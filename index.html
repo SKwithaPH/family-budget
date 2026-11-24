@@ -157,6 +157,10 @@
                                 <i class="fa-solid fa-download text-slate-400 w-4"></i>
                                 <span>Export JSON Backup</span>
                             </button>
+                            <button type="button" onclick="closeSettingsMenu(); openJsonRestoreModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-upload text-indigo-400 w-4"></i>
+                                <span>Restore JSON Backup</span>
+                            </button>
                             <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-file-csv text-slate-400 w-4"></i>
                                 <span>Export CSV Log</span>
@@ -210,7 +214,7 @@
                         <div class="min-w-0">
                             <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Fixed Expenses</p>
                             <h3 class="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="kpi-fixed-expenses">$0.00</h3>
-                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Recurring bills</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate" id="kpi-fixed-sub">Recurring bills</p>
                         </div>
                         <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-file-invoice"></i>
@@ -221,7 +225,7 @@
                         <div class="min-w-0">
                             <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Variable Spent</p>
                             <h3 class="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="kpi-variable-spent">$0.00</h3>
-                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Groceries, gas, dining</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate" id="kpi-variable-sub">Of budget target</p>
                         </div>
                         <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-cart-shopping"></i>
@@ -271,13 +275,7 @@
 
                     <!-- Single-Row Entry Container -->
                     <div id="single-tx-container">
-                        <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar mb-2" id="quick-category-pills">
-                            <button type="button" onclick="selectQuickCategory('Groceries', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Groceries</button>
-                            <button type="button" onclick="selectQuickCategory('Dining Out', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Dining Out</button>
-                            <button type="button" onclick="selectQuickCategory('Shopping', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Shopping</button>
-                            <button type="button" onclick="selectQuickCategory('Gas/Fuel', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Gas/Fuel</button>
-                            <button type="button" onclick="selectQuickCategory('Miscellaneous', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Miscellaneous</button>
-                        </div>
+                        <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar mb-2" id="quick-category-pills"></div>
 
                         <form id="fast-tx-form" onsubmit="saveFastTransaction(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                             <div class="sm:col-span-2">
@@ -286,13 +284,7 @@
                             </div>
                             <div class="sm:col-span-3">
                                 <label for="ftx-category" class="sr-only">Category</label>
-                                <select id="ftx-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
-                                    <option value="Groceries">Groceries</option>
-                                    <option value="Dining Out">Dining Out</option>
-                                    <option value="Shopping">Shopping</option>
-                                    <option value="Gas/Fuel">Gas/Fuel</option>
-                                    <option value="Miscellaneous">Miscellaneous</option>
-                                </select>
+                                <select id="ftx-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium"></select>
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="ftx-amount" class="sr-only">Amount</label>
@@ -338,10 +330,10 @@
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Category Budget Threshold Progress (Amber at 80%, Red at 100%) -->
                         <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <div class="flex items-center justify-between mb-5">
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
                                 <div>
-                                    <h3 class="font-bold text-lg">Budget Thresholds</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Alerts trigger at 80% (amber) and 100%+ (red)</p>
+                                    <h3 class="font-bold text-lg">Budget Thresholds & Pacing</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400" id="budget-pacing-summary">Alerts trigger at 80% (amber) and 100%+ (red)</p>
                                 </div>
                                 <button type="button" onclick="openCategoryBudgetModal()" class="min-h-[44px] px-3 text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline flex items-center">
                                     <i class="fa-solid fa-sliders mr-1"></i>Edit Budget
@@ -381,16 +373,29 @@
                         </div>
                     </div>
 
-                    <!-- Variable Expense Feed -->
+                    <!-- Variable Expense Feed with Search & Category Filter -->
                     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-3">
                             <div>
                                 <h3 class="font-bold text-lg">Recent Variable Log</h3>
                                 <p class="text-xs text-slate-500 dark:text-slate-400">Shared household entries</p>
                             </div>
                             <span class="text-xs bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2.5 py-1 rounded-full font-semibold" id="transaction-count">0 items</span>
                         </div>
-                        <div class="flex-grow overflow-y-auto max-h-[540px] space-y-3 pr-1" id="transactions-list"></div>
+
+                        <!-- Search & Category Filter Bar -->
+                        <div class="space-y-2 mb-3">
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" id="tx-search-input" oninput="handleTxFilterChange()" placeholder="Search merchant, note, or member..." class="w-full pl-8 pr-8 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <button type="button" id="tx-search-clear" onclick="clearTxFilters()" aria-label="Clear filters" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar" id="tx-filter-pills"></div>
+                        </div>
+
+                        <div class="flex-grow overflow-y-auto max-h-[520px] space-y-3 pr-1" id="transactions-list"></div>
                     </div>
                 </div>
             </section>
@@ -400,7 +405,7 @@
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                     <div>
                         <h3 class="font-bold text-xl">Month-to-Month Comparison</h3>
-                        <p class="text-xs text-slate-500">Compare income, fixed expenses, variable spending, and net surplus across months.</p>
+                        <p class="text-xs text-slate-500">Compare income, fixed expenses, variable spending, burn rate, and net surplus across months.</p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
@@ -411,10 +416,25 @@
                                     <th class="py-3 px-3 text-right">Fixed Expenses</th>
                                     <th class="py-3 px-3 text-right">Variable Spent</th>
                                     <th class="py-3 px-3 text-right">Net Surplus</th>
+                                    <th class="py-3 px-3 text-center">Fixed / Var Split</th>
                                     <th class="py-3 px-3 text-center">Savings Rate</th>
                                 </tr>
                             </thead>
                             <tbody id="monthly-comparison-tbody" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Category Spending Breakdown Across Months -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
+                    <div>
+                        <h3 class="font-bold text-xl">Variable Category Trends by Month</h3>
+                        <p class="text-xs text-slate-500">Spot seasonal spikes and monthly averages across every variable budget category.</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead id="category-trends-thead" class="border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-400 font-semibold bg-slate-50 dark:bg-slate-700/30"></thead>
+                            <tbody id="category-trends-tbody" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
                         </table>
                     </div>
                 </div>
@@ -471,6 +491,10 @@
                             <span>New Project</span>
                         </button>
                     </div>
+
+                    <!-- Household-Level Roll-Up Summary Strip Across All Projects -->
+                    <div id="projects-rollup-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-3 hidden"></div>
+
                     <div id="projects-container" class="space-y-6"></div>
                 </div>
             </section>
@@ -622,7 +646,7 @@
                     <label for="efb-scope" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Apply Amount Change To</label>
                     <select id="efb-scope" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
                         <option value="month">This Month Only (e.g., Water/Sewer bill)</option>
-                        <option value="forward">This Month & Going Forward (e.g., Disney+ increase)</option>
+                        <option value="forward">This Month & Going Forward (e.g., price increase)</option>
                     </select>
                 </div>
                 <div id="efb-reset-wrapper" class="hidden">
@@ -663,13 +687,7 @@
                 </div>
                 <div>
                     <label for="etx-category" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Category</label>
-                    <select id="etx-category" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
-                        <option value="Groceries">Groceries</option>
-                        <option value="Dining Out">Dining Out</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Gas/Fuel">Gas/Fuel</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
-                    </select>
+                    <select id="etx-category" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium"></select>
                 </div>
                 <div>
                     <label for="etx-notes" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Store / Note</label>
@@ -783,6 +801,51 @@
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('project-expense-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
                     <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md">Save Cost</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6B. Edit Project Expense Modal -->
+    <div id="edit-project-expense-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-lg" id="edit-proj-exp-modal-title">Edit Project Cost</h3>
+                <button type="button" onclick="closeModal('edit-project-expense-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="edit-project-expense-form" onsubmit="submitEditProjectExpense(event)" class="space-y-4">
+                <input type="hidden" id="epe-id">
+                <input type="hidden" id="epe-project-id">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="epe-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Date</label>
+                        <input type="date" id="epe-date" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                    <div>
+                        <label for="epe-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
+                        <input type="number" step="0.01" min="0.01" id="epe-amount" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="epe-category" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Budget Category</label>
+                        <select id="epe-category" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm"></select>
+                    </div>
+                    <div>
+                        <label for="epe-work-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Work Type</label>
+                        <select id="epe-work-type" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
+                            <option value="Contractor">Contractor</option>
+                            <option value="DIY">DIY</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="epe-vendor" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Vendor / Description</label>
+                    <input type="text" id="epe-vendor" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('edit-project-expense-modal')" class="flex-1 py-2.5 min-h-[44px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -927,6 +990,35 @@
         </div>
     </div>
 
+    <!-- 11. Restore JSON Backup Modal -->
+    <div id="json-restore-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-upload text-indigo-500"></i> Restore JSON Backup
+                </h3>
+                <button type="button" onclick="closeModal('json-restore-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Load a previously exported <code>family_budget_*.json</code> snapshot to preview and restore records into Firestore.</p>
+            <div>
+                <label for="json-backup-file" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Select Backup (.JSON)</label>
+                <input type="file" id="json-backup-file" accept=".json,application/json" onchange="handleJsonBackupSelect(event)" class="w-full text-xs text-slate-600 dark:text-slate-300 file:mr-2.5 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
+            </div>
+            <div id="json-backup-summary" class="hidden bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-1"></div>
+            <div>
+                <label for="json-restore-mode" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Restore Mode</label>
+                <select id="json-restore-mode" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium">
+                    <option value="merge">Merge (Upsert matching IDs, keep newer records)</option>
+                    <option value="replace">Full Replace (Clear existing collections before restoring)</option>
+                </select>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeModal('json-restore-modal')" class="flex-1 py-2.5 min-h-[44px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                <button type="button" id="json-restore-submit-btn" onclick="executeJsonBackupRestore()" disabled class="flex-1 py-2.5 min-h-[44px] bg-brand-500 hover:bg-brand-600 disabled:opacity-40 text-white font-semibold rounded-xl text-sm shadow-md">Restore Data</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Non-blocking Toast Banner -->
     <div id="toast" role="status" aria-live="polite" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm">
         <i id="toast-icon" class="fa-solid fa-circle-check text-brand-400"></i>
@@ -971,6 +1063,9 @@
         let currentUser = null;
         let unsubscribeListeners = [];
         let pendingConfirmAction = null;
+        let txCategoryFilter = 'ALL';
+        let txSearchQuery = '';
+        let pendingJsonRestorePayload = null;
 
         // Core Application State
         const state = {
@@ -1028,6 +1123,34 @@
             }
         });
 
+        // Keyboard Escape closes any open modal or dropdown
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape') return;
+            window.closeSettingsMenu();
+            const modalIds = [
+                'income-modal',
+                'fixed-bills-modal',
+                'edit-fixed-bill-modal',
+                'edit-tx-modal',
+                'category-budget-modal',
+                'household-modal',
+                'project-modal',
+                'project-expense-modal',
+                'edit-project-expense-modal',
+                'savings-goal-modal',
+                'add-savings-funds-modal',
+                'confirm-action-modal',
+                'csv-import-modal',
+                'json-restore-modal'
+            ];
+            modalIds.forEach((id) => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('hidden')) {
+                    el.classList.add('hidden');
+                }
+            });
+        });
+
         window.toggleSettingsMenu = function(event) {
             event.stopPropagation();
             document.getElementById('settings-dropdown').classList.toggle('hidden');
@@ -1049,6 +1172,7 @@
             });
 
             document.getElementById('ftx-date').value = new Date().toISOString().slice(0, 10);
+            syncDynamicCategorySelectors();
             document.getElementById('confirm-modal-submit').addEventListener('click', async () => {
                 const action = pendingConfirmAction;
                 pendingConfirmAction = null;
@@ -1158,6 +1282,47 @@
                 if (typeof unsub === 'function') unsub();
             });
             unsubscribeListeners = [];
+        }
+
+        function getBudgetCategories() {
+            const keys = Object.keys(state.categoryBudgets);
+            return keys.length > 0 ? keys : ['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'];
+        }
+
+        // Keep quick pills, single-entry select, batch-row selects, and log filter pills synced with state.categoryBudgets
+        function syncDynamicCategorySelectors() {
+            const categories = getBudgetCategories();
+
+            const ftxSelect = document.getElementById('ftx-category');
+            if (ftxSelect) {
+                const currentVal = ftxSelect.value;
+                ftxSelect.innerHTML = categories
+                    .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
+                    .join('');
+                ftxSelect.value = categories.includes(currentVal) ? currentVal : categories[0];
+            }
+
+            const pillsContainer = document.getElementById('quick-category-pills');
+            if (pillsContainer) {
+                const activeCat = ftxSelect ? ftxSelect.value : categories[0];
+                pillsContainer.innerHTML = categories.map((cat) => {
+                    const isSelected = cat === activeCat;
+                    const cls = isSelected
+                        ? "quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-brand-500 bg-brand-500 text-white transition whitespace-nowrap"
+                        : "quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap";
+                    return `<button type="button" onclick="selectQuickCategory('${escapeJsAttr(cat)}', this)" class="${cls}">${escapeHtml(cat)}</button>`;
+                }).join('');
+            }
+
+            document.querySelectorAll('.batch-category').forEach((sel) => {
+                const prev = sel.value;
+                sel.innerHTML = categories
+                    .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
+                    .join('');
+                if (categories.includes(prev)) sel.value = prev;
+            });
+
+            renderTxFilterPills();
         }
 
         // Main Tab Navigation
@@ -1372,6 +1537,7 @@
 
         // Rendering Functions
         function renderAll() {
+            syncDynamicCategorySelectors();
             renderDashboard();
             if (!document.getElementById('tab-content-analytics').classList.contains('hidden')) {
                 renderAnalytics();
@@ -1389,20 +1555,45 @@
             const totalIncome = getIncomeForMonth(month);
             const totalFixedBills = getFixedBillsTotal();
             const totalVariableSpent = getVariableSpentForMonth(month);
+            const totalVariableBudget = Object.values(state.categoryBudgets).reduce((sum, v) => sum + Number(v || 0), 0);
             const monthlySurplus = totalIncome - totalFixedBills - totalVariableSpent;
             const rolloverSurplus = getAccumulatedSurplusRollover();
 
             document.getElementById('kpi-income').innerText = formatCurrency(totalIncome);
             document.getElementById('kpi-fixed-expenses').innerText = formatCurrency(totalFixedBills);
+            const fixedPct = totalIncome > 0 ? Math.round((totalFixedBills / totalIncome) * 100) : 0;
+            document.getElementById('kpi-fixed-sub').innerText = totalIncome > 0 ? `${fixedPct}% of income` : 'Recurring bills';
+
             document.getElementById('kpi-variable-spent').innerText = formatCurrency(totalVariableSpent);
+            const varBudgetPct = totalVariableBudget > 0 ? Math.round((totalVariableSpent / totalVariableBudget) * 100) : 0;
+            document.getElementById('kpi-variable-sub').innerText = totalVariableBudget > 0
+                ? `${varBudgetPct}% of ${formatCurrency(totalVariableBudget)}`
+                : 'Groceries, gas, dining';
+
+            // Pacing subtitle on Budget Thresholds card
+            const pacingEl = document.getElementById('budget-pacing-summary');
+            if (pacingEl) {
+                const now = new Date();
+                const currentIsoMonth = now.toISOString().slice(0, 7);
+                const [y, m] = month.split('-').map(Number);
+                const daysInMonth = new Date(y, m, 0).getDate();
+                const varRemaining = totalVariableBudget - totalVariableSpent;
+                if (month === currentIsoMonth) {
+                    const daysLeft = Math.max(daysInMonth - now.getDate() + 1, 1);
+                    const dailySafe = varRemaining > 0 ? varRemaining / daysLeft : 0;
+                    pacingEl.innerText = `${formatCurrency(Math.max(varRemaining, 0))} variable budget left · ${daysLeft}d remaining (${formatCurrency(dailySafe)}/day)`;
+                } else {
+                    pacingEl.innerText = `Total variable target: ${formatCurrency(totalVariableBudget)} (${varRemaining >= 0 ? formatCurrency(varRemaining) + ' under' : formatCurrency(Math.abs(varRemaining)) + ' over'})`;
+                }
+            }
 
             const netEl = document.getElementById('kpi-net-cash');
             netEl.innerText = formatCurrency(monthlySurplus);
             if (monthlySurplus < 0) {
-                netEl.className = "text-2xl font-bold text-red-500";
+                netEl.className = "text-lg sm:text-2xl font-bold text-red-500 truncate";
                 document.getElementById('kpi-net-sub').innerText = "Monthly shortfall";
             } else {
-                netEl.className = "text-2xl font-bold text-brand-600 dark:text-brand-400";
+                netEl.className = "text-lg sm:text-2xl font-bold text-brand-600 dark:text-brand-400 truncate";
                 document.getElementById('kpi-net-sub').innerText = "Monthly surplus savings";
             }
 
@@ -1517,20 +1708,86 @@
             }).join('');
         }
 
+        function renderTxFilterPills() {
+            const container = document.getElementById('tx-filter-pills');
+            if (!container) return;
+            const categories = ['ALL', ...getBudgetCategories()];
+            if (!categories.includes(txCategoryFilter)) {
+                txCategoryFilter = 'ALL';
+            }
+
+            container.innerHTML = categories.map((cat) => {
+                const active = txCategoryFilter === cat;
+                const label = cat === 'ALL' ? 'All' : cat;
+                const cls = active
+                    ? "px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-800 dark:bg-brand-500 text-white whitespace-nowrap shrink-0 transition"
+                    : "px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 whitespace-nowrap shrink-0 transition";
+                return `<button type="button" onclick="setTxCategoryFilter('${escapeJsAttr(cat)}')" class="${cls}">${escapeHtml(label)}</button>`;
+            }).join('');
+        }
+
+        window.setTxCategoryFilter = function(cat) {
+            txCategoryFilter = cat;
+            renderTxFilterPills();
+            renderTransactionsList(state.currentMonth);
+        };
+
+        window.handleTxFilterChange = function() {
+            const input = document.getElementById('tx-search-input');
+            txSearchQuery = input ? input.value.trim().toLowerCase() : '';
+            renderTransactionsList(state.currentMonth);
+        };
+
+        window.clearTxFilters = function() {
+            txCategoryFilter = 'ALL';
+            txSearchQuery = '';
+            const input = document.getElementById('tx-search-input');
+            if (input) input.value = '';
+            renderTxFilterPills();
+            renderTransactionsList(state.currentMonth);
+        };
+
         function renderTransactionsList(month) {
             const container = document.getElementById('transactions-list');
-            const monthTxs = state.transactions
+            const allMonthTxs = state.transactions
                 .filter((tx) => tx.date && tx.date.startsWith(month))
                 .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''));
 
-            document.getElementById('transaction-count').innerText = `${monthTxs.length} items`;
+            const clearBtn = document.getElementById('tx-search-clear');
+            const hasFilter = txCategoryFilter !== 'ALL' || txSearchQuery.length > 0;
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', !hasFilter);
+            }
 
-            if (monthTxs.length === 0) {
+            const filteredTxs = allMonthTxs.filter((tx) => {
+                if (txCategoryFilter !== 'ALL' && tx.category !== txCategoryFilter) return false;
+                if (txSearchQuery) {
+                    const hay = `${tx.notes || ''} ${tx.category || ''} ${tx.author || ''} ${tx.amount || ''}`.toLowerCase();
+                    if (!hay.includes(txSearchQuery)) return false;
+                }
+                return true;
+            });
+
+            document.getElementById('transaction-count').innerText = hasFilter
+                ? `${filteredTxs.length} of ${allMonthTxs.length}`
+                : `${allMonthTxs.length} items`;
+
+            if (allMonthTxs.length === 0) {
                 container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No variable expenses logged for ${escapeHtml(month)} yet.</p>`;
                 return;
             }
 
-            container.innerHTML = monthTxs.map((tx) => `
+            if (filteredTxs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-2">
+                        <p class="text-sm text-slate-400">No entries match your filter.</p>
+                        <button type="button" onclick="clearTxFilters()" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">Reset filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredTxs.map((tx) => `
                 <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
@@ -1630,6 +1887,11 @@
         window.addBatchRow = function() {
             const container = document.getElementById('batch-rows-container');
             const defaultDate = document.getElementById('ftx-date').value || new Date().toISOString().slice(0, 10);
+            const categories = getBudgetCategories();
+            const catOptionsHtml = categories
+                .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
+                .join('');
+
             const row = document.createElement('div');
             row.className = "batch-entry-row grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-slate-50 dark:bg-slate-700/30 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700";
             row.innerHTML = `
@@ -1638,11 +1900,7 @@
                 </div>
                 <div class="sm:col-span-3">
                     <select class="batch-category w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium">
-                        <option value="Groceries">Groceries</option>
-                        <option value="Dining Out">Dining Out</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Gas/Fuel">Gas/Fuel</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
+                        ${catOptionsHtml}
                     </select>
                 </div>
                 <div class="sm:col-span-2">
@@ -1862,9 +2120,7 @@
                 return;
             }
 
-            const categories = Object.keys(state.categoryBudgets).length > 0
-                ? Object.keys(state.categoryBudgets)
-                : ['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'];
+            const categories = getBudgetCategories();
 
             tbody.innerHTML = csvPreviewItems.map((item, idx) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
@@ -1932,6 +2188,114 @@
             }
         };
 
+        // JSON Backup Restore
+        window.openJsonRestoreModal = function() {
+            pendingJsonRestorePayload = null;
+            document.getElementById('json-backup-file').value = '';
+            document.getElementById('json-backup-summary').classList.add('hidden');
+            document.getElementById('json-backup-summary').innerHTML = '';
+            document.getElementById('json-restore-submit-btn').disabled = true;
+            document.getElementById('json-restore-modal').classList.remove('hidden');
+        };
+
+        window.handleJsonBackupSelect = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(String(e.target.result || '{}'));
+                    if (!parsed || typeof parsed !== 'object') {
+                        throw new Error("Invalid backup object.");
+                    }
+
+                    const counts = {
+                        incomeStreams: Array.isArray(parsed.incomeStreams) ? parsed.incomeStreams.length : 0,
+                        fixedBills: Array.isArray(parsed.fixedBills) ? parsed.fixedBills.length : 0,
+                        transactions: Array.isArray(parsed.transactions) ? parsed.transactions.length : 0,
+                        projects: Array.isArray(parsed.projects) ? parsed.projects.length : 0,
+                        projectExpenses: Array.isArray(parsed.projectExpenses) ? parsed.projectExpenses.length : 0,
+                        savingsGoals: Array.isArray(parsed.savingsGoals) ? parsed.savingsGoals.length : 0
+                    };
+
+                    const totalRecords = Object.values(counts).reduce((sum, n) => sum + n, 0);
+                    if (totalRecords === 0 && !parsed.categoryBudgets) {
+                        throw new Error("No budget records found in file.");
+                    }
+
+                    pendingJsonRestorePayload = parsed;
+                    const summaryEl = document.getElementById('json-backup-summary');
+                    summaryEl.innerHTML = `
+                        <p class="font-semibold text-slate-800 dark:text-slate-100">Ready to restore:</p>
+                        <p class="text-slate-600 dark:text-slate-300">
+                            ${counts.incomeStreams} income entries · ${counts.fixedBills} fixed expenses · ${counts.transactions} variable transactions · ${counts.projects} projects (${counts.projectExpenses} costs) · ${counts.savingsGoals} savings goals
+                        </p>
+                    `;
+                    summaryEl.classList.remove('hidden');
+                    document.getElementById('json-restore-submit-btn').disabled = false;
+                } catch (err) {
+                    pendingJsonRestorePayload = null;
+                    document.getElementById('json-restore-submit-btn').disabled = true;
+                    showToast("Invalid JSON backup: " + err.message, "error");
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        window.executeJsonBackupRestore = async function() {
+            if (!currentUser || !db || !pendingJsonRestorePayload) return;
+            const mode = document.getElementById('json-restore-mode').value;
+            const submitBtn = document.getElementById('json-restore-submit-btn');
+            submitBtn.disabled = true;
+
+            try {
+                const colNames = [
+                    'incomeStreams',
+                    'fixedBills',
+                    'transactions',
+                    'projects',
+                    'projectExpenses',
+                    'savingsGoals'
+                ];
+
+                if (mode === 'replace') {
+                    for (const colName of colNames) {
+                        const existing = state[colName] || [];
+                        await Promise.all(
+                            existing.map((item) => deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', colName, item.id)))
+                        );
+                    }
+                }
+
+                if (pendingJsonRestorePayload.categoryBudgets && typeof pendingJsonRestorePayload.categoryBudgets === 'object') {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'categoryBudgets', 'main_limits'), {
+                        budgets: pendingJsonRestorePayload.categoryBudgets
+                    });
+                }
+
+                for (const colName of colNames) {
+                    const records = Array.isArray(pendingJsonRestorePayload[colName]) ? pendingJsonRestorePayload[colName] : [];
+                    await Promise.all(
+                        records.map((rec) => {
+                            const { id, ...cleanData } = rec;
+                            if (id) {
+                                return setDoc(doc(db, 'artifacts', appId, 'public', 'data', colName, id), cleanData);
+                            }
+                            return addDoc(collection(db, 'artifacts', appId, 'public', 'data', colName), cleanData);
+                        })
+                    );
+                }
+
+                pendingJsonRestorePayload = null;
+                closeModal('json-restore-modal');
+                showToast("JSON backup restored successfully.");
+            } catch (err) {
+                showToast("Restore failed: " + err.message, "error");
+                submitBtn.disabled = false;
+            }
+        };
+
         window.confirmDeleteTransaction = function(id) {
             openConfirmModal("Delete Expense", "Remove this variable expense entry?", async () => {
                 try {
@@ -1954,13 +2318,11 @@
 
             // Dynamically sync category options from state.categoryBudgets
             const catSelect = document.getElementById('etx-category');
-            const categories = Object.keys(state.categoryBudgets);
-            if (categories.length > 0) {
-                catSelect.innerHTML = categories
-                    .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
-                    .join('');
-            }
-            catSelect.value = tx.category || 'Miscellaneous';
+            const categories = getBudgetCategories();
+            catSelect.innerHTML = categories
+                .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
+                .join('');
+            catSelect.value = tx.category || categories[0];
 
             document.getElementById('edit-tx-modal').classList.remove('hidden');
         };
@@ -2015,8 +2377,11 @@
                 const inc = getIncomeForMonth(m);
                 const fix = getFixedBillsTotalForMonth(m);
                 const varSpent = getVariableSpentForMonth(m);
-                const surplus = inc - fix - varSpent;
+                const totalOut = fix + varSpent;
+                const surplus = inc - totalOut;
                 const rate = inc > 0 ? Math.round((surplus / inc) * 100) : 0;
+                const fixedShare = totalOut > 0 ? Math.round((fix / totalOut) * 100) : 0;
+                const varShare = totalOut > 0 ? 100 - fixedShare : 0;
 
                 return `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
@@ -2025,12 +2390,15 @@
                         <td class="py-3 px-3 text-right text-blue-600 dark:text-blue-400">${formatCurrency(fix)}</td>
                         <td class="py-3 px-3 text-right text-amber-600 dark:text-amber-400">${formatCurrency(varSpent)}</td>
                         <td class="py-3 px-3 text-right font-bold ${surplus < 0 ? 'text-red-500' : 'text-slate-900 dark:text-white'}">${formatCurrency(surplus)}</td>
+                        <td class="py-3 px-3 text-center text-xs text-slate-500 dark:text-slate-400">${fixedShare}% / ${varShare}%</td>
                         <td class="py-3 px-3 text-center">
                             <span class="px-2.5 py-1 ${rate < 0 ? 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'} rounded-full text-xs font-semibold">${rate}%</span>
                         </td>
                     </tr>
                 `;
             }).join('');
+
+            renderCategoryTrendsMatrix(months);
 
             const year = document.getElementById('annual-year-select').value;
             let annualInc = 0;
@@ -2056,11 +2424,90 @@
                 : "text-xl font-bold text-brand-600 dark:text-brand-400";
         }
 
+        function renderCategoryTrendsMatrix(months) {
+            const thead = document.getElementById('category-trends-thead');
+            const tbody = document.getElementById('category-trends-tbody');
+            if (!thead || !tbody) return;
+
+            const categories = getBudgetCategories();
+            const recentMonths = months.slice(0, 6);
+
+            thead.innerHTML = `
+                <tr>
+                    <th class="py-3 px-3">Category</th>
+                    ${recentMonths.map((m) => `<th class="py-3 px-3 text-right">${escapeHtml(m)}</th>`).join('')}
+                    <th class="py-3 px-3 text-right">Avg / Mo</th>
+                    <th class="py-3 px-3 text-right">Target</th>
+                </tr>
+            `;
+
+            tbody.innerHTML = categories.map((cat) => {
+                const target = Number(state.categoryBudgets[cat] || 0);
+                let rowSum = 0;
+                const cellsHtml = recentMonths.map((m) => {
+                    const spent = state.transactions
+                        .filter((tx) => tx.date && tx.date.startsWith(m) && tx.category === cat)
+                        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+                    rowSum += spent;
+                    const overBudget = target > 0 && spent > target;
+                    return `<td class="py-3 px-3 text-right ${overBudget ? 'text-red-500 font-semibold' : 'text-slate-700 dark:text-slate-300'}">${formatCurrency(spent)}</td>`;
+                }).join('');
+
+                const avg = recentMonths.length > 0 ? rowSum / recentMonths.length : 0;
+                return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
+                        <td class="py-3 px-3 font-semibold">${escapeHtml(cat)}</td>
+                        ${cellsHtml}
+                        <td class="py-3 px-3 text-right font-semibold text-indigo-600 dark:text-indigo-400">${formatCurrency(avg)}</td>
+                        <td class="py-3 px-3 text-right text-xs text-slate-500">${formatCurrency(target)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
         function renderProjectsView() {
             const container = document.getElementById('projects-container');
+            const rollupContainer = document.getElementById('projects-rollup-summary');
+
             if (state.projects.length === 0) {
+                if (rollupContainer) rollupContainer.classList.add('hidden');
                 container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No projects yet. Click "New Project" to track a build-out, renovation, or equity loan budget.</p>`;
                 return;
+            }
+
+            // Household-wide roll-up across all projects
+            const totalAllBudgets = state.projects.reduce((sum, p) => sum + Number(p.totalBudget || 0), 0);
+            const activeProjectIds = new Set(state.projects.map((p) => p.id));
+            const allActiveExpenses = state.projectExpenses.filter((pe) => activeProjectIds.has(pe.projectId));
+            const totalAllSpent = allActiveExpenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+            const totalAllRemaining = totalAllBudgets - totalAllSpent;
+            const totalAllContractor = allActiveExpenses
+                .filter((item) => item.workType === 'Contractor')
+                .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+            const totalAllDiy = allActiveExpenses
+                .filter((item) => item.workType !== 'Contractor')
+                .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+            if (rollupContainer) {
+                rollupContainer.classList.remove('hidden');
+                rollupContainer.innerHTML = `
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-[11px] uppercase font-semibold text-slate-400">All Projects Budget (${state.projects.length})</span>
+                        <span class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${formatCurrency(totalAllBudgets)}</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-[11px] uppercase font-semibold text-slate-400">Total Spent</span>
+                        <span class="text-base sm:text-lg font-bold text-amber-600 dark:text-amber-400">${formatCurrency(totalAllSpent)}</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-[11px] uppercase font-semibold text-slate-400">Total Remaining</span>
+                        <span class="text-base sm:text-lg font-bold ${totalAllRemaining < 0 ? 'text-red-500' : 'text-brand-600 dark:text-brand-400'}">${formatCurrency(totalAllRemaining)}</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-[11px] uppercase font-semibold text-slate-400">Contractor vs. DIY</span>
+                        <span class="text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-400">${formatCurrency(totalAllContractor)} / ${formatCurrency(totalAllDiy)}</span>
+                    </div>
+                `;
             }
 
             container.innerHTML = state.projects.map((proj) => {
@@ -2104,7 +2551,10 @@
                             </td>
                             <td class="py-2.5 px-2 text-xs">${escapeHtml(pe.vendor || '')}</td>
                             <td class="py-2.5 px-2 text-xs text-right font-bold">${formatCurrency(pe.amount)}</td>
-                            <td class="py-2.5 px-2 text-right">
+                            <td class="py-2.5 px-2 text-right whitespace-nowrap">
+                                <button type="button" onclick="openEditProjectExpenseModal('${pe.id}')" aria-label="Edit project expense" class="text-slate-400 hover:text-brand-600 p-1 mr-1">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
                                 <button type="button" onclick="confirmDeleteProjectExpense('${pe.id}')" aria-label="Delete project expense" class="text-slate-400 hover:text-red-500 p-1">
                                     <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
@@ -2631,6 +3081,62 @@
             }
         };
 
+        window.openEditProjectExpenseModal = function(expenseId) {
+            const pe = state.projectExpenses.find((item) => item.id === expenseId);
+            if (!pe) return;
+
+            const proj = state.projects.find((p) => p.id === pe.projectId);
+            document.getElementById('epe-id').value = pe.id;
+            document.getElementById('epe-project-id').value = pe.projectId || '';
+            document.getElementById('edit-proj-exp-modal-title').innerText = proj ? `Edit Cost: ${proj.name}` : 'Edit Project Cost';
+            document.getElementById('epe-date').value = pe.date || '';
+            document.getElementById('epe-amount').value = Number(pe.amount || 0).toFixed(2);
+            document.getElementById('epe-work-type').value = pe.workType || 'DIY';
+            document.getElementById('epe-vendor').value = pe.vendor || '';
+
+            const catSelect = document.getElementById('epe-category');
+            const cats = (proj && proj.categories && proj.categories.length > 0) ? [...proj.categories] : ['General'];
+            if (pe.category && !cats.includes(pe.category)) {
+                cats.push(pe.category);
+            }
+            catSelect.innerHTML = cats.map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+            catSelect.value = pe.category || cats[0];
+
+            document.getElementById('edit-project-expense-modal').classList.remove('hidden');
+        };
+
+        window.submitEditProjectExpense = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const id = document.getElementById('epe-id').value;
+            const date = document.getElementById('epe-date').value;
+            const category = document.getElementById('epe-category').value;
+            const workType = document.getElementById('epe-work-type').value;
+            const amount = parseFloat(document.getElementById('epe-amount').value);
+            const vendor = document.getElementById('epe-vendor').value.trim();
+
+            if (!id || !date || isNaN(amount) || amount <= 0) {
+                showToast("Enter a valid date and amount.", "error");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projectExpenses', id), {
+                    date,
+                    category,
+                    workType,
+                    amount,
+                    vendor,
+                    updatedAt: new Date().toISOString()
+                });
+                closeModal('edit-project-expense-modal');
+                showToast("Project cost updated.");
+            } catch (err) {
+                showToast("Failed to update project cost: " + err.message, "error");
+            }
+        };
+
         window.confirmDeleteProjectExpense = function(id) {
             openConfirmModal("Delete Project Cost", "Remove this project cost item?", async () => {
                 try {
@@ -2809,6 +3315,14 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
+        }
+
+        function escapeJsAttr(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'")
+                .replace(/"/g, "&quot;");
         }
 
         let toastTimer = null;

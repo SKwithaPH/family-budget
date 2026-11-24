@@ -1536,13 +1536,78 @@
             </form>
         </div>
     </div>
+
+    <!-- 10. Client-Side CSV Statement Importer Modal -->
+        window.saveFastTransaction = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const txDate = document.getElementById('ftx-date').value;
+            const category = document.getElementById('ftx-category').value;
+            const amount = parseFloat(document.getElementById('ftx-amount').value);
+            const notes = document.getElementById('ftx-notes').value.trim();
+
+            if (!txDate || isNaN(amount) || amount <= 0) {
+                showToast("Enter a valid date and amount.", "error");
+                return;
+            }
+
+            const author = currentUser.email ? currentUser.email.split('@')[0] : 'Member';
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), {
+                    date: txDate,
+                    category,
+                    amount,
+                    notes,
+                    author,
+                    createdAt: new Date().toISOString()
+                });
+                document.getElementById('ftx-amount').value = '';
+                document.getElementById('ftx-notes').value = '';
+                showToast("Variable expense logged.");
+            } catch (err) {
+                showToast("Failed to save expense: " + err.message, "error");
+            }
+        };
+
+        // Multi-Row Batch Entry Helpers
+        window.toggleBatchEntryMode = function() {
+            const singleBox = document.getElementById('single-tx-container');
+            const batchForm = document.getElementById('batch-tx-form');
+            const btn = document.getElementById('toggle-batch-btn');
+            const isBatchHidden = batchForm.classList.contains('hidden');
+
+            if (isBatchHidden) {
+                singleBox.classList.add('hidden');
+                batchForm.classList.remove('hidden');
+                btn.classList.add('border-brand-500', 'text-brand-600', 'dark:text-brand-400');
+                const rowsContainer = document.getElementById('batch-rows-container');
+                if (rowsContainer.children.length === 0) {
+                    for (let i = 0; i < 5; i++) window.addBatchRow();
+                }
+            } else {
+                batchForm.classList.add('hidden');
+                singleBox.classList.remove('hidden');
+                btn.classList.remove('border-brand-500', 'text-brand-600', 'dark:text-brand-400');
+            }
+        };
+
+        window.addBatchRow = function() {
+            const container = document.getElementById('batch-rows-container');
+            const defaultDate = document.getElementById('ftx-date').value || new Date().toISOString().slice(0, 10);
+            const categories = Object.keys(state.categoryBudgets);
+            const catOptions = categories.map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+
+            const row = document.createElement('div');
+            row.className = "batch-entry-row grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-slate-50 dark:bg-slate-700/30 p-2 rounded-xl border border-slate-200 dark:border-slate-700";
+            row.innerHTML = `
+                <div class="sm:col-span-3">
+                    <input type="date" value="${escapeHtml(defaultDate)}" class="batch-date w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs">
+                </div>
                 <div class="sm:col-span-3">
                     <select class="batch-category w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium">
-                        <option value="Groceries">Groceries</option>
-                        <option value="Dining Out">Dining Out</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Gas/Fuel">Gas/Fuel</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
+                        ${catOptions}
                     </select>
                 </div>
                 <div class="sm:col-span-2">
@@ -1889,6 +1954,243 @@
                 showToast("Failed to update expense: " + err.message, "error");
             }
         };
+
+        // Analytics & Annual Summary Rendering
+        function renderAnalytics() {
+            const tbody = document.getElementById('monthly-comparison-tbody');
+            const selectedYear = document.getElementById('annual-year-select').value || new Date().getFullYear().toString();
+
+            const monthSet = new Set([state.currentMonth]);
+            for (let m = 1; m <= 12; m++) {
+                monthSet.add(`${selectedYear}-${String(m).padStart(2, '0')}`);
+            }
+            state.transactions.forEach((tx) => {
+                if (tx.date && tx.date.length >= 7) monthSet.add(tx.date.slice(0, 7));
+            });
+
+            const sortedMonths = Array.from(monthSet)
+                .filter((m) => m.startsWith(selectedYear))
+                .sort();
+
+            let annualIncome = 0;
+            let annualFixed = 0;
+            let annualVariable = 0;
+
+            tbody.innerHTML = sortedMonths.map((mStr) => {
+                const inc = getIncomeForMonth(mStr);
+                const fix = getFixedBillsTotalForMonth(mStr);
+                const varSpent = getVariableSpentForMonth(mStr);
+                const surplus = inc - fix - varSpent;
+                const savingsRate = inc > 0 ? Math.round((surplus / inc) * 100) : 0;
+
+                annualIncome += inc;
+                annualFixed += fix;
+                annualVariable += varSpent;
+
+                const isCurrent = mStr === state.currentMonth;
+                return `
+                    <tr class="${isCurrent ? 'bg-brand-50/60 dark:bg-brand-900/20 font-semibold' : 'hover:bg-slate-50 dark:hover:bg-slate-700/40'}">
+                        <td class="py-3 px-3">${escapeHtml(mStr)} ${isCurrent ? '<span class="ml-1.5 text-[10px] px-2 py-0.5 bg-brand-500 text-white rounded-full">Active</span>' : ''}</td>
+                        <td class="py-3 px-3 text-right">${formatCurrency(inc)}</td>
+                        <td class="py-3 px-3 text-right">${formatCurrency(fix)}</td>
+                        <td class="py-3 px-3 text-right">${formatCurrency(varSpent)}</td>
+                        <td class="py-3 px-3 text-right font-bold ${surplus < 0 ? 'text-red-500' : 'text-brand-600 dark:text-brand-400'}">${formatCurrency(surplus)}</td>
+                        <td class="py-3 px-3 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${savingsRate >= 20 ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}">${savingsRate}%</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const annualSurplus = annualIncome - annualFixed - annualVariable;
+            document.getElementById('annual-total-income').innerText = formatCurrency(annualIncome);
+            document.getElementById('annual-total-fixed').innerText = formatCurrency(annualFixed);
+            document.getElementById('annual-total-variable').innerText = formatCurrency(annualVariable);
+            const annSaveEl = document.getElementById('annual-total-savings');
+            annSaveEl.innerText = formatCurrency(annualSurplus);
+            annSaveEl.className = annualSurplus < 0
+                ? "text-xl font-bold text-red-500"
+                : "text-xl font-bold text-brand-600 dark:text-brand-400";
+        }
+
+        // Projects Rendering (Contractor vs. DIY + Category Breakdown)
+        function renderProjectsView() {
+            const container = document.getElementById('projects-container');
+            if (state.projects.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No projects created yet. Click <strong>New Project</strong> above to track a build or renovation budget.</p>`;
+                return;
+            }
+
+            container.innerHTML = state.projects.map((proj) => {
+                const expenses = state.projectExpenses
+                    .filter((e) => e.projectId === proj.id)
+                    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+                const totalBudget = Number(proj.totalBudget || 0);
+                const totalSpent = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+                const remaining = totalBudget - totalSpent;
+                const pctUsed = totalBudget > 0 ? Math.min(Math.round((totalSpent / totalBudget) * 100), 100) : 0;
+
+                const contractorTotal = expenses
+                    .filter((e) => e.workType === 'Contractor')
+                    .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+                const diyTotal = expenses
+                    .filter((e) => e.workType === 'DIY')
+                    .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+                const categories = (proj.categories && proj.categories.length > 0) ? proj.categories : ['General'];
+                const catBreakdownHtml = categories.map((cat) => {
+                    const catSpent = expenses
+                        .filter((e) => e.category === cat)
+                        .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+                    return `
+                        <div class="bg-white dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+                            <span class="font-medium text-slate-600 dark:text-slate-300 truncate mr-2">${escapeHtml(cat)}</span>
+                            <span class="font-bold text-slate-900 dark:text-white shrink-0">${formatCurrency(catSpent)}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                const expensesRowsHtml = expenses.length === 0
+                    ? `<tr><td colspan="6" class="py-4 text-center text-slate-400 text-xs">No costs logged for this project yet.</td></tr>`
+                    : expenses.map((e) => `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
+                            <td class="py-2.5 px-2 text-xs text-slate-500">${escapeHtml(e.date || '')}</td>
+                            <td class="py-2.5 px-2 text-xs font-medium">${escapeHtml(e.category || '')}</td>
+                            <td class="py-2.5 px-2 text-xs">
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${e.workType === 'DIY' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'}">${escapeHtml(e.workType || 'Contractor')}</span>
+                            </td>
+                            <td class="py-2.5 px-2 text-xs">${escapeHtml(e.vendor || '')}</td>
+                            <td class="py-2.5 px-2 text-right text-xs font-bold">${formatCurrency(e.amount)}</td>
+                            <td class="py-2.5 px-2 text-right">
+                                <button type="button" onclick="confirmDeleteProjectExpense('${e.id}')" aria-label="Delete project cost" class="text-slate-400 hover:text-red-500 p-1">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                return `
+                    <div class="bg-slate-50 dark:bg-slate-700/30 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(proj.name)}</h4>
+                                <p class="text-xs text-slate-500">Total Funds: <strong>${formatCurrency(totalBudget)}</strong> · Spent: <strong>${formatCurrency(totalSpent)}</strong> · Remaining: <strong class="${remaining < 0 ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}">${formatCurrency(remaining)}</strong></p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="openProjectExpenseModal('${proj.id}')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs shadow transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus"></i> Log Cost
+                                </button>
+                                <button type="button" onclick="confirmDeleteProject('${proj.id}')" aria-label="Delete project" class="p-2 text-slate-400 hover:text-red-500 rounded-xl">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="${remaining < 0 ? 'bg-red-500' : 'bg-indigo-600'} h-2.5 rounded-full" style="width: ${pctUsed}%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                            <div class="bg-white dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+                                <span class="text-slate-400 block">Contractor Total</span>
+                                <strong class="text-indigo-600 dark:text-indigo-400 text-sm">${formatCurrency(contractorTotal)}</strong>
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+                                <span class="text-slate-400 block">DIY Total</span>
+                                <strong class="text-emerald-600 dark:text-emerald-400 text-sm">${formatCurrency(diyTotal)}</strong>
+                            </div>
+                            ${catBreakdownHtml}
+                        </div>
+
+                        <div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <table class="w-full text-left">
+                                <thead class="border-b border-slate-200 dark:border-slate-700 text-[11px] uppercase text-slate-400 font-semibold">
+                                    <tr>
+                                        <th class="py-2 px-2">Date</th>
+                                        <th class="py-2 px-2">Category</th>
+                                        <th class="py-2 px-2">Type</th>
+                                        <th class="py-2 px-2">Vendor / Item</th>
+                                        <th class="py-2 px-2 text-right">Amount</th>
+                                        <th class="py-2 px-2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">${expensesRowsHtml}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Savings Goals Rendering & CRUD
+        window.openNewSavingsGoalModal = function() {
+            document.getElementById('savings-goal-form').reset();
+            document.getElementById('sg-current').value = '0';
+            document.getElementById('sg-categories').value = 'Lodging & Bookings, Travel & Fuel, Activities & Gear, Miscellaneous';
+            document.getElementById('savings-goal-modal').classList.remove('hidden');
+        };
+
+        window.saveSavingsGoal = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const goalData = {
+                name: document.getElementById('sg-name').value.trim(),
+                targetAmount: parseFloat(document.getElementById('sg-target').value),
+                currentSaved: parseFloat(document.getElementById('sg-current').value) || 0,
+                categories: document.getElementById('sg-categories').value.split(',').map((c) => c.trim()).filter(Boolean),
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'savingsGoals'), goalData);
+                closeModal('savings-goal-modal');
+                showToast("Savings goal created.");
+            } catch (err) {
+                showToast("Failed to save goal: " + err.message, "error");
+            }
+        };
+
+        function renderSavingsGoalsView() {
+            const container = document.getElementById('savings-goals-container');
+            if (state.savingsGoals.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8 col-span-2">No savings goals yet. Create a target above and convert it into a project budget once funded.</p>`;
+                return;
+            }
+
+            container.innerHTML = state.savingsGoals.map((goal) => {
+                const target = Number(goal.targetAmount || 0);
+                const saved = Number(goal.currentSaved || 0);
+                const pct = target > 0 ? Math.min(Math.round((saved / target) * 100), 100) : 0;
+
+                return `
+                    <div class="bg-slate-50 dark:bg-slate-700/30 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(goal.name)}</h4>
+                                <button type="button" onclick="confirmDeleteSavingsGoal('${goal.id}')" aria-label="Delete savings goal" class="text-slate-400 hover:text-red-500 p-1">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500">Saved <strong>${formatCurrency(saved)}</strong> of <strong>${formatCurrency(target)}</strong> (${pct}%)</p>
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-2.5 rounded-full" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <button type="button" onclick="openAddSavingsFundsModal('${goal.id}', ${saved})" class="flex-1 py-2 px-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-xs shadow transition">
+                                <i class="fa-solid fa-plus mr-1"></i>Add Funds
+                            </button>
+                            <button type="button" onclick="confirmConvertGoalToProject('${goal.id}')" class="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs shadow transition">
+                                <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>Convert to Project
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         window.openAddSavingsFundsModal = function(goalId, currentSaved) {
             const goal = state.savingsGoals.find((g) => g.id === goalId);

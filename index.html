@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FamilyBudget & Project Cost Tracker</title>
+    <!-- Standalone PWA / Home Screen App Configuration (No base64; inline SVG data URI) -->
+    <meta name="theme-color" content="#22c55e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FamilyBudget">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2322c55e'/%3E%3Ccircle cx='256' cy='256' r='132' fill='none' stroke='%23ffffff' stroke-width='36'/%3E%3Ccircle cx='256' cy='256' r='36' fill='%23ffffff'/%3E%3Cpath d='M256 124v44M256 344v44M124 256h44M344 256h44' stroke='%23ffffff' stroke-width='32' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2322c55e'/%3E%3Ccircle cx='256' cy='256' r='132' fill='none' stroke='%23ffffff' stroke-width='36'/%3E%3Ccircle cx='256' cy='256' r='36' fill='%23ffffff'/%3E%3Cpath d='M256 124v44M256 344v44M124 256h44M344 256h44' stroke='%23ffffff' stroke-width='32' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FamilyBudget%20%26%20Project%20Tracker%22%2C%22short_name%22%3A%22FamilyBudget%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2322c55e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27112%27%2520fill%3D%27%252322c55e%27%2F%253E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%27132%27%2520fill%3D%27none%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2736%27%2F%253E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%2736%27%2520fill%3D%27%2523ffffff%27%2F%253E%253Cpath%2520d%3D%27M256%2520124v44M256%2520344v44M124%2520256h44M344%2520256h44%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2732%27%2520stroke-linecap%3D%27round%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
     <!-- Tailwind CSS for responsive, high-contrast styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -98,6 +107,7 @@
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="submit" id="email-signin-btn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
+                    <button type="button" id="email-signup-btn" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition text-sm">Register</button>
                 </div>
             </form>
         </section>
@@ -133,7 +143,7 @@
                         <div id="settings-dropdown" class="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
                             <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-money-bill-trend-up text-emerald-500 w-4"></i>
-                                <span>Income</span>
+                                <span>Income & Future Raises</span>
                             </button>
                             <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-file-invoice-dollar text-blue-500 w-4"></i>

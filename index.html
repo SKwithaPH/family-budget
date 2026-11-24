@@ -47,35 +47,35 @@
 
     <!-- Top Navigation Bar -->
     <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-brand-500/20">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+            <div class="flex items-center space-x-2.5 min-w-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-brand-500 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-md shadow-brand-500/20">
                     <i class="fa-solid fa-vault"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight flex items-center gap-2">
-                        FamilyBudget
-                        <span class="text-[10px] px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-full font-semibold">Shared Sync</span>
+                <div class="min-w-0">
+                    <h1 class="font-bold text-base sm:text-lg leading-tight flex items-center gap-1.5 truncate">
+                        <span class="truncate">FamilyBudget</span>
+                        <span class="text-[10px] px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-full font-semibold shrink-0">Shared</span>
                     </h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Household Budget, Rollover & Project Costs</p>
+                    <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate hidden xs:block sm:block">Budget, Rollover & Project Costs</p>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 shrink-0">
                 <!-- Light / Dark Theme Toggle -->
-                <button type="button" id="theme-toggle" aria-label="Toggle theme" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                <button type="button" id="theme-toggle" aria-label="Toggle theme" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
 
                 <!-- Auth Badge / User Info -->
-                <div id="auth-nav-section" class="flex items-center space-x-2"></div>
+                <div id="auth-nav-section" class="flex items-center"></div>
             </div>
         </div>
     </header>
 
     <!-- Main Application Shell -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
         <!-- Authentication Screen (Shown when unauthenticated) -->
         <section id="login-view" class="max-w-md mx-auto mt-10 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 hidden">
@@ -87,157 +87,157 @@
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Real-time household budget, surplus rollover, and project cost tracking.</p>
             </div>
 
-            <div class="space-y-4">
-                <button type="button" id="google-login-btn" class="w-full py-3 px-4 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 transition flex items-center justify-center space-x-3 shadow-sm">
-                    <i class="fa-brands fa-google text-red-500 text-lg"></i>
-                    <span>Continue with Google</span>
-                </button>
-
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
-                    <span class="flex-shrink mx-4 text-xs text-slate-400 uppercase">Or Email & Password</span>
-                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+            <form id="email-auth-form" class="space-y-4">
+                <div>
+                    <label for="auth-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
+                    <input type="email" id="auth-email" required autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
-
-                <form id="email-auth-form" class="space-y-4">
-                    <div>
-                        <label for="auth-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
-                        <input type="email" id="auth-email" required autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
-                    </div>
-                    <div>
-                        <label for="auth-password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Password</label>
-                        <input type="password" id="auth-password" required autocomplete="current-password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
-                    </div>
-                    <div class="flex gap-3 pt-2">
-                        <button type="submit" id="email-signin-btn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
-                        <button type="button" id="email-signup-btn" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition text-sm">Register</button>
-                    </div>
-                </form>
-            </div>
+                <div>
+                    <label for="auth-password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Password</label>
+                    <input type="password" id="auth-password" required autocomplete="current-password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" id="email-signin-btn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
+                    <button type="button" id="email-signup-btn" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition text-sm">Register</button>
+                </div>
+            </form>
         </section>
 
         <!-- Main Authenticated Workspace -->
-        <div id="app-dashboard" class="space-y-6 hidden">
+        <div id="app-dashboard" class="space-y-4 sm:space-y-6 hidden">
 
-            <!-- Month Selector, Primary Tabs & Settings Controls -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div class="flex items-center space-x-3">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        <i class="fa-regular fa-calendar-days mr-1.5"></i> Active Month:
-                    </span>
-                    <input type="month" id="month-selector" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-semibold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                    <button type="button" onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>Dashboard</span>
-                    </button>
-                    <button type="button" onclick="switchMainTab('analytics')" id="tab-btn-analytics" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>Analytics & Annual</span>
-                    </button>
-                    <button type="button" onclick="switchMainTab('projects')" id="tab-btn-projects" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
-                        <i class="fa-solid fa-hammer"></i>
-                        <span>Projects</span>
-                    </button>
-                    <button type="button" onclick="switchMainTab('savings')" id="tab-btn-savings" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
-                        <i class="fa-solid fa-bullseye"></i>
-                        <span>Savings Goals</span>
-                    </button>
+            <!-- Compact Active Month Switcher & Single-Row Scrollable Tab Bar -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <button type="button" onclick="stepMonth(-1)" aria-label="Previous month" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <div class="relative flex items-center bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl px-3 min-h-[44px]">
+                            <i class="fa-regular fa-calendar-days text-xs text-slate-400 mr-2"></i>
+                            <input type="month" id="month-selector" aria-label="Active Month" class="bg-transparent font-semibold text-slate-800 dark:text-slate-100 focus:outline-none text-sm">
+                        </div>
+                        <button type="button" onclick="stepMonth(1)" aria-label="Next month" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                        <button type="button" onclick="jumpToCurrentMonth()" class="min-h-[44px] px-3 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 text-xs font-semibold transition">
+                            Today
+                        </button>
+                    </div>
 
                     <!-- Secondary Budget & Workspace Tools Menu -->
-                    <div class="relative" id="settings-menu-wrapper">
-                        <button type="button" onclick="toggleSettingsMenu(event)" aria-label="Budget settings" class="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm">
+                    <div class="relative shrink-0" id="settings-menu-wrapper">
+                        <button type="button" onclick="toggleSettingsMenu(event)" aria-label="Budget settings" class="min-w-[44px] min-h-[44px] px-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-gear"></i>
+                            <span class="hidden sm:inline text-xs font-semibold">Setup</span>
                         </button>
-                        <div id="settings-dropdown" class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
-                            <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                        <div id="settings-dropdown" class="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
+                            <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-money-bill-trend-up text-emerald-500 w-4"></i>
                                 <span>Income & Future Raises</span>
                             </button>
-                            <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                            <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-file-invoice-dollar text-blue-500 w-4"></i>
-                                <span>Preset Fixed Bills</span>
+                                <span>Fixed Expenses</span>
                             </button>
-                            <button type="button" onclick="closeSettingsMenu(); openCategoryBudgetModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                            <button type="button" onclick="closeSettingsMenu(); openCategoryBudgetModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-sliders text-amber-500 w-4"></i>
-                                <span>Category Spending Limits</span>
+                                <span>Budget</span>
                             </button>
                             <div class="border-t border-slate-200 dark:border-slate-700 my-1"></div>
-                            <button type="button" onclick="closeSettingsMenu(); exportDataJSON();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                            <button type="button" onclick="closeSettingsMenu(); exportDataJSON();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-download text-slate-400 w-4"></i>
                                 <span>Export JSON Backup</span>
                             </button>
-                            <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                            <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-file-csv text-slate-400 w-4"></i>
                                 <span>Export CSV Log</span>
                             </button>
-                            <button type="button" onclick="closeSettingsMenu(); openHouseholdModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                            <button type="button" onclick="closeSettingsMenu(); openHouseholdModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
                                 <i class="fa-solid fa-users text-indigo-500 w-4"></i>
                                 <span>Shared Account & Sign Out</span>
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Single-Row Scrollable Tab Strip -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-0.5 hide-scrollbar">
+                    <button type="button" onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="min-h-[44px] px-4 bg-brand-500 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button type="button" onclick="switchMainTab('analytics')" id="tab-btn-analytics" class="min-h-[44px] px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-xs sm:text-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Analytics & Annual</span>
+                    </button>
+                    <button type="button" onclick="switchMainTab('projects')" id="tab-btn-projects" class="min-h-[44px] px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-xs sm:text-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0">
+                        <i class="fa-solid fa-hammer"></i>
+                        <span>Projects</span>
+                    </button>
+                    <button type="button" onclick="switchMainTab('savings')" id="tab-btn-savings" class="min-h-[44px] px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-xs sm:text-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <span>Savings Goals</span>
+                    </button>
+                </div>
             </div>
 
             <!-- ==================== TAB 1: DASHBOARD ==================== -->
-            <section id="tab-content-dashboard" class="space-y-6">
+            <section id="tab-content-dashboard" class="space-y-4 sm:space-y-6">
 
-                <!-- 5-Card Financial Overview: Income, Fixed, Variable, Monthly Surplus, Rollover Surplus -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fixed Income</p>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-income">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Active rate for month</p>
+                <!-- Compact 2x2 Mobile / 5-Card Desktop Financial Overview -->
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Income</p>
+                            <h3 class="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="kpi-income">$0.00</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Monthly rate</p>
                         </div>
-                        <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-arrow-trend-up"></i>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fixed Bills</p>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-fixed-expenses">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Preset recurring costs</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Fixed Expenses</p>
+                            <h3 class="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="kpi-fixed-expenses">$0.00</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Recurring bills</p>
                         </div>
-                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-file-invoice"></i>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Variable Spent</p>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-variable-spent">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Groceries, gas, dining</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Variable Spent</p>
+                            <h3 class="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="kpi-variable-spent">$0.00</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Groceries, gas, dining</p>
                         </div>
-                        <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Monthly Surplus</p>
-                            <h3 class="text-2xl font-bold text-brand-600 dark:text-brand-400" id="kpi-net-cash">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1" id="kpi-net-sub">Current month savings</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Monthly Surplus</p>
+                            <h3 class="text-lg sm:text-2xl font-bold text-brand-600 dark:text-brand-400 truncate" id="kpi-net-cash">$0.00</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate" id="kpi-net-sub">Current month savings</p>
                         </div>
-                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-piggy-bank"></i>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Rollover Surplus</p>
-                            <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400" id="kpi-accumulated-savings">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Cumulative saved surplus</p>
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2 col-span-2 lg:col-span-1">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Rollover Surplus</p>
+                            <h3 class="text-lg sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 truncate" id="kpi-accumulated-savings">$0.00</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Cumulative saved surplus</p>
                         </div>
-                        <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-coins"></i>
                         </div>
                     </div>
@@ -295,28 +295,28 @@
                     </form>
                 </div>
 
-                <!-- Main Dashboard Grid: Category Limits & Fixed Bills + Recent Variable Transactions -->
+                <!-- Main Dashboard Grid: Category Budget & Fixed Expenses + Recent Variable Transactions -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 space-y-6">
-                        <!-- Category Threshold Progress (Amber at 80%, Red at 100%) -->
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <!-- Category Budget Threshold Progress (Amber at 80%, Red at 100%) -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex items-center justify-between mb-5">
                                 <div>
-                                    <h3 class="font-bold text-lg">Variable Category Thresholds</h3>
+                                    <h3 class="font-bold text-lg">Budget Thresholds</h3>
                                     <p class="text-xs text-slate-500 dark:text-slate-400">Alerts trigger at 80% (amber) and 100%+ (red)</p>
                                 </div>
-                                <button type="button" onclick="openCategoryBudgetModal()" class="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
-                                    <i class="fa-solid fa-sliders mr-1"></i>Edit Limits
+                                <button type="button" onclick="openCategoryBudgetModal()" class="min-h-[44px] px-3 text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline flex items-center">
+                                    <i class="fa-solid fa-sliders mr-1"></i>Edit Budget
                                 </button>
                             </div>
                             <div class="space-y-4" id="category-progress-list"></div>
                         </div>
 
-                        <!-- Preset Fixed Expenses Table -->
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <!-- Fixed Expenses Table -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <h3 class="font-bold text-lg">Preset Fixed Expenses</h3>
+                                    <h3 class="font-bold text-lg">Fixed Expenses</h3>
                                     <p class="text-xs text-slate-500 dark:text-slate-400">Recurring monthly commitments</p>
                                 </div>
                                 <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 bills</span>
@@ -356,15 +356,15 @@
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                     <div>
                         <h3 class="font-bold text-xl">Month-to-Month Comparison</h3>
-                        <p class="text-xs text-slate-500">Compare fixed income, fixed bills, variable spending, and net surplus across months.</p>
+                        <p class="text-xs text-slate-500">Compare income, fixed expenses, variable spending, and net surplus across months.</p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead class="border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-400 font-semibold bg-slate-50 dark:bg-slate-700/30">
                                 <tr>
                                     <th class="py-3 px-3">Month</th>
-                                    <th class="py-3 px-3 text-right">Fixed Income</th>
-                                    <th class="py-3 px-3 text-right">Fixed Bills</th>
+                                    <th class="py-3 px-3 text-right">Income</th>
+                                    <th class="py-3 px-3 text-right">Fixed Expenses</th>
                                     <th class="py-3 px-3 text-right">Variable Spent</th>
                                     <th class="py-3 px-3 text-right">Net Surplus</th>
                                     <th class="py-3 px-3 text-center">Savings Rate</th>
@@ -379,11 +379,11 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <h3 class="font-bold text-xl">Annual Summary</h3>
-                            <p class="text-xs text-slate-500">Yearly totals across income, preset bills, variable expenses, and surplus.</p>
+                            <p class="text-xs text-slate-500">Yearly totals across income, fixed expenses, variable spending, and surplus.</p>
                         </div>
                         <div>
                             <label for="annual-year-select" class="sr-only">Select Year</label>
-                            <select id="annual-year-select" onchange="renderAnalytics()" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl font-semibold text-sm border border-slate-300 dark:border-slate-600">
+                            <select id="annual-year-select" onchange="renderAnalytics()" class="min-h-[44px] px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl font-semibold text-sm border border-slate-300 dark:border-slate-600">
                                 <option value="2027">2027</option>
                                 <option value="2026" selected>2026</option>
                                 <option value="2025">2025</option>
@@ -397,7 +397,7 @@
                             <h4 class="text-xl font-bold text-slate-900 dark:text-white" id="annual-total-income">$0.00</h4>
                         </div>
                         <div class="bg-slate-50 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                            <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Annual Fixed Bills</span>
+                            <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Annual Fixed Expenses</span>
                             <h4 class="text-xl font-bold text-slate-900 dark:text-white" id="annual-total-fixed">$0.00</h4>
                         </div>
                         <div class="bg-slate-50 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -458,39 +458,51 @@
     <div id="income-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="font-bold text-lg">Fixed Income & Date-Based Raises</h3>
-                <button type="button" onclick="closeModal('income-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Income & Future Raises</h3>
+                <button type="button" onclick="closeModal('income-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Each income entry takes effect on its start date. Past months keep historical rates; future dates apply upcoming raises automatically.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Submit a new effective-dated entry when a raise starts so prior months keep historical rates and future months update automatically.</p>
 
             <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="income-streams-list"></div>
 
             <form id="income-form" onsubmit="saveIncomeStream(event)" class="space-y-3 border-t border-slate-200 dark:border-slate-700 pt-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="inc-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Label / Source</label>
-                        <input type="text" id="inc-name" required placeholder="e.g. Base Pay / Annual Raise" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                        <label for="inc-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Label</label>
+                        <input type="text" id="inc-name" value="Income" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                     <div>
-                        <label for="inc-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Monthly Amount ($)</label>
-                        <input type="number" step="0.01" min="0" id="inc-amount" required placeholder="5500.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                        <label for="inc-cadence" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Pay Period</label>
+                        <select id="inc-cadence" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
+                            <option value="Monthly" selected>Monthly</option>
+                            <option value="Semi-Monthly">Semi-Monthly (2x/mo)</option>
+                            <option value="Bi-Weekly">Bi-Weekly (26/yr ÷ 12)</option>
+                            <option value="Weekly">Weekly (52/yr ÷ 12)</option>
+                            <option value="One-Time">One-Time (Selected Month)</option>
+                        </select>
                     </div>
                 </div>
-                <div>
-                    <label for="inc-start-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Effective Start Date</label>
-                    <input type="date" id="inc-start-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="inc-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Paycheck / Entry Amount ($)</label>
+                        <input type="number" step="0.01" min="0" id="inc-amount" required placeholder="2750.00" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label for="inc-start-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Effective Date</label>
+                        <input type="date" id="inc-start-date" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Save Income Schedule</button>
+                <button type="submit" class="w-full py-3 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Save Income Entry</button>
             </form>
         </div>
     </div>
 
-    <!-- 2. Preset Fixed Bills Modal -->
+    <!-- 2. Fixed Expenses Modal -->
     <div id="fixed-bills-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="font-bold text-lg">Preset Fixed Monthly Expenses</h3>
-                <button type="button" onclick="closeModal('fixed-bills-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Fixed Expenses</h3>
+                <button type="button" onclick="closeModal('fixed-bills-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses such as mortgage, insurance, utilities, or loans.</p>
 
@@ -499,34 +511,34 @@
             <form id="fixed-bill-form" onsubmit="saveFixedBill(event)" class="space-y-3 border-t border-slate-200 dark:border-slate-700 pt-4">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <div>
-                        <label for="fb-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Bill Name</label>
-                        <input type="text" id="fb-name" required placeholder="Mortgage" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                        <label for="fb-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Expense Name</label>
+                        <input type="text" id="fb-name" required placeholder="Mortgage" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                     <div>
                         <label for="fb-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
-                        <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="1650.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                        <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="1650.00" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                     </div>
                     <div>
                         <label for="fb-dueday" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Due Day (1-31)</label>
-                        <input type="number" min="1" max="31" id="fb-dueday" required placeholder="1" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                        <input type="number" min="1" max="31" id="fb-dueday" required placeholder="1" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Expense</button>
+                <button type="submit" class="w-full py-3 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Expense</button>
             </form>
         </div>
     </div>
 
-    <!-- 3. Category Spending Limits Modal -->
+    <!-- 3. Budget Modal -->
     <div id="category-budget-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="font-bold text-lg">Variable Category Limits</h3>
-                <button type="button" onclick="closeModal('category-budget-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Budget</h3>
+                <button type="button" onclick="closeModal('category-budget-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Set monthly caps for variable categories to power 80% and 100% threshold alerts.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Set monthly budget targets for variable categories to power 80% and 100% alerts.</p>
             <form id="category-budget-form" onsubmit="saveCategoryBudgets(event)" class="space-y-3">
                 <div id="category-limits-inputs" class="space-y-3"></div>
-                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md mt-4">Save Limits</button>
+                <button type="submit" class="w-full py-3 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md mt-4">Save Budget</button>
             </form>
         </div>
     </div>
@@ -701,8 +713,6 @@
             getAuth,
             signInAnonymously,
             signInWithCustomToken,
-            GoogleAuthProvider,
-            signInWithPopup,
             signInWithEmailAndPassword,
             createUserWithEmailAndPassword,
             onAuthStateChanged,
@@ -879,16 +889,6 @@
                     showToast(err.message, "error");
                 }
             });
-
-            document.getElementById('google-login-btn').addEventListener('click', async () => {
-                try {
-                    const provider = new GoogleAuthProvider();
-                    await signInWithPopup(auth, provider);
-                    showToast("Google sign-in successful.");
-                } catch (err) {
-                    showToast(err.message, "error");
-                }
-            });
         };
 
         function updateAuthNav(user) {
@@ -926,66 +926,115 @@
                     });
 
                     if (colName === 'categoryBudgets') {
-                        if (items.length > 0 && items[0].budgets) {
-                            state.categoryBudgets = items[0].budgets;
+                        const mainLimits = items.find((item) => item.id === 'main_limits');
+                        if (mainLimits && mainLimits.budgets) {
+                            state.categoryBudgets = mainLimits.budgets;
                         }
                     } else {
                         state[colName] = items;
                     }
+
                     renderAll();
-                }, (err) => {
-                    console.error(`Firestore listener error (${colName}):`, err);
+                }, (error) => {
+                    console.error(`Firestore sync error on ${colName}:`, error);
                 });
+
                 unsubscribeListeners.push(unsub);
             });
         }
 
         function clearFirestoreSync() {
-            unsubscribeListeners.forEach((unsub) => unsub());
+            unsubscribeListeners.forEach((unsub) => {
+                if (typeof unsub === 'function') unsub();
+            });
             unsubscribeListeners = [];
         }
 
-        // Primary Tab Navigation
+        // Main Tab Navigation
         window.switchMainTab = function(tabName) {
-            ['dashboard', 'analytics', 'projects', 'savings'].forEach((t) => {
-                document.getElementById(`tab-content-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className =
-                    "px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2";
+            const tabs = ['dashboard', 'analytics', 'projects', 'savings'];
+            tabs.forEach((t) => {
+                const contentEl = document.getElementById(`tab-content-${t}`);
+                const btnEl = document.getElementById(`tab-btn-${t}`);
+                if (!contentEl || !btnEl) return;
+
+                if (t === tabName) {
+                    contentEl.classList.remove('hidden');
+                    btnEl.className = "min-h-[44px] px-4 bg-brand-500 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0";
+                } else {
+                    contentEl.classList.add('hidden');
+                    btnEl.className = "min-h-[44px] px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-xs sm:text-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0";
+                }
             });
 
-            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-            activeBtn.className = tabName === 'projects'
-                ? "px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2"
-                : "px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
+            if (tabName === 'analytics') renderAnalytics();
+            if (tabName === 'projects') renderProjectsView();
+            if (tabName === 'savings') renderSavingsGoalsView();
+        };
 
+        // Month Switcher Helpers for Mobile & Desktop
+        window.stepMonth = function(deltaMonths) {
+            const [y, m] = state.currentMonth.split('-').map(Number);
+            const target = new Date(y, (m - 1) + deltaMonths, 1);
+            const nextVal = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+            state.currentMonth = nextVal;
+            document.getElementById('month-selector').value = nextVal;
             renderAll();
         };
 
-        // Financial Calculations: Date-Based Income, Fixed Bills, Variable Spent & Surplus Rollover
+        window.jumpToCurrentMonth = function() {
+            const nowMonth = new Date().toISOString().slice(0, 7);
+            state.currentMonth = nowMonth;
+            document.getElementById('month-selector').value = nowMonth;
+            renderAll();
+        };
+
+        // Convert an income stream into its monthly impact for a given YYYY-MM month
+        function getStreamMonthlyImpact(stream, monthStr) {
+            const amount = Number(stream.amount || 0);
+            const cadence = stream.cadence || 'Monthly';
+            if (cadence === 'One-Time') {
+                return (stream.startDate || '').startsWith(monthStr) ? amount : 0;
+            }
+            if (cadence === 'Semi-Monthly') return amount * 2;
+            if (cadence === 'Bi-Weekly') return (amount * 26) / 12;
+            if (cadence === 'Weekly') return (amount * 52) / 12;
+            return amount;
+        }
+
+        // Financial Calculations: Date-Based Income Raises, Fixed Expenses, Variable Spent & Surplus Rollover
         function getIncomeForMonth(monthStr) {
             const [year, month] = monthStr.split('-').map(Number);
             const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
 
-            // Group streams by name so a raise on an existing income source replaces its prior rate
-            // rather than stacking duplicate salaries.
-            const latestByName = new Map();
+            // One-time entries apply only in their own month while keeping recurring pay history intact
+            let total = 0;
+            const latestRecurringByName = new Map();
+
             state.incomeStreams.forEach((stream) => {
                 if (!stream.startDate) return;
                 const start = new Date(`${stream.startDate}T00:00:00`);
-                if (start <= endOfMonth) {
-                    const key = (stream.name || 'Income').trim().toLowerCase();
-                    const prev = latestByName.get(key);
-                    if (!prev || new Date(`${prev.startDate}T00:00:00`) <= start) {
-                        latestByName.set(key, stream);
-                    }
+                if (start > endOfMonth) return;
+
+                const cadence = stream.cadence || 'Monthly';
+                if (cadence === 'One-Time') {
+                    total += getStreamMonthlyImpact(stream, monthStr);
+                    return;
+                }
+
+                // A raise entry with the same label and a later effective date supersedes the prior rate
+                // from that date forward while preserving earlier months' historical pay rate.
+                const key = `${(stream.name || 'Income').trim().toLowerCase()}__${cadence}`;
+                const prev = latestRecurringByName.get(key);
+                if (!prev || new Date(`${prev.startDate}T00:00:00`) <= start) {
+                    latestRecurringByName.set(key, stream);
                 }
             });
 
-            let total = 0;
-            latestByName.forEach((stream) => {
-                total += Number(stream.amount || 0);
+            latestRecurringByName.forEach((stream) => {
+                total += getStreamMonthlyImpact(stream, monthStr);
             });
+
             return total;
         }
 
@@ -1573,13 +1622,14 @@
             );
         };
 
-        // Income, Fixed Bills & Category Limits CRUD
+        // Income, Fixed Expenses & Category Budget CRUD
         window.saveIncomeStream = async function(e) {
             e.preventDefault();
             if (!currentUser || !db) return;
 
             const streamData = {
-                name: document.getElementById('inc-name').value.trim(),
+                name: document.getElementById('inc-name').value.trim() || 'Income',
+                cadence: document.getElementById('inc-cadence').value,
                 amount: parseFloat(document.getElementById('inc-amount').value),
                 startDate: document.getElementById('inc-start-date').value
             };
@@ -1587,9 +1637,12 @@
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'incomeStreams'), streamData);
                 document.getElementById('income-form').reset();
+                document.getElementById('inc-name').value = 'Income';
+                document.getElementById('inc-cadence').value = 'Monthly';
                 document.getElementById('inc-start-date').value = new Date().toISOString().slice(0, 10);
                 renderIncomeModalList();
-                showToast("Income schedule saved.");
+                renderAll();
+                showToast("Income entry saved.");
             } catch (err) {
                 showToast("Failed to save income: " + err.message, "error");
             }
@@ -1752,6 +1805,7 @@
         // Modal Helpers
         window.openIncomeModal = function() {
             renderIncomeModalList();
+            document.getElementById('inc-name').value = 'Income';
             document.getElementById('inc-start-date').value = new Date().toISOString().slice(0, 10);
             document.getElementById('income-modal').classList.remove('hidden');
         };
@@ -1765,8 +1819,8 @@
             const container = document.getElementById('category-limits-inputs');
             container.innerHTML = Object.keys(state.categoryBudgets).map((cat) => `
                 <div>
-                    <label for="cat-limit-${escapeHtml(cat)}" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">${escapeHtml(cat)} Limit ($)</label>
-                    <input type="number" step="1" min="0" id="cat-limit-${escapeHtml(cat)}" value="${Number(state.categoryBudgets[cat] || 0)}" required class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    <label for="cat-limit-${escapeHtml(cat)}" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">${escapeHtml(cat)} Budget ($)</label>
+                    <input type="number" step="1" min="0" id="cat-limit-${escapeHtml(cat)}" value="${Number(state.categoryBudgets[cat] || 0)}" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
             `).join('');
             document.getElementById('category-budget-modal').classList.remove('hidden');
@@ -1794,20 +1848,27 @@
                 return;
             }
             const sorted = [...state.incomeStreams].sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
-            container.innerHTML = sorted.map((s) => `
-                <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                    <div>
-                        <h5 class="font-semibold text-sm">${escapeHtml(s.name)}</h5>
-                        <p class="text-xs text-slate-500">Effective: ${escapeHtml(s.startDate)}</p>
+            container.innerHTML = sorted.map((s) => {
+                const cadence = s.cadence || 'Monthly';
+                const monthlyImpact = getStreamMonthlyImpact(s, state.currentMonth);
+                return `
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h5 class="font-semibold text-sm">${escapeHtml(s.name || 'Income')}</h5>
+                                <span class="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded text-[11px] font-semibold">${escapeHtml(cadence)}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Effective: ${escapeHtml(s.startDate)} · Entry: ${formatCurrency(s.amount)}</p>
+                        </div>
+                        <div class="flex items-center space-x-3 shrink-0">
+                            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm">${formatCurrency(monthlyImpact)}/mo</span>
+                            <button type="button" onclick="deleteIncomeStream('${s.id}')" aria-label="Delete income entry" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-red-400 hover:text-red-600 text-sm">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold text-brand-600 dark:text-brand-400">${formatCurrency(s.amount)}/mo</span>
-                        <button type="button" onclick="deleteIncomeStream('${s.id}')" aria-label="Delete income entry" class="text-red-400 hover:text-red-600 text-sm">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function renderFixedBillsManageList() {

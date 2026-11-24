@@ -325,9 +325,14 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 class="font-bold text-lg">Fixed Expenses</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Recurring monthly commitments</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Tap edit on any bill to adjust this month or update recurring rate/due day</p>
                                 </div>
-                                <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 bills</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 bills</span>
+                                    <button type="button" onclick="openFixedBillsModal()" class="min-h-[44px] px-3 text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline flex items-center">
+                                        <i class="fa-solid fa-plus mr-1"></i>Manage
+                                    </button>
+                                </div>
                             </div>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left text-sm">
@@ -336,7 +341,8 @@
                                             <th class="py-3 px-2">Expense</th>
                                             <th class="py-3 px-2">Due Day</th>
                                             <th class="py-3 px-2 text-right">Amount</th>
-                                            <th class="py-3 px-2 text-center">Type</th>
+                                            <th class="py-3 px-2 text-center">Status</th>
+                                            <th class="py-3 px-2 text-right">Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody id="fixed-bills-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
@@ -462,11 +468,11 @@
 
     <!-- ==================== MODALS ==================== -->
 
-    <!-- 1. Income Modal -->
+    <!-- 1. Income & Future Raises Modal -->
     <div id="income-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="font-bold text-lg">Income </h3>
+                <h3 class="font-bold text-lg">Income</h3>
                 <button type="button" onclick="closeModal('income-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Submit a new effective-dated entry when a raise starts so prior months keep historical rates and future months update automatically.</p>
@@ -512,7 +518,7 @@
                 <h3 class="font-bold text-lg">Fixed Expenses</h3>
                 <button type="button" onclick="closeModal('fixed-bills-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses such as mortgage, insurance, utilities, or loans.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses or tap the pencil icon to edit due dates, permanent increases, or single-month amounts.</p>
 
             <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="fixed-bills-manage-list"></div>
 
@@ -532,6 +538,51 @@
                     </div>
                 </div>
                 <button type="submit" class="w-full py-3 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2B. Edit Fixed Expense Modal (Supports This Month Only vs. Going Forward + Due Date) -->
+    <div id="edit-fixed-bill-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-lg">Edit Fixed Expense</h3>
+                <button type="button" onclick="closeModal('edit-fixed-bill-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" id="efb-context-note">Adjust for the active month only or update the recurring rate moving forward.</p>
+
+            <form id="edit-fixed-bill-form" onsubmit="submitEditFixedBill(event)" class="space-y-4">
+                <input type="hidden" id="efb-id">
+                <div>
+                    <label for="efb-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Expense Name</label>
+                    <input type="text" id="efb-name" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="efb-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
+                        <input type="number" step="0.01" min="0" id="efb-amount" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label for="efb-dueday" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Due Day (1-31)</label>
+                        <input type="number" min="1" max="31" id="efb-dueday" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label for="efb-scope" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Apply Amount Change To</label>
+                    <select id="efb-scope" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
+                        <option value="month">This Month Only (e.g., Water/Sewer bill)</option>
+                        <option value="forward">This Month & Going Forward (e.g., Disney+ increase)</option>
+                    </select>
+                </div>
+                <div id="efb-reset-wrapper" class="hidden">
+                    <button type="button" onclick="resetFixedBillMonthOverride()" class="text-xs text-amber-600 dark:text-amber-400 font-semibold hover:underline">
+                        <i class="fa-solid fa-rotate-left mr-1"></i>Clear single-month override and revert to base rate
+                    </button>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('edit-fixed-bill-modal')" class="flex-1 py-2.5 min-h-[44px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Save Changes</button>
+                </div>
             </form>
         </div>
     </div>
@@ -1047,7 +1098,49 @@
         }
 
         function getFixedBillsTotal() {
-            return state.fixedBills.reduce((sum, bill) => sum + Number(bill.amount || 0), 0);
+            return getFixedBillsTotalForMonth(state.currentMonth);
+        }
+
+        // Resolves each fixed bill for a target YYYY-MM month using:
+        // 1) Single-month override (bill.monthlyOverrides[monthStr]) for fluctuating bills like Water/Sewer
+        // 2) Effective-dated rate history (bill.rateHistory) for permanent increases like Disney+
+        // 3) Base bill.amount fallback
+        function getFixedBillEffectiveDetails(bill, monthStr) {
+            const overrides = bill.monthlyOverrides || {};
+            if (Object.prototype.hasOwnProperty.call(overrides, monthStr)) {
+                return {
+                    amount: Number(overrides[monthStr] || 0),
+                    isMonthOverride: true
+                };
+            }
+
+            const history = Array.isArray(bill.rateHistory) ? bill.rateHistory : [];
+            if (history.length > 0) {
+                const eligible = history
+                    .filter((entry) => entry.effectiveMonth && entry.effectiveMonth <= monthStr)
+                    .sort((a, b) => a.effectiveMonth.localeCompare(b.effectiveMonth));
+                if (eligible.length > 0) {
+                    return {
+                        amount: Number(eligible[eligible.length - 1].amount || 0),
+                        isMonthOverride: false
+                    };
+                }
+                // If viewing a month earlier than the earliest recorded effectiveMonth, use the earliest historical rate
+                const earliest = [...history].sort((a, b) => a.effectiveMonth.localeCompare(b.effectiveMonth))[0];
+                return {
+                    amount: Number(earliest.amount || 0),
+                    isMonthOverride: false
+                };
+            }
+
+            return {
+                amount: Number(bill.amount || 0),
+                isMonthOverride: false
+            };
+        }
+
+        function getFixedBillsTotalForMonth(monthStr) {
+            return state.fixedBills.reduce((sum, bill) => sum + getFixedBillEffectiveDetails(bill, monthStr).amount, 0);
         }
 
         function getVariableSpentForMonth(monthStr) {
@@ -1075,7 +1168,7 @@
             sortedMonths.forEach((m) => {
                 if (m <= state.currentMonth) {
                     const inc = getIncomeForMonth(m);
-                    const fix = getFixedBillsTotal();
+                    const fix = getFixedBillsTotalForMonth(m);
                     const varSpent = getVariableSpentForMonth(m);
                     cumulativeSurplus += (inc - fix - varSpent);
                 }
@@ -1188,124 +1281,35 @@
             document.getElementById('fixed-bills-count').innerText = `${state.fixedBills.length} bills`;
 
             if (state.fixedBills.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400 text-sm">No preset fixed bills configured yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400 text-sm">No fixed expenses configured yet.</td></tr>`;
                 return;
             }
 
             const sortedBills = [...state.fixedBills].sort((a, b) => Number(a.dueDay || 1) - Number(b.dueDay || 1));
-            tbody.innerHTML = sortedBills.map((bill) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                    <td class="py-3 px-2 font-medium">${escapeHtml(bill.name)}</td>
-                    <td class="py-3 px-2 text-slate-500">Day ${escapeHtml(String(bill.dueDay))}</td>
-                    <td class="py-3 px-2 text-right font-semibold">${formatCurrency(bill.amount)}</td>
-                    <td class="py-3 px-2 text-center">
-                        <span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-semibold">Preset</span>
-                    </td>
-                </tr>
-            `).join('');
-        }
+            tbody.innerHTML = sortedBills.map((bill) => {
+                const details = getFixedBillEffectiveDetails(bill, state.currentMonth);
+                const badgeHtml = details.isMonthOverride
+                    ? `<span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">Month Adj.</span>`
+                    : `<span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-semibold">Preset</span>`;
 
-        function renderTransactionsList(month) {
-            const listEl = document.getElementById('transactions-list');
-            const filtered = state.transactions
-                .filter((tx) => tx.date && tx.date.startsWith(month))
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            document.getElementById('transaction-count').innerText = `${filtered.length} items`;
-
-            if (filtered.length === 0) {
-                listEl.innerHTML = `
-                    <div class="text-center py-12 text-slate-400">
-                        <i class="fa-solid fa-receipt text-3xl mb-2 opacity-50"></i>
-                        <p class="text-sm">No variable expenses logged for ${escapeHtml(month)}.</p>
-                    </div>
+                return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                        <td class="py-3 px-2 font-medium">${escapeHtml(bill.name)}</td>
+                        <td class="py-3 px-2 text-slate-500">Day ${escapeHtml(String(bill.dueDay))}</td>
+                        <td class="py-3 px-2 text-right font-semibold">${formatCurrency(details.amount)}</td>
+                        <td class="py-3 px-2 text-center">${badgeHtml}</td>
+                        <td class="py-3 px-2 text-right">
+                            <button type="button" onclick="openEditFixedBillModal('${bill.id}')" aria-label="Edit ${escapeHtml(bill.name)}" class="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg text-slate-500 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                    </tr>
                 `;
-                return;
-            }
-
-            listEl.innerHTML = filtered.map((tx) => `
-                <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center justify-between group">
-                    <div class="space-y-0.5">
-                        <div class="flex items-center space-x-2">
-                            <span class="px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-md text-xs font-semibold">${escapeHtml(tx.category)}</span>
-                            <span class="text-xs text-slate-400">${escapeHtml(tx.date)}</span>
-                        </div>
-                        <p class="font-medium text-sm text-slate-800 dark:text-slate-100 mt-1">${escapeHtml(tx.notes || 'Variable expense')}</p>
-                        <p class="text-xs text-slate-400">By: <span class="font-medium text-slate-600 dark:text-slate-300">${escapeHtml(tx.author || 'Household')}</span></p>
-                    </div>
-                    <div class="text-right flex items-center space-x-3">
-                        <span class="font-bold text-slate-900 dark:text-white text-base">${formatCurrency(tx.amount)}</span>
-                        <button type="button" onclick="confirmDeleteTransaction('${tx.id}')" aria-label="Delete expense" class="text-slate-400 hover:text-red-500 p-1 transition">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            }).join('');
         }
-
-        // Quick Category Pill Selection & Fast Variable Logging
-        window.selectQuickCategory = function(catName, btnEl) {
-            document.getElementById('ftx-category').value = catName;
-            document.querySelectorAll('.quick-pill').forEach((pill) => {
-                pill.classList.remove('bg-brand-500', 'text-white', 'border-brand-500');
-            });
-            if (btnEl) {
-                btnEl.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
-            }
-            document.getElementById('ftx-amount').focus();
-        };
-
-        window.saveFastTransaction = async function(e) {
-            e.preventDefault();
-            if (!currentUser || !db) return;
-
-            const author = currentUser.email ? currentUser.email.split('@')[0] : "Household";
-            const txData = {
-                date: document.getElementById('ftx-date').value,
-                category: document.getElementById('ftx-category').value,
-                amount: parseFloat(document.getElementById('ftx-amount').value),
-                notes: document.getElementById('ftx-notes').value.trim(),
-                author,
-                createdAt: new Date().toISOString()
-            };
-
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), txData);
-                document.getElementById('ftx-amount').value = '';
-                document.getElementById('ftx-notes').value = '';
-                showToast("Expense logged.");
-            } catch (err) {
-                showToast("Failed to save expense: " + err.message, "error");
-            }
-        };
-
-        window.confirmDeleteTransaction = function(id) {
-            openConfirmModal("Delete Expense", "Remove this variable expense from your shared budget?", async () => {
-                try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'transactions', id));
-                    showToast("Expense removed.");
-                } catch (err) {
-                    showToast("Failed to remove expense.", "error");
-                }
-            });
-        };
-
-        // Analytics: Month-to-Month Comparison & Annual Summary
-        function renderAnalytics() {
-            const tbody = document.getElementById('monthly-comparison-tbody');
-            const [selYear, selMonth] = state.currentMonth.split('-').map(Number);
-
-            const months = [];
-            for (let i = 5; i >= 0; i--) {
-                const d = new Date(selYear, selMonth - 1 - i, 1);
-                const y = d.getFullYear();
-                const m = String(d.getMonth() + 1).padStart(2, '0');
-                months.push(`${y}-${m}`);
-            }
-
             tbody.innerHTML = months.map((m) => {
                 const inc = getIncomeForMonth(m);
-                const fix = getFixedBillsTotal();
+                const fix = getFixedBillsTotalForMonth(m);
                 const varSpent = getVariableSpentForMonth(m);
                 const surplus = inc - fix - varSpent;
                 const rate = inc > 0 ? Math.round((surplus / inc) * 100) : 0;
@@ -1332,153 +1336,8 @@
             for (let m = 1; m <= 12; m++) {
                 const mStr = `${year}-${String(m).padStart(2, '0')}`;
                 annualInc += getIncomeForMonth(mStr);
-                annualFixed += getFixedBillsTotal();
+                annualFixed += getFixedBillsTotalForMonth(mStr);
                 annualVar += getVariableSpentForMonth(mStr);
-            }
-
-            const annualSurplus = annualInc - annualFixed - annualVar;
-            document.getElementById('annual-total-income').innerText = formatCurrency(annualInc);
-            document.getElementById('annual-total-fixed').innerText = formatCurrency(annualFixed);
-            document.getElementById('annual-total-variable').innerText = formatCurrency(annualVar);
-            const annualSavingsEl = document.getElementById('annual-total-savings');
-            annualSavingsEl.innerText = formatCurrency(annualSurplus);
-            annualSavingsEl.className = annualSurplus < 0
-                ? "text-xl font-bold text-red-500"
-                : "text-xl font-bold text-brand-600 dark:text-brand-400";
-        }
-
-        // Project Cost Tracker (Budget / Equity Loan, Contractor vs. DIY, Remaining Balance)
-        function renderProjectsView() {
-            const container = document.getElementById('projects-container');
-            if (!state.projects || state.projects.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-slate-400">
-                        <i class="fa-solid fa-helmet-safety text-4xl mb-3 opacity-40"></i>
-                        <p class="text-sm font-medium">No active projects yet. Create one or convert a savings goal.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = state.projects.map((proj) => {
-                const totalBudget = Number(proj.totalBudget || 0);
-                const expenses = state.projectExpenses.filter((pe) => pe.projectId === proj.id);
-                const spent = expenses.reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
-                const contractorSpent = expenses
-                    .filter((pe) => pe.workType === 'Contractor')
-                    .reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
-                const diySpent = expenses
-                    .filter((pe) => pe.workType === 'DIY')
-                    .reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
-                const remaining = totalBudget - spent;
-                const rawPct = totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
-                const barWidth = Math.min(Math.max(rawPct, 0), 100);
-
-                let barColor = 'bg-indigo-600';
-                if (rawPct >= 100 && totalBudget > 0) barColor = 'bg-red-500';
-                else if (rawPct >= 80 && totalBudget > 0) barColor = 'bg-amber-500';
-
-                const catTotals = {};
-                (proj.categories || []).forEach((c) => { catTotals[c] = 0; });
-                expenses.forEach((pe) => {
-                    catTotals[pe.category] = (catTotals[pe.category] || 0) + Number(pe.amount || 0);
-                });
-
-                return `
-                    <div class="bg-slate-50 dark:bg-slate-700/30 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-5">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div>
-                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(proj.name)}</h4>
-                                <p class="text-xs text-slate-500">Budget / Equity Loan: <strong class="text-slate-800 dark:text-slate-200">${formatCurrency(totalBudget)}</strong></p>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <button type="button" onclick="openProjectExpenseModal('${proj.id}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center space-x-1.5">
-                                    <i class="fa-solid fa-plus"></i>
-                                    <span>Log Project Cost</span>
-                                </button>
-                                <button type="button" onclick="confirmDeleteProject('${proj.id}')" aria-label="Delete project" class="p-2 text-slate-400 hover:text-red-500 transition">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
-                            <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Remaining</span>
-                                <span class="font-bold text-base ${remaining < 0 ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}">${formatCurrency(remaining)}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Total Spent (${rawPct}%)</span>
-                                <span class="font-bold text-base text-slate-900 dark:text-white">${formatCurrency(spent)}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Contractor</span>
-                                <span class="font-bold text-base text-indigo-600 dark:text-indigo-400">${formatCurrency(contractorSpent)}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">DIY</span>
-                                <span class="font-bold text-base text-brand-600 dark:text-brand-400">${formatCurrency(diySpent)}</span>
-                            </div>
-                        </div>
-
-                        <div class="w-full bg-slate-200 dark:bg-slate-600 h-3 rounded-full overflow-hidden">
-                            <div class="${barColor} h-3 rounded-full transition-all duration-500" style="width: ${barWidth}%"></div>
-                        </div>
-
-                        <div>
-                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Category Totals</span>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                                ${(proj.categories || []).map((cat) => `
-                                    <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs">
-                                        <span class="font-medium text-slate-700 dark:text-slate-200">${escapeHtml(cat)}</span>
-                                        <span class="font-bold text-slate-900 dark:text-white">${formatCurrency(catTotals[cat] || 0)}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div>
-                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Project Cost Log</span>
-                            <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                                ${expenses.length === 0
-                                    ? `<p class="text-xs text-slate-400 italic">No costs logged for this project yet.</p>`
-                                    : expenses.map((pe) => `
-                                        <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-                                            <div>
-                                                <div class="flex items-center space-x-2">
-                                                    <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded font-semibold">${escapeHtml(pe.category)}</span>
-                                                    <span class="px-2 py-0.5 ${pe.workType === 'DIY' ? 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'} rounded font-semibold">${escapeHtml(pe.workType || 'Contractor')}</span>
-                                                    <span class="text-slate-400">${escapeHtml(pe.date)}</span>
-                                                </div>
-                                                <p class="font-medium text-slate-800 dark:text-slate-200 mt-1">${escapeHtml(pe.vendor)}</p>
-                                            </div>
-                                            <div class="flex items-center space-x-3">
-                                                <span class="font-bold text-slate-900 dark:text-white">${formatCurrency(pe.amount)}</span>
-                                                <button type="button" onclick="confirmDeleteProjectExpense('${pe.id}')" aria-label="Delete project cost" class="text-slate-400 hover:text-red-500">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    `).join('')
-                                }
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Savings Goals & Conversion to Active Project Cost Tracker
-        function renderSavingsGoalsView() {
-            const container = document.getElementById('savings-goals-container');
-            if (!state.savingsGoals || state.savingsGoals.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-2 text-center py-12 text-slate-400">
-                        <i class="fa-solid fa-bullseye text-4xl mb-3 opacity-40"></i>
-                        <p class="text-sm font-medium">No savings goals yet. Create one for a trip, gift, or purchase.</p>
-                    </div>
-                `;
-                return;
             }
 
             container.innerHTML = state.savingsGoals.map((sg) => {
@@ -1671,19 +1530,121 @@
             e.preventDefault();
             if (!currentUser || !db) return;
 
+            const amt = parseFloat(document.getElementById('fb-amount').value);
             const billData = {
                 name: document.getElementById('fb-name').value.trim(),
-                amount: parseFloat(document.getElementById('fb-amount').value),
-                dueDay: parseInt(document.getElementById('fb-dueday').value, 10)
+                amount: amt,
+                dueDay: parseInt(document.getElementById('fb-dueday').value, 10),
+                rateHistory: [
+                    { effectiveMonth: state.currentMonth, amount: amt }
+                ],
+                monthlyOverrides: {}
             };
 
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fixedBills'), billData);
                 document.getElementById('fixed-bill-form').reset();
                 renderFixedBillsManageList();
-                showToast("Preset fixed bill added.");
+                showToast("Fixed expense added.");
             } catch (err) {
-                showToast("Failed to add fixed bill: " + err.message, "error");
+                showToast("Failed to add fixed expense: " + err.message, "error");
+            }
+        };
+
+        window.openEditFixedBillModal = function(billId) {
+            const bill = state.fixedBills.find((b) => b.id === billId);
+            if (!bill) return;
+
+            const details = getFixedBillEffectiveDetails(bill, state.currentMonth);
+            document.getElementById('efb-id').value = bill.id;
+            document.getElementById('efb-name').value = bill.name || '';
+            document.getElementById('efb-amount').value = details.amount;
+            document.getElementById('efb-dueday').value = bill.dueDay || 1;
+            document.getElementById('efb-scope').value = details.isMonthOverride ? 'month' : 'forward';
+            document.getElementById('efb-context-note').innerText = `Editing for ${state.currentMonth} (or update recurring amount & due day going forward).`;
+
+            const resetWrap = document.getElementById('efb-reset-wrapper');
+            if (details.isMonthOverride) {
+                resetWrap.classList.remove('hidden');
+            } else {
+                resetWrap.classList.add('hidden');
+            }
+
+            document.getElementById('edit-fixed-bill-modal').classList.remove('hidden');
+        };
+
+        window.submitEditFixedBill = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const billId = document.getElementById('efb-id').value;
+            const bill = state.fixedBills.find((b) => b.id === billId);
+            if (!bill) return;
+
+            const newName = document.getElementById('efb-name').value.trim();
+            const newAmount = parseFloat(document.getElementById('efb-amount').value);
+            const newDueDay = parseInt(document.getElementById('efb-dueday').value, 10);
+            const scope = document.getElementById('efb-scope').value;
+
+            const overrides = { ...(bill.monthlyOverrides || {}) };
+            let history = Array.isArray(bill.rateHistory) ? [...bill.rateHistory] : [];
+
+            // Seed initial historical baseline if legacy bill had no rateHistory yet
+            if (history.length === 0) {
+                history.push({ effectiveMonth: '2000-01', amount: Number(bill.amount || 0) });
+            }
+
+            if (scope === 'month') {
+                // Single-month override (e.g. Water/Sewer fluctuation) without changing other months
+                overrides[state.currentMonth] = newAmount;
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', billId), {
+                    name: newName,
+                    dueDay: newDueDay,
+                    monthlyOverrides: overrides
+                });
+            } else {
+                // Permanent price update effective from active month forward (e.g. Disney+ price increase)
+                delete overrides[state.currentMonth];
+                const existingIdx = history.findIndex((h) => h.effectiveMonth === state.currentMonth);
+                if (existingIdx >= 0) {
+                    history[existingIdx] = { effectiveMonth: state.currentMonth, amount: newAmount };
+                } else {
+                    history.push({ effectiveMonth: state.currentMonth, amount: newAmount });
+                }
+                history.sort((a, b) => a.effectiveMonth.localeCompare(b.effectiveMonth));
+
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', billId), {
+                    name: newName,
+                    amount: newAmount,
+                    dueDay: newDueDay,
+                    rateHistory: history,
+                    monthlyOverrides: overrides
+                });
+            }
+
+            closeModal('edit-fixed-bill-modal');
+            renderFixedBillsManageList();
+            showToast("Fixed expense updated.");
+        };
+
+        window.resetFixedBillMonthOverride = async function() {
+            if (!currentUser || !db) return;
+            const billId = document.getElementById('efb-id').value;
+            const bill = state.fixedBills.find((b) => b.id === billId);
+            if (!bill) return;
+
+            const overrides = { ...(bill.monthlyOverrides || {}) };
+            delete overrides[state.currentMonth];
+
+            try {
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', billId), {
+                    monthlyOverrides: overrides
+                });
+                closeModal('edit-fixed-bill-modal');
+                renderFixedBillsManageList();
+                showToast(`Reverted ${bill.name} to base rate for ${state.currentMonth}.`);
+            } catch (err) {
+                showToast("Failed to revert override.", "error");
             }
         };
 
@@ -1882,9 +1843,34 @@
         function renderFixedBillsManageList() {
             const container = document.getElementById('fixed-bills-manage-list');
             if (state.fixedBills.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No preset fixed bills yet.</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No fixed expenses yet.</p>`;
                 return;
             }
+            const sorted = [...state.fixedBills].sort((a, b) => Number(a.dueDay || 1) - Number(b.dueDay || 1));
+            container.innerHTML = sorted.map((b) => {
+                const details = getFixedBillEffectiveDetails(b, state.currentMonth);
+                return `
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h5 class="font-semibold text-sm">${escapeHtml(b.name)}</h5>
+                                ${details.isMonthOverride ? `<span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded text-[10px] font-semibold">${escapeHtml(state.currentMonth)} only</span>` : ''}
+                            </div>
+                            <p class="text-xs text-slate-500">Due day ${escapeHtml(String(b.dueDay))}</p>
+                        </div>
+                        <div class="flex items-center space-x-1 shrink-0">
+                            <span class="font-bold mr-2">${formatCurrency(details.amount)}</span>
+                            <button type="button" onclick="openEditFixedBillModal('${b.id}')" aria-label="Edit fixed expense" class="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-500 hover:text-brand-600 text-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button type="button" onclick="deleteFixedBill('${b.id}')" aria-label="Delete fixed expense" class="min-w-[40px] min-h-[40px] flex items-center justify-center text-red-400 hover:text-red-600 text-sm">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
             container.innerHTML = state.fixedBills.map((b) => `
                 <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                     <div>

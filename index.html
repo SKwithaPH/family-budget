@@ -241,9 +241,9 @@
 
                     <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2 col-span-2 lg:col-span-1">
                         <div class="min-w-0">
-                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Rollover Surplus</p>
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate" id="kpi-rollover-label">YTD Rollover</p>
                             <h3 class="text-lg sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 truncate" id="kpi-accumulated-savings">$0.00</h3>
-                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Cumulative saved surplus</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate" id="kpi-rollover-sub">Calendar year surplus</p>
                         </div>
                         <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-base sm:text-xl">
                             <i class="fa-solid fa-coins"></i>
@@ -1124,7 +1124,10 @@
         }
 
         function getFixedBillsTotalForMonth(monthStr) {
-            return state.fixedBills.reduce((sum, bill) => sum + getFixedBillEffectiveDetails(bill, monthStr).amount, 0);
+            return state.fixedBills.reduce((sum, bill) => {
+                const details = getFixedBillEffectiveDetails(bill, monthStr);
+                return sum + details.amount;
+            }, 0);
         }
 
         function getVariableSpentForMonth(monthStr) {
@@ -1133,30 +1136,44 @@
                 .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
         }
 
-        // Calculated monthly rollover showing cumulative net surplus across active/historical months
+        // Calculated monthly rollover scoped strictly to the active calendar year (Jan through active month)
         function getAccumulatedSurplusRollover() {
-            const months = new Set([state.currentMonth]);
+            const [activeYear, activeMon] = state.currentMonth.split('-').map(Number);
+            const yearPrefix = `${activeYear}-`;
+
+            // Find earliest month with recorded data in the active calendar year so blank pre-setup months don't skew YTD
+            const yearMonths = [state.currentMonth];
             state.transactions.forEach((tx) => {
-                if (tx.date && tx.date.length >= 7) {
-                    months.add(tx.date.slice(0, 7));
+                if (tx.date && tx.date.startsWith(yearPrefix)) {
+                    yearMonths.push(tx.date.slice(0, 7));
                 }
             });
             state.incomeStreams.forEach((inc) => {
                 if (inc.startDate && inc.startDate.length >= 7) {
-                    months.add(inc.startDate.slice(0, 7));
+                    const incMonth = inc.startDate.slice(0, 7);
+                    if (incMonth <= `${activeYear}-01`) {
+                        yearMonths.push(`${activeYear}-01`);
+                    } else if (incMonth.startsWith(yearPrefix)) {
+                        yearMonths.push(incMonth);
+                    }
                 }
             });
 
-            const sortedMonths = Array.from(months).sort();
+            yearMonths.sort();
+            const startMonth = yearMonths[0];
+            if (!startMonth || startMonth > state.currentMonth) {
+                return 0;
+            }
+
+            const startMon = Number(startMonth.split('-')[1]);
             let cumulativeSurplus = 0;
-            sortedMonths.forEach((m) => {
-                if (m <= state.currentMonth) {
-                    const inc = getIncomeForMonth(m);
-                    const fix = getFixedBillsTotalForMonth(m);
-                    const varSpent = getVariableSpentForMonth(m);
-                    cumulativeSurplus += (inc - fix - varSpent);
-                }
-            });
+            for (let m = startMon; m <= activeMon; m++) {
+                const mStr = `${activeYear}-${String(m).padStart(2, '0')}`;
+                const inc = getIncomeForMonth(mStr);
+                const fix = getFixedBillsTotalForMonth(mStr);
+                const varSpent = getVariableSpentForMonth(mStr);
+                cumulativeSurplus += (inc - fix - varSpent);
+            }
             return cumulativeSurplus;
         }
 
@@ -1197,10 +1214,15 @@
             }
 
             const rolloverEl = document.getElementById('kpi-accumulated-savings');
+            const activeYearStr = month.split('-')[0];
+            const rolloverLabelEl = document.getElementById('kpi-rollover-label');
+            const rolloverSubEl = document.getElementById('kpi-rollover-sub');
+            if (rolloverLabelEl) rolloverLabelEl.innerText = `${activeYearStr} YTD Rollover`;
+            if (rolloverSubEl) rolloverSubEl.innerText = `Jan – ${month} surplus`;
             rolloverEl.innerText = formatCurrency(rolloverSurplus);
             rolloverEl.className = rolloverSurplus < 0
-                ? "text-2xl font-bold text-red-500"
-                : "text-2xl font-bold text-indigo-600 dark:text-indigo-400";
+                ? "text-lg sm:text-2xl font-bold text-red-500 truncate"
+                : "text-lg sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 truncate";
 
             renderCategoryProgress(month);
             renderFixedBillsTable();

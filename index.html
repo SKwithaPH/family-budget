@@ -105,9 +105,8 @@
                     <label for="auth-password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Password</label>
                     <input type="password" id="auth-password" required autocomplete="current-password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
-                <div class="flex gap-3 pt-2">
-                    <button type="submit" id="email-signin-btn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
-                
+                <div class="pt-2">
+                    <button type="submit" id="email-signin-btn" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
                 </div>
             </form>
         </section>
@@ -469,14 +468,14 @@
 
     <!-- ==================== MODALS ==================== -->
 
-    <!-- 1. Income & Future Raises Modal -->
+    <!-- 1. Income Modal -->
     <div id="income-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="font-bold text-lg">Income</h3>
                 <button type="button" onclick="closeModal('income-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Submit a new effective-dated entry when a raise starts so prior months keep historical rates and future months update automatically.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Submit a new effective-dated entry when pay changes so prior months keep historical rates and future months update automatically.</p>
 
             <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="income-streams-list"></div>
 
@@ -774,7 +773,6 @@
             signInAnonymously,
             signInWithCustomToken,
             signInWithEmailAndPassword,
-            createUserWithEmailAndPassword,
             onAuthStateChanged,
             signOut
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -930,21 +928,6 @@
                 try {
                     await signInWithEmailAndPassword(auth, email, password);
                     showToast("Signed in to shared budget.");
-                } catch (err) {
-                    showToast(err.message, "error");
-                }
-            });
-
-            document.getElementById('email-signup-btn').addEventListener('click', async () => {
-                const email = document.getElementById('auth-email').value.trim();
-                const password = document.getElementById('auth-password').value;
-                if (!email || !password) {
-                    showToast("Enter both email and password.", "error");
-                    return;
-                }
-                try {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    showToast("Account created and signed in.");
                 } catch (err) {
                     showToast(err.message, "error");
                 }
@@ -1308,6 +1291,114 @@
                 `;
             }).join('');
         }
+
+        function renderTransactionsList(month) {
+            const container = document.getElementById('transactions-list');
+            const monthTxs = state.transactions
+                .filter((tx) => tx.date && tx.date.startsWith(month))
+                .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+            document.getElementById('transaction-count').innerText = `${monthTxs.length} items`;
+
+            if (monthTxs.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No variable expenses logged for ${escapeHtml(month)} yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = monthTxs.map((tx) => `
+                <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded text-[11px] font-semibold">${escapeHtml(tx.category || 'Expense')}</span>
+                            <span class="text-xs text-slate-400">${escapeHtml(tx.date || '')}</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-800 dark:text-slate-100 mt-1 truncate">${escapeHtml(tx.notes || tx.category || 'Variable expense')}</p>
+                        <p class="text-[11px] text-slate-400">Logged by ${escapeHtml(tx.author || 'Member')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span class="font-bold text-slate-900 dark:text-white text-sm">${formatCurrency(tx.amount)}</span>
+                        <button type="button" onclick="confirmDeleteTransaction('${tx.id}')" aria-label="Delete expense" class="min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-400 hover:text-red-500 rounded-lg transition">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.selectQuickCategory = function(categoryName, btnEl) {
+            const selectEl = document.getElementById('ftx-category');
+            if (selectEl) selectEl.value = categoryName;
+
+            document.querySelectorAll('.quick-pill').forEach((pill) => {
+                pill.classList.remove('bg-brand-500', 'text-white', 'border-brand-500');
+                pill.classList.add('bg-slate-100', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-200');
+            });
+
+            if (btnEl) {
+                btnEl.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-200');
+                btnEl.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
+            }
+
+            const amtEl = document.getElementById('ftx-amount');
+            if (amtEl) amtEl.focus();
+        };
+
+        window.saveFastTransaction = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const txDate = document.getElementById('ftx-date').value;
+            const category = document.getElementById('ftx-category').value;
+            const amount = parseFloat(document.getElementById('ftx-amount').value);
+            const notes = document.getElementById('ftx-notes').value.trim();
+
+            if (!txDate || isNaN(amount) || amount <= 0) {
+                showToast("Enter a valid date and amount.", "error");
+                return;
+            }
+
+            const author = currentUser.email ? currentUser.email.split('@')[0] : 'Member';
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), {
+                    date: txDate,
+                    category,
+                    amount,
+                    notes,
+                    author,
+                    createdAt: new Date().toISOString()
+                });
+                document.getElementById('ftx-amount').value = '';
+                document.getElementById('ftx-notes').value = '';
+                showToast(`Added ${formatCurrency(amount)} to ${category}.`);
+            } catch (err) {
+                showToast("Failed to save expense: " + err.message, "error");
+            }
+        };
+
+        window.confirmDeleteTransaction = function(id) {
+            openConfirmModal("Delete Expense", "Remove this variable expense entry?", async () => {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'transactions', id));
+                    showToast("Expense deleted.");
+                } catch (err) {
+                    showToast("Failed to delete expense.", "error");
+                }
+            });
+        };
+
+        function renderAnalytics() {
+            const tbody = document.getElementById('monthly-comparison-tbody');
+            const monthSet = new Set([state.currentMonth]);
+
+            state.transactions.forEach((tx) => {
+                if (tx.date && tx.date.length >= 7) monthSet.add(tx.date.slice(0, 7));
+            });
+            state.incomeStreams.forEach((inc) => {
+                if (inc.startDate && inc.startDate.length >= 7) monthSet.add(inc.startDate.slice(0, 7));
+            });
+
+            const months = Array.from(monthSet).sort().reverse();
             tbody.innerHTML = months.map((m) => {
                 const inc = getIncomeForMonth(m);
                 const fix = getFixedBillsTotalForMonth(m);
@@ -1339,6 +1430,144 @@
                 annualInc += getIncomeForMonth(mStr);
                 annualFixed += getFixedBillsTotalForMonth(mStr);
                 annualVar += getVariableSpentForMonth(mStr);
+            }
+
+            const annualSurplus = annualInc - annualFixed - annualVar;
+            document.getElementById('annual-total-income').innerText = formatCurrency(annualInc);
+            document.getElementById('annual-total-fixed').innerText = formatCurrency(annualFixed);
+            document.getElementById('annual-total-variable').innerText = formatCurrency(annualVar);
+
+            const annualSurplusEl = document.getElementById('annual-total-savings');
+            annualSurplusEl.innerText = formatCurrency(annualSurplus);
+            annualSurplusEl.className = annualSurplus < 0
+                ? "text-xl font-bold text-red-500"
+                : "text-xl font-bold text-brand-600 dark:text-brand-400";
+        }
+
+        function renderProjectsView() {
+            const container = document.getElementById('projects-container');
+            if (state.projects.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No projects yet. Click "New Project" to track a build-out, renovation, or equity loan budget.</p>`;
+                return;
+            }
+
+            container.innerHTML = state.projects.map((proj) => {
+                const expenses = state.projectExpenses
+                    .filter((pe) => pe.projectId === proj.id)
+                    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+                const totalBudget = Number(proj.totalBudget || 0);
+                const totalSpent = expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                const remaining = totalBudget - totalSpent;
+                const pctUsed = totalBudget > 0 ? Math.min(Math.round((totalSpent / totalBudget) * 100), 100) : 0;
+
+                const contractorSpent = expenses
+                    .filter((item) => item.workType === 'Contractor')
+                    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                const diySpent = expenses
+                    .filter((item) => item.workType !== 'Contractor')
+                    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+                const categories = (proj.categories && proj.categories.length > 0) ? proj.categories : ['General'];
+                const categoryBreakdownHtml = categories.map((cat) => {
+                    const catSpent = expenses
+                        .filter((item) => item.category === cat)
+                        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                    return `
+                        <div class="bg-white dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+                            <span class="font-medium text-slate-600 dark:text-slate-300 truncate mr-2">${escapeHtml(cat)}</span>
+                            <span class="font-bold text-slate-900 dark:text-white shrink-0">${formatCurrency(catSpent)}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                const expensesRowsHtml = expenses.length === 0
+                    ? `<tr><td colspan="6" class="py-4 text-center text-xs text-slate-400">No project costs logged yet.</td></tr>`
+                    : expenses.map((pe) => `
+                        <tr class="hover:bg-slate-100/60 dark:hover:bg-slate-700/40">
+                            <td class="py-2.5 px-2 text-xs text-slate-500">${escapeHtml(pe.date || '')}</td>
+                            <td class="py-2.5 px-2 text-xs font-medium">${escapeHtml(pe.category || '')}</td>
+                            <td class="py-2.5 px-2 text-xs">
+                                <span class="px-2 py-0.5 rounded-full font-semibold ${pe.workType === 'Contractor' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'}">${escapeHtml(pe.workType || 'DIY')}</span>
+                            </td>
+                            <td class="py-2.5 px-2 text-xs">${escapeHtml(pe.vendor || '')}</td>
+                            <td class="py-2.5 px-2 text-xs text-right font-bold">${formatCurrency(pe.amount)}</td>
+                            <td class="py-2.5 px-2 text-right">
+                                <button type="button" onclick="confirmDeleteProjectExpense('${pe.id}')" aria-label="Delete project expense" class="text-slate-400 hover:text-red-500 p-1">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                return `
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(proj.name)}</h4>
+                                <p class="text-xs text-slate-500">Contractor: <strong>${formatCurrency(contractorSpent)}</strong> · DIY: <strong>${formatCurrency(diySpent)}</strong></p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="openProjectExpenseModal('${proj.id}')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Log Cost</span>
+                                </button>
+                                <button type="button" onclick="confirmDeleteProject('${proj.id}')" aria-label="Delete project" class="p-2 text-slate-400 hover:text-red-500 transition">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="block text-[11px] uppercase font-semibold text-slate-400">Budget / Loan</span>
+                                <span class="text-sm sm:text-base font-bold">${formatCurrency(totalBudget)}</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="block text-[11px] uppercase font-semibold text-slate-400">Spent</span>
+                                <span class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400">${formatCurrency(totalSpent)}</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <span class="block text-[11px] uppercase font-semibold text-slate-400">Remaining</span>
+                                <span class="text-sm sm:text-base font-bold ${remaining < 0 ? 'text-red-500' : 'text-brand-600 dark:text-brand-400'}">${formatCurrency(remaining)}</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-slate-200 dark:bg-slate-600 h-2.5 rounded-full overflow-hidden">
+                            <div class="${remaining < 0 ? 'bg-red-500' : 'bg-indigo-600'} h-2.5 rounded-full transition-all duration-500" style="width: ${pctUsed}%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                            ${categoryBreakdownHtml}
+                        </div>
+
+                        <div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-2">
+                            <table class="w-full text-left">
+                                <thead class="border-b border-slate-200 dark:border-slate-700 text-[11px] uppercase text-slate-400 font-semibold">
+                                    <tr>
+                                        <th class="py-2 px-2">Date</th>
+                                        <th class="py-2 px-2">Category</th>
+                                        <th class="py-2 px-2">Type</th>
+                                        <th class="py-2 px-2">Vendor / Note</th>
+                                        <th class="py-2 px-2 text-right">Amount</th>
+                                        <th class="py-2 px-2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                    ${expensesRowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSavingsGoalsView() {
+            const container = document.getElementById('savings-goals-container');
+            if (state.savingsGoals.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-8 col-span-full">No savings goals yet. Click "New Savings Goal" to start saving toward a target.</p>`;
+                return;
             }
 
             container.innerHTML = state.savingsGoals.map((sg) => {
@@ -1871,21 +2100,6 @@
                     </div>
                 `;
             }).join('');
-        }
-            container.innerHTML = state.fixedBills.map((b) => `
-                <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                    <div>
-                        <h5 class="font-semibold text-sm">${escapeHtml(b.name)}</h5>
-                        <p class="text-xs text-slate-500">Due day ${escapeHtml(String(b.dueDay))}</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold">${formatCurrency(b.amount)}</span>
-                        <button type="button" onclick="deleteFixedBill('${b.id}')" aria-label="Delete fixed bill" class="text-red-400 hover:text-red-600 text-sm">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
         }
 
         window.signOutUser = async function() {

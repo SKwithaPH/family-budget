@@ -2695,27 +2695,7 @@
         function formatCurrency(val) {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val || 0));
         }
-        
 
-        function isFixedBillActiveInMonth(bill, monthStr) {
-    if (!bill || !monthStr) return false;
-    const start = bill.startMonth || '';
-    const end = bill.endMonth || '';
-    if (start && monthStr < start) return false;
-    if (end && monthStr > end) return false;
-    return true;
-}
-
-function getActiveFixedBillsForMonth(fixedBills, monthStr) {
-    if (!Array.isArray(fixedBills)) return [];
-    return fixedBills.filter((bill) => isFixedBillActiveInMonth(bill, monthStr));
-}
-
-function getFixedBillsTotalForMonth(fixedBills, monthStr) {
-    return getActiveFixedBillsForMonth(fixedBills, monthStr)
-        .reduce((sum, bill) => sum + (Number(bill.amount) || 0), 0);
-}
-        
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)

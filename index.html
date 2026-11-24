@@ -253,52 +253,82 @@
 
                 <!-- Fast Variable Expense Logger -->
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <div class="flex items-center justify-between mb-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <h3 class="font-bold text-base flex items-center gap-2">
                             <i class="fa-solid fa-bolt text-amber-500"></i> Quick Variable Expense Entry
                         </h3>
-                        <span class="text-xs text-slate-400">Tap a category pill, enter amount, and save</span>
-                    </div>
-
-                    <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar mb-2" id="quick-category-pills">
-                        <button type="button" onclick="selectQuickCategory('Groceries', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Groceries</button>
-                        <button type="button" onclick="selectQuickCategory('Dining Out', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Dining Out</button>
-                        <button type="button" onclick="selectQuickCategory('Shopping', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Shopping</button>
-                        <button type="button" onclick="selectQuickCategory('Gas/Fuel', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Gas/Fuel</button>
-                        <button type="button" onclick="selectQuickCategory('Miscellaneous', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Miscellaneous</button>
-                    </div>
-
-                    <form id="fast-tx-form" onsubmit="saveFastTransaction(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-                        <div class="sm:col-span-2">
-                            <label for="ftx-date" class="sr-only">Date</label>
-                            <input type="date" id="ftx-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                        </div>
-                        <div class="sm:col-span-3">
-                            <label for="ftx-category" class="sr-only">Category</label>
-                            <select id="ftx-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
-                                <option value="Groceries">Groceries</option>
-                                <option value="Dining Out">Dining Out</option>
-                                <option value="Shopping">Shopping</option>
-                                <option value="Gas/Fuel">Gas/Fuel</option>
-                                <option value="Miscellaneous">Miscellaneous</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label for="ftx-amount" class="sr-only">Amount</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">$</span>
-                                <input type="number" step="0.01" min="0.01" id="ftx-amount" required placeholder="0.00" class="w-full pl-7 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
-                            </div>
-                        </div>
-                        <div class="sm:col-span-3">
-                            <label for="ftx-notes" class="sr-only">Store or Note</label>
-                            <input type="text" id="ftx-notes" placeholder="Store / item note..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-sm transition flex items-center justify-center space-x-2">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add Expense</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="toggleBatchEntryMode()" id="toggle-batch-btn" class="min-h-[36px] px-3 rounded-xl text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-table-list text-brand-500"></i>
+                                <span>Batch Entry (5 Rows)</span>
                             </button>
+                            <button type="button" onclick="openCsvImportModal()" class="min-h-[36px] px-3 rounded-xl text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-import text-indigo-500"></i>
+                                <span>Import CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Single-Row Entry Container -->
+                    <div id="single-tx-container">
+                        <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar mb-2" id="quick-category-pills">
+                            <button type="button" onclick="selectQuickCategory('Groceries', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Groceries</button>
+                            <button type="button" onclick="selectQuickCategory('Dining Out', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Dining Out</button>
+                            <button type="button" onclick="selectQuickCategory('Shopping', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Shopping</button>
+                            <button type="button" onclick="selectQuickCategory('Gas/Fuel', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Gas/Fuel</button>
+                            <button type="button" onclick="selectQuickCategory('Miscellaneous', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Miscellaneous</button>
+                        </div>
+
+                        <form id="fast-tx-form" onsubmit="saveFastTransaction(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                            <div class="sm:col-span-2">
+                                <label for="ftx-date" class="sr-only">Date</label>
+                                <input type="date" id="ftx-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label for="ftx-category" class="sr-only">Category</label>
+                                <select id="ftx-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
+                                    <option value="Groceries">Groceries</option>
+                                    <option value="Dining Out">Dining Out</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Gas/Fuel">Gas/Fuel</option>
+                                    <option value="Miscellaneous">Miscellaneous</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="ftx-amount" class="sr-only">Amount</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">$</span>
+                                    <input type="number" step="0.01" min="0.01" id="ftx-amount" required placeholder="0.00" class="w-full pl-7 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                                </div>
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label for="ftx-notes" class="sr-only">Store or Note</label>
+                                <input type="text" id="ftx-notes" placeholder="Store / item note..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-sm transition flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Add Expense</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Multi-Row Batch Entry Grid -->
+                    <form id="batch-tx-form" onsubmit="saveBatchTransactions(event)" class="hidden space-y-3 pt-1">
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Fill in as many rows as needed (blank amounts are skipped) and save all at once.</p>
+                        <div id="batch-rows-container" class="space-y-2.5"></div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                            <button type="button" onclick="addBatchRow()" class="min-h-[40px] px-3.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-xs font-semibold text-slate-700 dark:text-slate-200 transition">
+                                <i class="fa-solid fa-plus mr-1"></i>Add Another Row
+                            </button>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="toggleBatchEntryMode()" class="min-h-[40px] px-4 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300">Cancel</button>
+                                <button type="submit" class="min-h-[40px] px-5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-xs sm:text-sm transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-check-double"></i>
+                                    <span>Save All Rows</span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -755,6 +785,78 @@
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="closeModal('confirm-action-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
                 <button type="button" id="confirm-modal-submit" class="flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Client-Side CSV Statement Importer Modal -->
+    <div id="csv-import-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-4xl w-full p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[92vh] flex flex-col space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-file-import text-indigo-500"></i> Import Bank / Card CSV Statement
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Parsed locally in your browser — raw CSV files and account numbers are never uploaded.</p>
+                </div>
+                <button type="button" onclick="closeModal('csv-import-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- File Drop / Selector & Column Mapping -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-slate-50 dark:bg-slate-700/30 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 items-end">
+                <div class="sm:col-span-4">
+                    <label for="csv-file-input" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">1. Choose .CSV File</label>
+                    <input type="file" id="csv-file-input" accept=".csv,text/csv" onchange="handleCsvFileSelect(event)" class="w-full text-xs text-slate-600 dark:text-slate-300 file:mr-2.5 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="csv-col-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Date Col</label>
+                    <select id="csv-col-date" onchange="rebuildCsvPreviewRows()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium"></select>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="csv-col-desc" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Merchant Col</label>
+                    <select id="csv-col-desc" onchange="rebuildCsvPreviewRows()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium"></select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="csv-col-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount Col</label>
+                    <select id="csv-col-amount" onchange="rebuildCsvPreviewRows()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium"></select>
+                </div>
+                <div class="sm:col-span-1">
+                    <label for="csv-invert-signs" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" title="Check if bank exports charges as negative numbers">Charges -</label>
+                    <input type="checkbox" id="csv-invert-signs" checked onchange="rebuildCsvPreviewRows()" class="w-5 h-5 rounded accent-brand-500 cursor-pointer">
+                </div>
+            </div>
+
+            <!-- Preview Table -->
+            <div class="flex-grow overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                <table class="w-full text-left text-xs">
+                    <thead class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-300 font-semibold sticky top-0">
+                        <tr>
+                            <th class="py-2.5 px-3 w-10">
+                                <input type="checkbox" id="csv-select-all" checked onchange="toggleAllCsvRows(this.checked)" aria-label="Select all rows" class="w-4 h-4 rounded accent-brand-500">
+                            </th>
+                            <th class="py-2.5 px-2">Date</th>
+                            <th class="py-2.5 px-2">Category</th>
+                            <th class="py-2.5 px-2">Cleaned Merchant / Note</th>
+                            <th class="py-2.5 px-3 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="csv-preview-tbody" class="divide-y divide-slate-100 dark:divide-slate-700">
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-400">Select a bank or credit card .CSV file above to preview and categorize transactions.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <span id="csv-selected-summary" class="text-xs font-semibold text-slate-600 dark:text-slate-300">0 transactions selected ($0.00)</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeModal('csv-import-modal')" class="min-h-[44px] px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="button" onclick="importSelectedCsvRows()" id="csv-import-submit-btn" class="min-h-[44px] px-5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Import Selected</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1395,6 +1497,330 @@
                 showToast(`Added ${formatCurrency(amount)} to ${category}.`);
             } catch (err) {
                 showToast("Failed to save expense: " + err.message, "error");
+            }
+        };
+
+        // Multi-Row Batch Entry Mode
+        let isBatchMode = false;
+        window.toggleBatchEntryMode = function() {
+            isBatchMode = !isBatchMode;
+            const singleContainer = document.getElementById('single-tx-container');
+            const batchForm = document.getElementById('batch-tx-form');
+            const toggleBtn = document.getElementById('toggle-batch-btn');
+
+            if (isBatchMode) {
+                singleContainer.classList.add('hidden');
+                batchForm.classList.remove('hidden');
+                toggleBtn.innerHTML = `<i class="fa-solid fa-bolt text-amber-500"></i><span>Single Entry</span>`;
+                const rowsContainer = document.getElementById('batch-rows-container');
+                if (rowsContainer.children.length === 0) {
+                    for (let i = 0; i < 5; i++) window.addBatchRow();
+                }
+            } else {
+                singleContainer.classList.remove('hidden');
+                batchForm.classList.add('hidden');
+                toggleBtn.innerHTML = `<i class="fa-solid fa-table-list text-brand-500"></i><span>Batch Entry (5 Rows)</span>`;
+            }
+        };
+
+        window.addBatchRow = function() {
+            const container = document.getElementById('batch-rows-container');
+            const defaultDate = document.getElementById('ftx-date').value || new Date().toISOString().slice(0, 10);
+            const row = document.createElement('div');
+            row.className = "batch-entry-row grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-slate-50 dark:bg-slate-700/30 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700";
+            row.innerHTML = `
+                <div class="sm:col-span-3">
+                    <input type="date" value="${escapeHtml(defaultDate)}" class="batch-date w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs">
+                </div>
+                <div class="sm:col-span-3">
+                    <select class="batch-category w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium">
+                        <option value="Groceries">Groceries</option>
+                        <option value="Dining Out">Dining Out</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Gas/Fuel">Gas/Fuel</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 text-xs font-bold">$</span>
+                        <input type="number" step="0.01" min="0.01" placeholder="0.00" class="batch-amount w-full pl-6 pr-2 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold">
+                    </div>
+                </div>
+                <div class="sm:col-span-3">
+                    <input type="text" placeholder="Store / note..." class="batch-notes w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs">
+                </div>
+                <div class="sm:col-span-1 text-right">
+                    <button type="button" onclick="this.closest('.batch-entry-row').remove()" aria-label="Remove row" class="p-2 text-slate-400 hover:text-red-500 text-xs">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+        };
+
+        window.saveBatchTransactions = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const rows = Array.from(document.querySelectorAll('.batch-entry-row'));
+            const author = currentUser.email ? currentUser.email.split('@')[0] : 'Member';
+            const entries = [];
+
+            rows.forEach((row) => {
+                const date = row.querySelector('.batch-date').value;
+                const category = row.querySelector('.batch-category').value;
+                const amount = parseFloat(row.querySelector('.batch-amount').value);
+                const notes = row.querySelector('.batch-notes').value.trim();
+                if (date && !isNaN(amount) && amount > 0) {
+                    entries.push({ date, category, amount, notes, author, createdAt: new Date().toISOString() });
+                }
+            });
+
+            if (entries.length === 0) {
+                showToast("Enter at least one valid row amount.", "error");
+                return;
+            }
+
+            try {
+                await Promise.all(
+                    entries.map((entry) => addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), entry))
+                );
+                document.getElementById('batch-rows-container').innerHTML = '';
+                for (let i = 0; i < 5; i++) window.addBatchRow();
+                showToast(`Saved ${entries.length} variable expenses.`);
+            } catch (err) {
+                showToast("Batch save failed: " + err.message, "error");
+            }
+        };
+
+        // Client-Side CSV Statement Importer (100% local parsing + merchant privacy cleanup)
+        let parsedCsvMatrix = [];
+        let csvPreviewItems = [];
+
+        window.openCsvImportModal = function() {
+            parsedCsvMatrix = [];
+            csvPreviewItems = [];
+            document.getElementById('csv-file-input').value = '';
+            document.getElementById('csv-preview-tbody').innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Select a bank or credit card .CSV file above to preview and categorize transactions.</td></tr>`;
+            document.getElementById('csv-selected-summary').innerText = "0 transactions selected ($0.00)";
+            document.getElementById('csv-import-modal').classList.remove('hidden');
+        };
+
+        window.handleCsvFileSelect = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = String(e.target.result || '');
+                parsedCsvMatrix = parseRawCsvText(text);
+                if (parsedCsvMatrix.length < 2) {
+                    showToast("CSV file appears empty or unreadable.", "error");
+                    return;
+                }
+
+                const headers = parsedCsvMatrix[0];
+                populateCsvColumnSelects(headers);
+                window.rebuildCsvPreviewRows();
+            };
+            reader.readAsText(file);
+        };
+
+        function parseRawCsvText(text) {
+            const rows = [];
+            let row = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                const next = text[i + 1];
+                if (ch === '"') {
+                    if (inQuotes && next === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
+                    if (ch === '\r') i++;
+                    row.push(current.trim());
+                    if (row.some((cell) => cell !== '')) rows.push(row);
+                    row = [];
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            if (current !== '' || row.length > 0) {
+                row.push(current.trim());
+                if (row.some((cell) => cell !== '')) rows.push(row);
+            }
+            return rows;
+        }
+
+        function populateCsvColumnSelects(headers) {
+            const dateSel = document.getElementById('csv-col-date');
+            const descSel = document.getElementById('csv-col-desc');
+            const amtSel = document.getElementById('csv-col-amount');
+
+            const optionsHtml = headers.map((h, idx) => `<option value="${idx}">${escapeHtml(h || `Column ${idx + 1}`)}</option>`).join('');
+            dateSel.innerHTML = optionsHtml;
+            descSel.innerHTML = optionsHtml;
+            amtSel.innerHTML = optionsHtml;
+
+            const lower = headers.map((h) => h.toLowerCase());
+            const dateIdx = lower.findIndex((h) => h.includes('date'));
+            const descIdx = lower.findIndex((h) => h.includes('desc') || h.includes('merchant') || h.includes('payee') || h.includes('name') || h.includes('memo'));
+            const amtIdx = lower.findIndex((h) => h.includes('amount') || h.includes('debit') || h.includes('charge'));
+
+            dateSel.value = dateIdx >= 0 ? dateIdx : 0;
+            descSel.value = descIdx >= 0 ? descIdx : Math.min(1, headers.length - 1);
+            amtSel.value = amtIdx >= 0 ? amtIdx : Math.min(2, headers.length - 1);
+        }
+
+        function normalizeCsvDate(rawDate) {
+            if (!rawDate) return '';
+            const clean = rawDate.trim().split(' ')[0];
+            if (/^\d{4}-\d{2}-\d{2}$/.test(clean)) return clean;
+            const slashMatch = clean.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+            if (slashMatch) {
+                const mm = slashMatch[1].padStart(2, '0');
+                const dd = slashMatch[2].padStart(2, '0');
+                const yyyy = slashMatch[3].length === 2 ? `20${slashMatch[3]}` : slashMatch[3];
+                return `${yyyy}-${mm}-${dd}`;
+            }
+            return '';
+        }
+
+        // Strips card numbers, POS reference codes, and noisy bank prefixes before preview/storage
+        function cleanBankMerchantName(rawDesc) {
+            if (!rawDesc) return 'Card Purchase';
+            let cleaned = rawDesc
+                .replace(/^(POS DEBIT|DEBIT CARD PURCHASE|ACH DEBIT|PURCHASE AUTHORIZED ON \d{2}\/\d{2})\s*/i, '')
+                .replace(/#\d+/g, '')
+                .replace(/\b\d{4,}\b/g, '')
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+            return cleaned.slice(0, 48) || 'Card Purchase';
+        }
+
+        function guessExpenseCategory(merchantName) {
+            const m = merchantName.toLowerCase();
+            if (/wal-?mart|reasor|aldi|kroger|target|grocery|market|sprouts|harps|homeland/.test(m)) return 'Groceries';
+            if (/quiktrip|qt |casey|shell|exxon|chevron|phillips|valero|love's|fuel|gas|murphy/.test(m)) return 'Gas/Fuel';
+            if (/mcdonald|chick-fil-a|starbucks|sonic|braum|chipotle|taco|pizza|grill|cafe|coffee|restaurant|diner|sub|wendy|burger|chilis|applebee/.test(m)) return 'Dining Out';
+            if (/amazon|best buy|home depot|lowe's|tractor supply|academy|kohls|tj maxx|old navy|etsy/.test(m)) return 'Shopping';
+            return 'Miscellaneous';
+        }
+
+        window.rebuildCsvPreviewRows = function() {
+            if (parsedCsvMatrix.length < 2) return;
+            const dateIdx = parseInt(document.getElementById('csv-col-date').value, 10);
+            const descIdx = parseInt(document.getElementById('csv-col-desc').value, 10);
+            const amtIdx = parseInt(document.getElementById('csv-col-amount').value, 10);
+            const chargesNegative = document.getElementById('csv-invert-signs').checked;
+
+            csvPreviewItems = [];
+            for (let i = 1; i < parsedCsvMatrix.length; i++) {
+                const row = parsedCsvMatrix[i];
+                const isoDate = normalizeCsvDate(row[dateIdx]);
+                const rawAmt = parseFloat(String(row[amtIdx] || '').replace(/[$,]/g, ''));
+                if (!isoDate || isNaN(rawAmt) || rawAmt === 0) continue;
+
+                // Skip payments/credits when charges are negative (or vice versa)
+                const expenseAmt = chargesNegative ? (rawAmt < 0 ? Math.abs(rawAmt) : 0) : (rawAmt > 0 ? rawAmt : 0);
+                if (expenseAmt <= 0) continue;
+
+                const cleanedNote = cleanBankMerchantName(row[descIdx]);
+                const guessedCat = guessExpenseCategory(cleanedNote);
+                csvPreviewItems.push({
+                    checked: true,
+                    date: isoDate,
+                    category: guessedCat,
+                    notes: cleanedNote,
+                    amount: expenseAmt
+                });
+            }
+
+            renderCsvPreviewTable();
+        };
+
+        function renderCsvPreviewTable() {
+            const tbody = document.getElementById('csv-preview-tbody');
+            if (csvPreviewItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">No expense charges matched the selected columns (try toggling the "Charges -" checkbox).</td></tr>`;
+                updateCsvSelectedSummary();
+                return;
+            }
+
+            tbody.innerHTML = csvPreviewItems.map((item, idx) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
+                    <td class="py-2 px-3">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="csvPreviewItems[${idx}].checked = this.checked; updateCsvSelectedSummary();" class="w-4 h-4 rounded accent-brand-500">
+                    </td>
+                    <td class="py-2 px-2">
+                        <input type="date" value="${escapeHtml(item.date)}" onchange="csvPreviewItems[${idx}].date = this.value" class="px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-transparent text-xs">
+                    </td>
+                    <td class="py-2 px-2">
+                        <select onchange="csvPreviewItems[${idx}].category = this.value" class="px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium">
+                            ${['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'].map((cat) => `<option value="${cat}" ${item.category === cat ? 'selected' : ''}>${cat}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td class="py-2 px-2">
+                        <input type="text" value="${escapeHtml(item.notes)}" onchange="csvPreviewItems[${idx}].notes = this.value" class="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-transparent text-xs">
+                    </td>
+                    <td class="py-2 px-3 text-right font-bold">${formatCurrency(item.amount)}</td>
+                </tr>
+            `).join('');
+
+            updateCsvSelectedSummary();
+        }
+
+        window.toggleAllCsvRows = function(checked) {
+            csvPreviewItems.forEach((item) => { item.checked = checked; });
+            renderCsvPreviewTable();
+        };
+
+        window.updateCsvSelectedSummary = function() {
+            const selected = csvPreviewItems.filter((item) => item.checked);
+            const total = selected.reduce((sum, item) => sum + item.amount, 0);
+            document.getElementById('csv-selected-summary').innerText = `${selected.length} transactions selected (${formatCurrency(total)})`;
+        };
+
+        window.importSelectedCsvRows = async function() {
+            if (!currentUser || !db) return;
+            const selected = csvPreviewItems.filter((item) => item.checked && item.date && item.amount > 0);
+            if (selected.length === 0) {
+                showToast("Select at least one transaction to import.", "error");
+                return;
+            }
+
+            const author = currentUser.email ? currentUser.email.split('@')[0] : 'Member';
+            const submitBtn = document.getElementById('csv-import-submit-btn');
+            submitBtn.disabled = true;
+
+            try {
+                await Promise.all(
+                    selected.map((item) => addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), {
+                        date: item.date,
+                        category: item.category,
+                        amount: item.amount,
+                        notes: item.notes,
+                        author,
+                        createdAt: new Date().toISOString()
+                    }))
+                );
+                closeModal('csv-import-modal');
+                showToast(`Imported ${selected.length} transactions.`);
+            } catch (err) {
+                showToast("CSV import failed: " + err.message, "error");
+            } finally {
+                submitBtn.disabled = false;
             }
         };
 

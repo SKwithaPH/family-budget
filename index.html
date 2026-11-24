@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FamilyBudget & Shop Build Tracker</title>
-    <!-- Tailwind CSS -->
+    <title>FamilyBudget & Project Cost Tracker</title>
+    <!-- Tailwind CSS for responsive, high-contrast styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,17 +26,26 @@
     </script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
+    <!-- Inter Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
 
-    <!-- Navbar -->
+    <!-- Top Navigation Bar -->
     <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -45,44 +54,43 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight flex items-center gap-2">
-                        FamilyBudget <span class="text-[10px] px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-full font-medium">Shared Cloud</span>
+                        FamilyBudget
+                        <span class="text-[10px] px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-full font-semibold">Shared Sync</span>
                     </h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Household & Project Tracker</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Household Budget, Rollover & Project Costs</p>
                 </div>
             </div>
 
             <div class="flex items-center space-x-3">
-                <!-- Theme Toggle -->
-                <button id="theme-toggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                <!-- Light / Dark Theme Toggle -->
+                <button type="button" id="theme-toggle" aria-label="Toggle theme" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
 
-                <!-- User Profile / Auth Status -->
-                <div id="auth-nav-section" class="flex items-center space-x-2">
-                    <!-- Populated dynamically -->
-                </div>
+                <!-- Auth Badge / User Info -->
+                <div id="auth-nav-section" class="flex items-center space-x-2"></div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main Application Shell -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- Auth Guard State (Shown when not logged in) -->
-        <section id="login-view" class="max-w-md mx-auto mt-12 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 hidden">
-            <div class="text-center mb-8">
+        <!-- Authentication Screen (Shown when unauthenticated) -->
+        <section id="login-view" class="max-w-md mx-auto mt-10 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 hidden">
+            <div class="text-center mb-7">
                 <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
                     <i class="fa-solid fa-shield-heart"></i>
                 </div>
-                <h2 class="text-2xl font-bold tracking-tight">Family Budget Sync</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Secure real-time household finance & project cost tracker for you and your spouse.</p>
+                <h2 class="text-2xl font-bold tracking-tight">Shared Family Sign In</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Real-time household budget, surplus rollover, and project cost tracking.</p>
             </div>
 
             <div class="space-y-4">
-                <button id="google-login-btn" class="w-full py-3 px-4 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 transition flex items-center justify-center space-x-3 shadow-sm">
+                <button type="button" id="google-login-btn" class="w-full py-3 px-4 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 transition flex items-center justify-center space-x-3 shadow-sm">
                     <i class="fa-brands fa-google text-red-500 text-lg"></i>
-                    <span>Sign in with Google</span>
+                    <span>Continue with Google</span>
                 </button>
 
                 <div class="relative flex py-2 items-center">
@@ -93,175 +101,172 @@
 
                 <form id="email-auth-form" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
-                        <input type="email" id="auth-email" required class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                        <label for="auth-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
+                        <input type="email" id="auth-email" required autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Password</label>
-                        <input type="password" id="auth-password" required class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                        <label for="auth-password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Password</label>
+                        <input type="password" id="auth-password" required autocomplete="current-password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                     </div>
                     <div class="flex gap-3 pt-2">
                         <button type="submit" id="email-signin-btn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md shadow-brand-500/20 transition text-sm">Sign In</button>
-                        <button type="button" id="email-signup-btn" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition text-sm">Create Account</button>
+                        <button type="button" id="email-signup-btn" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition text-sm">Register</button>
                     </div>
                 </form>
             </div>
         </section>
 
-        <!-- Main App Dashboard (Shown when logged in) -->
+        <!-- Main Authenticated Workspace -->
         <div id="app-dashboard" class="space-y-6 hidden">
 
-            <!-- Top Control Bar: Month Selector & Navigation Tabs -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <!-- Month Selector, Primary Tabs & Settings Controls -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div class="flex items-center space-x-3">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400"><i class="fa-regular fa-calendar-days mr-1.5"></i> Budget Month:</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                        <i class="fa-regular fa-calendar-days mr-1.5"></i> Active Month:
+                    </span>
                     <input type="month" id="month-selector" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-semibold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
+                    <button type="button" onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
                         <i class="fa-solid fa-chart-pie"></i>
                         <span>Dashboard</span>
                     </button>
-                    <button onclick="switchMainTab('analytics')" id="tab-btn-analytics" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
+                    <button type="button" onclick="switchMainTab('analytics')" id="tab-btn-analytics" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>Analytics & Annual</span>
                     </button>
-                    <button onclick="switchMainTab('projects')" id="tab-btn-projects" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
+                    <button type="button" onclick="switchMainTab('projects')" id="tab-btn-projects" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
                         <i class="fa-solid fa-hammer"></i>
-                        <span>Shop Build & Projects</span>
+                        <span>Projects</span>
                     </button>
-                    <button onclick="switchMainTab('savings')" id="tab-btn-savings" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
+                    <button type="button" onclick="switchMainTab('savings')" id="tab-btn-savings" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2">
                         <i class="fa-solid fa-bullseye"></i>
-                        <span>Savings & Goals</span>
+                        <span>Savings Goals</span>
                     </button>
 
-                    <!-- Settings Dropdown -->
-                    <div class="relative group ml-auto">
-                        <button class="px-3 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm">
+                    <!-- Secondary Budget & Workspace Tools Menu -->
+                    <div class="relative" id="settings-menu-wrapper">
+                        <button type="button" onclick="toggleSettingsMenu(event)" aria-label="Budget settings" class="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm">
                             <i class="fa-solid fa-gear"></i>
                         </button>
-                        <div class="absolute right-0 mt-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 hidden group-hover:block z-20">
-                            <button onclick="openIncomeModal()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-money-bill-trend-up text-slate-400"></i>
-                                <span>Manage Income & Raises</span>
+                        <div id="settings-dropdown" class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
+                            <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-money-bill-trend-up text-emerald-500 w-4"></i>
+                                <span>Income & Future Raises</span>
                             </button>
-                            <button onclick="openFixedBillsModal()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-file-invoice-dollar text-slate-400"></i>
-                                <span>Manage Fixed Bills</span>
+                            <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-file-invoice-dollar text-blue-500 w-4"></i>
+                                <span>Preset Fixed Bills</span>
                             </button>
-                            <button onclick="openCategoryBudgetModal()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-sliders text-slate-400"></i>
-                                <span>Set Category Limits</span>
+                            <button type="button" onclick="closeSettingsMenu(); openCategoryBudgetModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-sliders text-amber-500 w-4"></i>
+                                <span>Category Spending Limits</span>
                             </button>
                             <div class="border-t border-slate-200 dark:border-slate-700 my-1"></div>
-                            <button onclick="exportDataJSON()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-download text-slate-400"></i>
+                            <button type="button" onclick="closeSettingsMenu(); exportDataJSON();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-download text-slate-400 w-4"></i>
                                 <span>Export JSON Backup</span>
                             </button>
-                            <button onclick="exportTransactionsCSV()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-file-csv text-slate-400"></i>
-                                <span>Export CSV Transactions</span>
+                            <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-file-csv text-slate-400 w-4"></i>
+                                <span>Export CSV Log</span>
                             </button>
-                            <button onclick="openHouseholdModal()" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <i class="fa-solid fa-users text-slate-400"></i>
-                                <span>Household Info</span>
+                            <button type="button" onclick="closeSettingsMenu(); openHouseholdModal();" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                <i class="fa-solid fa-users text-indigo-500 w-4"></i>
+                                <span>Shared Account & Sign Out</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 1: DASHBOARD VIEW -->
-            <div id="tab-content-dashboard" class="space-y-6">
+            <!-- ==================== TAB 1: DASHBOARD ==================== -->
+            <section id="tab-content-dashboard" class="space-y-6">
 
-                <!-- Summary KPI Cards -->
+                <!-- 5-Card Financial Overview: Income, Fixed, Variable, Monthly Surplus, Rollover Surplus -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <!-- Fixed Income -->
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fixed Income</p>
                             <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-income">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Preset monthly rate</p>
+                            <p class="text-xs text-slate-500 mt-1">Active rate for month</p>
                         </div>
                         <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-xl">
                             <i class="fa-solid fa-arrow-trend-up"></i>
                         </div>
                     </div>
 
-                    <!-- Fixed Expenses -->
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fixed Bills</p>
                             <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-fixed-expenses">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Rent, utilities, subs</p>
+                            <p class="text-xs text-slate-500 mt-1">Preset recurring costs</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xl">
                             <i class="fa-solid fa-file-invoice"></i>
                         </div>
                     </div>
 
-                    <!-- Variable Spent -->
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Variable Spent</p>
                             <h3 class="text-2xl font-bold text-slate-900 dark:text-white" id="kpi-variable-spent">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Groceries, dining, etc.</p>
+                            <p class="text-xs text-slate-500 mt-1">Groceries, gas, dining</p>
                         </div>
                         <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xl">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </div>
                     </div>
 
-                    <!-- Net Monthly Surplus / Rollover -->
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Monthly Surplus</p>
                             <h3 class="text-2xl font-bold text-brand-600 dark:text-brand-400" id="kpi-net-cash">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1" id="kpi-net-sub">Net savings this month</p>
+                            <p class="text-xs text-slate-500 mt-1" id="kpi-net-sub">Current month savings</p>
                         </div>
                         <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-xl flex items-center justify-center text-xl">
                             <i class="fa-solid fa-piggy-bank"></i>
                         </div>
                     </div>
 
-                    <!-- Accumulated Net Savings Rollover -->
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
                         <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Rollover</p>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Rollover Surplus</p>
                             <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400" id="kpi-accumulated-savings">$0.00</h3>
-                            <p class="text-xs text-slate-500 mt-1">Cumulative surplus</p>
+                            <p class="text-xs text-slate-500 mt-1">Cumulative saved surplus</p>
                         </div>
                         <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-vault"></i>
+                            <i class="fa-solid fa-coins"></i>
                         </div>
                     </div>
                 </div>
 
-                <!-- FAST TRANSACTION INPUT BAR -->
+                <!-- Fast Variable Expense Logger -->
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="font-bold text-base flex items-center gap-2">
-                            <i class="fa-solid fa-bolt text-amber-500"></i> Fast Variable Expense Logger
+                            <i class="fa-solid fa-bolt text-amber-500"></i> Quick Variable Expense Entry
                         </h3>
-                        <span class="text-xs text-slate-400">Click preset pill for 1-click category</span>
+                        <span class="text-xs text-slate-400">Tap a category pill, enter amount, and save</span>
                     </div>
 
-                    <!-- Quick Category Pills -->
                     <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar mb-2" id="quick-category-pills">
-                        <button type="button" onclick="selectQuickCategory('Groceries')" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">🛒 Groceries</button>
-                        <button type="button" onclick="selectQuickCategory('Dining Out')" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">🍽️ Dining Out</button>
-                        <button type="button" onclick="selectQuickCategory('Shopping')" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">🛍️ Shopping</button>
-                        <button type="button" onclick="selectQuickCategory('Gas/Fuel')" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">⛽ Gas/Fuel</button>
-                        <button type="button" onclick="selectQuickCategory('Miscellaneous')" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">📦 Misc</button>
+                        <button type="button" onclick="selectQuickCategory('Groceries', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Groceries</button>
+                        <button type="button" onclick="selectQuickCategory('Dining Out', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Dining Out</button>
+                        <button type="button" onclick="selectQuickCategory('Shopping', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Shopping</button>
+                        <button type="button" onclick="selectQuickCategory('Gas/Fuel', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Gas/Fuel</button>
+                        <button type="button" onclick="selectQuickCategory('Miscellaneous', this)" class="quick-pill px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition whitespace-nowrap">Miscellaneous</button>
                     </div>
 
-                    <!-- Fast Form -->
                     <form id="fast-tx-form" onsubmit="saveFastTransaction(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                         <div class="sm:col-span-2">
+                            <label for="ftx-date" class="sr-only">Date</label>
                             <input type="date" id="ftx-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                         </div>
                         <div class="sm:col-span-3">
+                            <label for="ftx-category" class="sr-only">Category</label>
                             <select id="ftx-category" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
                                 <option value="Groceries">Groceries</option>
                                 <option value="Dining Out">Dining Out</option>
@@ -271,51 +276,48 @@
                             </select>
                         </div>
                         <div class="sm:col-span-2">
+                            <label for="ftx-amount" class="sr-only">Amount</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">$</span>
                                 <input type="number" step="0.01" min="0.01" id="ftx-amount" required placeholder="0.00" class="w-full pl-7 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                             </div>
                         </div>
                         <div class="sm:col-span-3">
-                            <input type="text" id="ftx-notes" placeholder="Note / Store / Merchant..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                            <label for="ftx-notes" class="sr-only">Store or Note</label>
+                            <input type="text" id="ftx-notes" placeholder="Store / item note..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                         </div>
                         <div class="sm:col-span-2">
                             <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-sm transition flex items-center justify-center space-x-2">
                                 <i class="fa-solid fa-plus"></i>
-                                <span>Log Expense</span>
+                                <span>Add Expense</span>
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Main Grid: Category Progress & Transactions Stream -->
+                <!-- Main Dashboard Grid: Category Limits & Fixed Bills + Recent Variable Transactions -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                    <!-- Column 1 & 2: Variable Categories Progress & Fixed Bills -->
                     <div class="lg:col-span-2 space-y-6">
-
-                        <!-- Variable Budgets / Categories Progress -->
+                        <!-- Category Threshold Progress (Amber at 80%, Red at 100%) -->
                         <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex items-center justify-between mb-5">
                                 <div>
-                                    <h3 class="font-bold text-lg">Variable Expense Categories</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Monthly spending limits vs. actuals</p>
+                                    <h3 class="font-bold text-lg">Variable Category Thresholds</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Alerts trigger at 80% (amber) and 100%+ (red)</p>
                                 </div>
-                                <button onclick="openCategoryBudgetModal()" class="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
-                                    <i class="fa-solid fa-sliders mr-1"></i>Configure Limits
+                                <button type="button" onclick="openCategoryBudgetModal()" class="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
+                                    <i class="fa-solid fa-sliders mr-1"></i>Edit Limits
                                 </button>
                             </div>
-                            <div class="space-y-4" id="category-progress-list">
-                                <!-- Populated dynamically -->
-                            </div>
+                            <div class="space-y-4" id="category-progress-list"></div>
                         </div>
 
-                        <!-- Fixed Bills Checklist -->
+                        <!-- Preset Fixed Expenses Table -->
                         <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <h3 class="font-bold text-lg">Fixed Monthly Bills</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Recurring preset expenses</p>
+                                    <h3 class="font-bold text-lg">Preset Fixed Expenses</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Recurring monthly commitments</p>
                                 </div>
                                 <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 bills</span>
                             </div>
@@ -323,49 +325,39 @@
                                 <table class="w-full text-left text-sm">
                                     <thead class="border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-400 font-semibold">
                                         <tr>
-                                            <th class="py-3 px-2">Bill Name</th>
-                                            <th class="py-3 px-2">Due Date</th>
+                                            <th class="py-3 px-2">Expense</th>
+                                            <th class="py-3 px-2">Due Day</th>
                                             <th class="py-3 px-2 text-right">Amount</th>
-                                            <th class="py-3 px-2 text-center">Status</th>
+                                            <th class="py-3 px-2 text-center">Type</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="fixed-bills-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
-                                        <!-- Populated dynamically -->
-                                    </tbody>
+                                    <tbody id="fixed-bills-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
                                 </table>
                             </div>
                         </div>
-
                     </div>
 
-                    <!-- Column 3: Recent Transactions Stream -->
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col h-full">
+                    <!-- Variable Expense Feed -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-lg">Variable Log</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Synced household feed</p>
+                                <h3 class="font-bold text-lg">Recent Variable Log</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Shared household entries</p>
                             </div>
                             <span class="text-xs bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2.5 py-1 rounded-full font-semibold" id="transaction-count">0 items</span>
                         </div>
-
-                        <div class="flex-grow overflow-y-auto max-h-[520px] space-y-3 pr-1" id="transactions-list">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div class="flex-grow overflow-y-auto max-h-[540px] space-y-3 pr-1" id="transactions-list"></div>
                     </div>
-
                 </div>
+            </section>
 
-            </div>
-
-            <!-- TAB 2: ANALYTICS & ANNUAL SUMMARY VIEW -->
-            <div id="tab-content-analytics" class="space-y-6 hidden">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+            <!-- ==================== TAB 2: ANALYTICS & ANNUAL SUMMARY ==================== -->
+            <section id="tab-content-analytics" class="space-y-6 hidden">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                     <div>
                         <h3 class="font-bold text-xl">Month-to-Month Comparison</h3>
-                        <p class="text-xs text-slate-500">Review your household income, fixed expenses, variable spending, and savings trajectory over the months.</p>
+                        <p class="text-xs text-slate-500">Compare fixed income, fixed bills, variable spending, and net surplus across months.</p>
                     </div>
-
-                    <!-- Month-to-Month Chart Table -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead class="border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-400 font-semibold bg-slate-50 dark:bg-slate-700/30">
@@ -374,34 +366,32 @@
                                     <th class="py-3 px-3 text-right">Fixed Income</th>
                                     <th class="py-3 px-3 text-right">Fixed Bills</th>
                                     <th class="py-3 px-3 text-right">Variable Spent</th>
-                                    <th class="py-3 px-3 text-right">Net Savings</th>
+                                    <th class="py-3 px-3 text-right">Net Surplus</th>
                                     <th class="py-3 px-3 text-center">Savings Rate</th>
                                 </tr>
                             </thead>
-                            <tbody id="monthly-comparison-tbody" class="divide-y divide-slate-100 dark:divide-slate-700">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <tbody id="monthly-comparison-tbody" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Annual Summary Section -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h3 class="font-bold text-xl">Annual Summary Report</h3>
-                            <p class="text-xs text-slate-500">Totals aggregated across the calendar year.</p>
+                            <h3 class="font-bold text-xl">Annual Summary</h3>
+                            <p class="text-xs text-slate-500">Yearly totals across income, preset bills, variable expenses, and surplus.</p>
                         </div>
                         <div>
+                            <label for="annual-year-select" class="sr-only">Select Year</label>
                             <select id="annual-year-select" onchange="renderAnalytics()" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl font-semibold text-sm border border-slate-300 dark:border-slate-600">
-                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2026" selected>2026</option>
                                 <option value="2025">2025</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- Annual KPI Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="bg-slate-50 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                             <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Annual Income</span>
                             <h4 class="text-xl font-bold text-slate-900 dark:text-white" id="annual-total-income">$0.00</h4>
@@ -415,196 +405,173 @@
                             <h4 class="text-xl font-bold text-slate-900 dark:text-white" id="annual-total-variable">$0.00</h4>
                         </div>
                         <div class="bg-slate-50 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                            <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Annual Net Savings</span>
+                            <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Annual Net Surplus</span>
                             <h4 class="text-xl font-bold text-brand-600 dark:text-brand-400" id="annual-total-savings">$0.00</h4>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- TAB 3: PROJECTS & SHOP BUILD-OUT VIEW -->
-            <div id="tab-content-projects" class="space-y-6 hidden">
+            <!-- ==================== TAB 3: PROJECT COST TRACKER ==================== -->
+            <section id="tab-content-projects" class="space-y-6 hidden">
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
                         <div>
                             <h3 class="font-bold text-xl flex items-center gap-2">
-                                <i class="fa-solid fa-hammer text-indigo-600"></i> Capital Projects & Shop Build-Out Tracker
+                                <i class="fa-solid fa-hammer text-indigo-600"></i> Project Cost & Equity Loan Tracker
                             </h3>
-                            <p class="text-xs text-slate-500">Track equity loans, contractor quotes (concrete pours, shell erection), and DIY finish-outs.</p>
+                            <p class="text-xs text-slate-500">Track total budget/loan funds, contractor vs. DIY work, category totals, and remaining balance.</p>
                         </div>
-                        <button onclick="openNewProjectModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
+                        <button type="button" onclick="openNewProjectModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
                             <i class="fa-solid fa-plus-circle"></i>
-                            <span>Create New Project</span>
+                            <span>New Project</span>
                         </button>
                     </div>
-
-                    <!-- Projects Container -->
-                    <div id="projects-container" class="space-y-6">
-                        <!-- Populated dynamically -->
-                    </div>
+                    <div id="projects-container" class="space-y-6"></div>
                 </div>
-            </div>
+            </section>
 
-            <!-- TAB 4: SAVINGS TARGETS & GOALS VIEW -->
-            <div id="tab-content-savings" class="space-y-6 hidden">
+            <!-- ==================== TAB 4: SAVINGS GOALS ==================== -->
+            <section id="tab-content-savings" class="space-y-6 hidden">
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
                         <div>
                             <h3 class="font-bold text-xl flex items-center gap-2">
-                                <i class="fa-solid fa-bullseye text-brand-600"></i> Savings Targets & Execution Goals
+                                <i class="fa-solid fa-bullseye text-brand-600"></i> Savings Targets & Project Converter
                             </h3>
-                            <p class="text-xs text-slate-500">Set savings goals (vacations, equipment, gifts). Convert them instantly into active project cost trackers when you begin execution!</p>
+                            <p class="text-xs text-slate-500">Save for a vacation, gift, or purchase, then convert any goal directly into an active project cost tracker.</p>
                         </div>
-                        <button onclick="openNewSavingsGoalModal()" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
+                        <button type="button" onclick="openNewSavingsGoalModal()" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2">
                             <i class="fa-solid fa-plus-circle"></i>
                             <span>New Savings Goal</span>
                         </button>
                     </div>
-
-                    <!-- Savings Goals Container -->
-                    <div id="savings-goals-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Populated dynamically -->
-                    </div>
+                    <div id="savings-goals-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
-            </div>
-
+            </section>
         </div>
-
     </main>
 
-    <!-- Modals -->
+    <!-- ==================== MODALS ==================== -->
 
-    <!-- 1. Manage Fixed Income Modal (Date-based raises) -->
+    <!-- 1. Income & Future Raises Modal -->
     <div id="income-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg">Manage Fixed Income & Raises</h3>
-                <button onclick="closeModal('income-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-lg">Fixed Income & Date-Based Raises</h3>
+                <button type="button" onclick="closeModal('income-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add income sources with effective start dates. Past months automatically use the active rate for that date.</p>
-            
-            <div class="space-y-3 mb-4 overflow-y-auto flex-grow pr-1" id="income-streams-list">
-                <!-- Dynamically populated -->
-            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Each income entry takes effect on its start date. Past months keep historical rates; future dates apply upcoming raises automatically.</p>
 
-            <div class="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
-                <h4 class="font-semibold text-sm mb-3">Add Income Stream / Raise Rate</h4>
-                <form id="income-form" onsubmit="saveIncomeStream(event)" class="space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Source Name</label>
-                            <input type="text" id="inc-name" required placeholder="e.g. Primary Salary / Raise" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Monthly Amount ($)</label>
-                            <input type="number" step="0.01" min="0" id="inc-amount" required placeholder="5000.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
-                        </div>
+            <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="income-streams-list"></div>
+
+            <form id="income-form" onsubmit="saveIncomeStream(event)" class="space-y-3 border-t border-slate-200 dark:border-slate-700 pt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="inc-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Label / Source</label>
+                        <input type="text" id="inc-name" required placeholder="e.g. Base Pay / Annual Raise" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Effective Start Date (Raise Date)</label>
-                        <input type="date" id="inc-start-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                        <label for="inc-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Monthly Amount ($)</label>
+                        <input type="number" step="0.01" min="0" id="inc-amount" required placeholder="5500.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                     </div>
-                    <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Income Rate</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Fixed Bills Modal -->
-    <div id="fixed-bills-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg">Manage Fixed Monthly Bills</h3>
-                <button onclick="closeModal('fixed-bills-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Preset monthly recurring expenses like mortgage, utilities, subscriptions.</p>
-
-            <div class="space-y-3 mb-4 overflow-y-auto flex-grow pr-1" id="fixed-bills-manage-list">
-                <!-- Dynamically populated -->
-            </div>
-
-            <div class="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
-                <h4 class="font-semibold text-sm mb-3">Add Preset Bill</h4>
-                <form id="fixed-bill-form" onsubmit="saveFixedBill(event)" class="space-y-3">
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="col-span-1">
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Bill Name</label>
-                            <input type="text" id="fb-name" required placeholder="e.g. Electricity" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
-                            <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="150.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Due Day (1-31)</label>
-                            <input type="number" min="1" max="31" id="fb-dueday" required placeholder="15" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Bill</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Category Budgets Modal -->
-    <div id="category-budget-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg">Set Variable Category Limits</h3>
-                <button onclick="closeModal('category-budget-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Define monthly target spending limits for each variable category.</p>
-            <form id="category-budget-form" onsubmit="saveCategoryBudgets(event)" class="space-y-3">
-                <div id="category-limits-inputs" class="space-y-3">
-                    <!-- Populated dynamically -->
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md mt-4">Save Budgets</button>
+                <div>
+                    <label for="inc-start-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Effective Start Date</label>
+                    <input type="date" id="inc-start-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Save Income Schedule</button>
             </form>
         </div>
     </div>
 
-    <!-- 4. Household & Sharing Info Modal -->
+    <!-- 2. Preset Fixed Bills Modal -->
+    <div id="fixed-bills-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-lg">Preset Fixed Monthly Expenses</h3>
+                <button type="button" onclick="closeModal('fixed-bills-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses such as mortgage, insurance, utilities, or loans.</p>
+
+            <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="fixed-bills-manage-list"></div>
+
+            <form id="fixed-bill-form" onsubmit="saveFixedBill(event)" class="space-y-3 border-t border-slate-200 dark:border-slate-700 pt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                        <label for="fb-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Bill Name</label>
+                        <input type="text" id="fb-name" required placeholder="Mortgage" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                    <div>
+                        <label for="fb-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
+                        <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="1650.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label for="fb-dueday" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Due Day (1-31)</label>
+                        <input type="number" min="1" max="31" id="fb-dueday" required placeholder="1" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Category Spending Limits Modal -->
+    <div id="category-budget-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-lg">Variable Category Limits</h3>
+                <button type="button" onclick="closeModal('category-budget-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Set monthly caps for variable categories to power 80% and 100% threshold alerts.</p>
+            <form id="category-budget-form" onsubmit="saveCategoryBudgets(event)" class="space-y-3">
+                <div id="category-limits-inputs" class="space-y-3"></div>
+                <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md mt-4">Save Limits</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Household Account Modal -->
     <div id="household-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg">Household & Sharing</h3>
-                <button onclick="closeModal('household-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Shared Household Workspace</h3>
+                <button type="button" onclick="closeModal('household-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-4 text-sm">
-                <p class="text-slate-600 dark:text-slate-300">You are securely connected to your shared family workspace. Any income updates, bills, variable expenses, or shop build-out costs logged by you or your spouse sync in real-time.</p>
+                <p class="text-slate-600 dark:text-slate-300">Changes sync in real time across signed-in household devices via Firestore.</p>
                 <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Household Workspace ID</span>
+                    <span class="block text-xs font-semibold uppercase text-slate-400 mb-1">Workspace ID</span>
                     <code id="household-id-code" class="text-xs font-mono font-bold text-brand-600 dark:text-brand-400 select-all">Loading...</code>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Your User ID</label>
+                    <label for="current-user-uid" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Active User ID</label>
                     <input type="text" id="current-user-uid" readonly class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-300">
                 </div>
-                <button onclick="signOutUser()" class="w-full py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition text-sm">Sign Out</button>
+                <button type="button" onclick="signOutUser()" class="w-full py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition text-sm">Sign Out</button>
             </div>
         </div>
     </div>
 
-    <!-- 5. Create / Edit Project Modal -->
+    <!-- 5. Create Project Modal -->
     <div id="project-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg" id="proj-modal-title">Create Project / Shop Build-Out</h3>
-                <button onclick="closeModal('project-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Create Project Budget</h3>
+                <button type="button" onclick="closeModal('project-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="project-form" onsubmit="saveProject(event)" class="space-y-4">
-                <input type="hidden" id="proj-id">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Project Name</label>
-                    <input type="text" id="proj-name" required placeholder="e.g. Backyard Pole Barn Shop Build-Out" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <label for="proj-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Project Name</label>
+                    <input type="text" id="proj-name" required placeholder="e.g. Shop Build & Finish-Out" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Total Equity Loan / Budget Amount ($)</label>
-                    <input type="number" step="0.01" min="0" id="proj-budget" required placeholder="50000.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    <label for="proj-budget" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Total Budget / Equity Loan ($)</label>
+                    <input type="number" step="0.01" min="0" id="proj-budget" required placeholder="65000.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Categories (Comma separated)</label>
-                    <input type="text" id="proj-categories" value="Concrete Pour, Contractor Erection, Electrical, Plumbing, DIY Insulation, Tools & Finish" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <label for="proj-categories" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Budget Categories (Comma separated)</label>
+                    <input type="text" id="proj-categories" value="Concrete & Erection, Framing & Insulation, Electrical & Plumbing, Interior Finish & DIY" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('project-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
@@ -614,30 +581,69 @@
         </div>
     </div>
 
+    <!-- 6. Log Project Expense Modal (Contractor vs. DIY) -->
+    <div id="project-expense-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-lg" id="proj-exp-modal-title">Log Project Cost</h3>
+                <button type="button" onclick="closeModal('project-expense-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="project-expense-form" onsubmit="saveProjectExpense(event)" class="space-y-4">
+                <input type="hidden" id="pe-project-id">
+                <div>
+                    <label for="pe-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Date</label>
+                    <input type="date" id="pe-date" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                </div>
+                <div>
+                    <label for="pe-category" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Budget Category</label>
+                    <select id="pe-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm"></select>
+                </div>
+                <div>
+                    <label for="pe-work-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Work Type</label>
+                    <select id="pe-work-type" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
+                        <option value="Contractor">Contractor</option>
+                        <option value="DIY">DIY</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="pe-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
+                    <input type="number" step="0.01" min="0.01" id="pe-amount" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                </div>
+                <div>
+                    <label for="pe-vendor" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Vendor / Description</label>
+                    <input type="text" id="pe-vendor" required placeholder="e.g. Concrete crew or drywall & wire" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal('project-expense-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md">Save Cost</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- 7. Create Savings Goal Modal -->
     <div id="savings-goal-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg" id="sg-modal-title">Create Savings Target / Goal</h3>
-                <button onclick="closeModal('savings-goal-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-bold text-lg">Create Savings Target</h3>
+                <button type="button" onclick="closeModal('savings-goal-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="savings-goal-form" onsubmit="saveSavingsGoal(event)" class="space-y-4">
-                <input type="hidden" id="sg-id">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Goal Name</label>
-                    <input type="text" id="sg-name" required placeholder="e.g. Family Summer Vacation / New Trailer" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <label for="sg-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Goal Name</label>
+                    <input type="text" id="sg-name" required placeholder="e.g. Family Trip or Special Gift" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Target Amount ($)</label>
-                    <input type="number" step="0.01" min="0" id="sg-target" required placeholder="5000.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    <label for="sg-target" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Target Budget ($)</label>
+                    <input type="number" step="0.01" min="0" id="sg-target" required placeholder="4500.00" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Current Saved ($)</label>
+                    <label for="sg-current" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Saved So Far ($)</label>
                     <input type="number" step="0.01" min="0" id="sg-current" value="0" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Target Execution Categories (Comma separated)</label>
-                    <input type="text" id="sg-categories" value="Booking, Travel, Supplies, Equipment, Miscellaneous" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <label for="sg-categories" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Execution Categories When Converted (Comma separated)</label>
+                    <input type="text" id="sg-categories" value="Lodging & Bookings, Travel & Fuel, Activities & Gear, Miscellaneous" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('savings-goal-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
@@ -647,154 +653,187 @@
         </div>
     </div>
 
-    <!-- 6. Log Project Expense Modal -->
-    <div id="project-expense-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg" id="proj-exp-modal-title">Log Project Expense</h3>
-                <button onclick="closeModal('project-expense-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- 8. Add Funds to Savings Goal Modal -->
+    <div id="add-savings-funds-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-lg">Add to Savings Goal</h3>
+                <button type="button" onclick="closeModal('add-savings-funds-modal')" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <form id="project-expense-form" onsubmit="saveProjectExpense(event)" class="space-y-4">
-                <input type="hidden" id="pe-project-id">
+            <form id="add-savings-funds-form" onsubmit="submitSavingsFunds(event)" class="space-y-4">
+                <input type="hidden" id="add-sg-id">
+                <input type="hidden" id="add-sg-current">
+                <p id="add-sg-label" class="text-sm text-slate-600 dark:text-slate-300 font-medium"></p>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Date</label>
-                    <input type="date" id="pe-date" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <label for="add-sg-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount to Add ($)</label>
+                    <input type="number" step="0.01" min="0.01" id="add-sg-amount" required placeholder="250.00" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Project Category</label>
-                    <select id="pe-category" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm">
-                        <!-- Populated dynamically -->
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
-                    <input type="number" step="0.01" min="0.01" id="pe-amount" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Vendor / Contractor / Notes</label>
-                    <input type="text" id="pe-vendor" required placeholder="e.g. Apex Concrete LLC" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Funding Source / Draw Ref</label>
-                    <input type="text" id="pe-source" placeholder="e.g. Equity Loan Draw #1" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
-                </div>
-                <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="closeModal('project-expense-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
-                    <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-md">Save Project Cost</button>
+                <div class="flex gap-3 pt-1">
+                    <button type="button" onclick="closeModal('add-savings-funds-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Funds</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Custom Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-brand-400"></i>
-        <span id="toast-message">Success message</span>
+    <!-- 9. Confirm Action Modal (Replaces native confirm()) -->
+    <div id="confirm-action-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
+            <h3 class="font-bold text-lg" id="confirm-modal-title">Confirm Action</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300" id="confirm-modal-message"></p>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeModal('confirm-action-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
+                <button type="button" id="confirm-modal-submit" class="flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Confirm</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Firebase Scripts & Logic -->
+    <!-- Non-blocking Toast Banner -->
+    <div id="toast" role="status" aria-live="polite" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-brand-400"></i>
+        <span id="toast-message">Updated</span>
+    </div>
+
+    <!-- Firebase Module & Application Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInAnonymously, 
-            signInWithCustomToken, 
+        import {
+            getAuth,
+            signInAnonymously,
+            signInWithCustomToken,
             GoogleAuthProvider,
             signInWithPopup,
             signInWithEmailAndPassword,
             createUserWithEmailAndPassword,
             onAuthStateChanged,
-            signOut 
+            signOut
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            collection, 
-            onSnapshot, 
-            addDoc, 
-            deleteDoc, 
-            updateDoc 
+        import {
+            getFirestore,
+            doc,
+            setDoc,
+            collection,
+            onSnapshot,
+            addDoc,
+            deleteDoc,
+            updateDoc
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Environment Variables
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'family-budget-shared-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "demo", authDomain: "demo", projectId: "demo" };
+        // Firebase Configuration for family-budget-c2c8c
+        const firebaseConfig = {
+            apiKey: 'AIzaSyDZF0i1EOTMu_nNDRcaaLb8dm4hQtW9Wcg',
+            authDomain: 'family-budget-c2c8c.firebaseapp.com',
+            databaseURL: 'https://family-budget-c2c8c-default-rtdb.firebaseio.com',
+            projectId: 'family-budget-c2c8c',
+            storageBucket: 'family-budget-c2c8c.firebasestorage.app',
+            messagingSenderId: '544907600663',
+            appId: '1:544907600663:web:0a2908f1f905c1c5710d52'
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'family-budget-c2c8c';
 
         let app, db, auth;
         let currentUser = null;
         let unsubscribeListeners = [];
+        let pendingConfirmAction = null;
 
-        // App State
-        let state = {
-            currentMonth: new Date().toISOString().slice(0, 7), // "YYYY-MM"
-            incomeStreams: [], // Array of { id, name, amount, startDate }
-            fixedBills: [],    // Array of { id, name, amount, dueDay }
-            categoryBudgets: { // Default monthly limits
+        // Core Application State
+        const state = {
+            currentMonth: new Date().toISOString().slice(0, 7),
+            incomeStreams: [],
+            fixedBills: [],
+            categoryBudgets: {
                 "Groceries": 600,
                 "Dining Out": 300,
                 "Shopping": 250,
                 "Gas/Fuel": 200,
                 "Miscellaneous": 150
             },
-            transactions: [],   // Array of { id, date, category, amount, notes, author }
-            projects: [],       // Array of { id, name, totalBudget, categories: [...] }
-            projectExpenses: [], // Array of { id, projectId, date, category, amount, vendor, source }
-            savingsGoals: []    // Array of { id, name, targetAmount, currentSaved, categories: [...] }
+            transactions: [],
+            projects: [],
+            projectExpenses: [],
+            savingsGoals: []
         };
 
-        // Initialize Firebase
+        // Initialize Firebase Services
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-        } catch (e) {
-            console.error("Firebase init error:", e);
+        } catch (err) {
+            console.error("Firebase initialization failed:", err);
         }
 
-        // Theme Toggle Setup
+        // Theme Preference Handling
         const themeToggleBtn = document.getElementById('theme-toggle');
         themeToggleBtn.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
+            const isDark = document.documentElement.classList.toggle('dark');
+            try {
+                localStorage.setItem('familyBudgetTheme', isDark ? 'dark' : 'light');
+            } catch (_) {
+                // Ignore storage restrictions
             }
         });
 
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+        try {
+            const savedTheme = localStorage.getItem('familyBudgetTheme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        } catch (_) {
+            // Ignore storage restrictions
         }
 
-        // Window Onload & Auth State Listener
+        // Close settings dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            const wrapper = document.getElementById('settings-menu-wrapper');
+            const dropdown = document.getElementById('settings-dropdown');
+            if (wrapper && dropdown && !wrapper.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        window.toggleSettingsMenu = function(event) {
+            event.stopPropagation();
+            document.getElementById('settings-dropdown').classList.toggle('hidden');
+        };
+
+        window.closeSettingsMenu = function() {
+            document.getElementById('settings-dropdown').classList.add('hidden');
+        };
+
+        // Lifecycle & Authentication Setup
         window.onload = async () => {
-            document.getElementById('month-selector').value = state.currentMonth;
-            document.getElementById('month-selector').addEventListener('change', (e) => {
-                state.currentMonth = e.target.value;
-                renderDashboard();
+            const monthSelector = document.getElementById('month-selector');
+            monthSelector.value = state.currentMonth;
+            monthSelector.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    state.currentMonth = e.target.value;
+                    renderAll();
+                }
             });
 
-            // Default dates
-            const todayStr = new Date().toISOString().slice(0, 10);
-            document.getElementById('ftx-date').value = todayStr;
-            document.getElementById('annual-year-select').value = new Date().getFullYear().toString();
+            document.getElementById('ftx-date').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('confirm-modal-submit').addEventListener('click', async () => {
+                const action = pendingConfirmAction;
+                pendingConfirmAction = null;
+                closeModal('confirm-action-modal');
+                if (typeof action === 'function') {
+                    await action();
+                }
+            });
 
             if (!auth) {
-                showToast("Firebase not initialized. Offline mode enabled.", "error");
+                showToast("Authentication service unavailable.", "error");
                 return;
             }
 
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Auth init error:", err);
+                console.error("Initial token sign-in error:", err);
             }
 
             onAuthStateChanged(auth, (user) => {
@@ -804,7 +843,6 @@
                     document.getElementById('app-dashboard').classList.remove('hidden');
                     document.getElementById('current-user-uid').value = user.uid;
                     document.getElementById('household-id-code').innerText = appId;
-                    
                     updateAuthNav(user);
                     setupFirestoreSync();
                 } else {
@@ -815,29 +853,28 @@
                 }
             });
 
-            // Email Form Handlers
             document.getElementById('email-auth-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const email = document.getElementById('auth-email').value;
+                const email = document.getElementById('auth-email').value.trim();
                 const password = document.getElementById('auth-password').value;
                 try {
                     await signInWithEmailAndPassword(auth, email, password);
-                    showToast("Successfully signed in!");
+                    showToast("Signed in to shared budget.");
                 } catch (err) {
                     showToast(err.message, "error");
                 }
             });
 
             document.getElementById('email-signup-btn').addEventListener('click', async () => {
-                const email = document.getElementById('auth-email').value;
+                const email = document.getElementById('auth-email').value.trim();
                 const password = document.getElementById('auth-password').value;
                 if (!email || !password) {
-                    showToast("Please enter email and password", "error");
+                    showToast("Enter both email and password.", "error");
                     return;
                 }
                 try {
                     await createUserWithEmailAndPassword(auth, email, password);
-                    showToast("Account created successfully!");
+                    showToast("Account created and signed in.");
                 } catch (err) {
                     showToast(err.message, "error");
                 }
@@ -847,7 +884,7 @@
                 try {
                     const provider = new GoogleAuthProvider();
                     await signInWithPopup(auth, provider);
-                    showToast("Google sign-in successful!");
+                    showToast("Google sign-in successful.");
                 } catch (err) {
                     showToast(err.message, "error");
                 }
@@ -856,94 +893,98 @@
 
         function updateAuthNav(user) {
             const nav = document.getElementById('auth-nav-section');
-            const displayName = user.email ? user.email.split('@')[0] : (user.isAnonymous ? "Guest Spouse" : "User");
+            const label = user.email ? user.email.split('@')[0] : (user.isAnonymous ? "Guest" : "Member");
             nav.innerHTML = `
-                <div class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-xl">
-                    <div class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></div>
-                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${displayName}</span>
-                </div>
+                <button type="button" onclick="openHouseholdModal()" class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 px-3 py-1.5 rounded-xl transition">
+                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">${escapeHtml(label)}</span>
+                </button>
             `;
         }
 
-        // Firestore Real-Time Synchronization (Rule 1: Shared Public Workspace)
+        // Firestore Real-Time Listeners for Shared Family Workspace
         function setupFirestoreSync() {
+            if (!db || !currentUser) return;
             clearFirestoreSync();
 
-            const paths = [
-                { key: 'incomeStreams', name: 'incomeStreams' },
-                { key: 'fixedBills', name: 'fixedBills' },
-                { key: 'categoryBudgets', name: 'categoryBudgets' },
-                { key: 'transactions', name: 'transactions' },
-                { key: 'projects', name: 'projects' },
-                { key: 'projectExpenses', name: 'projectExpenses' },
-                { key: 'savingsGoals', name: 'savingsGoals' }
+            const collections = [
+                'incomeStreams',
+                'fixedBills',
+                'categoryBudgets',
+                'transactions',
+                'projects',
+                'projectExpenses',
+                'savingsGoals'
             ];
 
-            paths.forEach(p => {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', p.name);
+            collections.forEach((colName) => {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', colName);
                 const unsub = onSnapshot(colRef, (snapshot) => {
-                    let items = [];
-                    snapshot.forEach(docSnap => {
+                    const items = [];
+                    snapshot.forEach((docSnap) => {
                         items.push({ id: docSnap.id, ...docSnap.data() });
                     });
-                    
-                    if (p.key === 'categoryBudgets') {
-                        if (items.length > 0) {
-                            state.categoryBudgets = items[0].budgets || state.categoryBudgets;
+
+                    if (colName === 'categoryBudgets') {
+                        if (items.length > 0 && items[0].budgets) {
+                            state.categoryBudgets = items[0].budgets;
                         }
                     } else {
-                        state[p.key] = items;
+                        state[colName] = items;
                     }
                     renderAll();
                 }, (err) => {
-                    console.error("Firestore sync error on " + p.name, err);
+                    console.error(`Firestore listener error (${colName}):`, err);
                 });
                 unsubscribeListeners.push(unsub);
             });
         }
 
         function clearFirestoreSync() {
-            unsubscribeListeners.forEach(unsub => unsub());
+            unsubscribeListeners.forEach((unsub) => unsub());
             unsubscribeListeners = [];
         }
 
-        // --- Navigation / Tabs Control ---
+        // Primary Tab Navigation
         window.switchMainTab = function(tabName) {
-            ['dashboard', 'analytics', 'projects', 'savings'].forEach(t => {
+            ['dashboard', 'analytics', 'projects', 'savings'].forEach((t) => {
                 document.getElementById(`tab-content-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`tab-btn-${t}`);
-                btn.className = "px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2";
+                document.getElementById(`tab-btn-${t}`).className =
+                    "px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl text-sm transition flex items-center space-x-2";
             });
 
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-            if (tabName === 'dashboard') {
-                activeBtn.className = "px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
-            } else if (tabName === 'analytics') {
-                activeBtn.className = "px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
-                renderAnalytics();
-            } else if (tabName === 'projects') {
-                activeBtn.className = "px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
-                renderProjectsView();
-            } else if (tabName === 'savings') {
-                activeBtn.className = "px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
-                renderSavingsGoalsView();
-            }
+            activeBtn.className = tabName === 'projects'
+                ? "px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2"
+                : "px-4 py-2.5 bg-brand-500 text-white font-semibold rounded-xl text-sm shadow-md transition flex items-center space-x-2";
+
+            renderAll();
         };
 
-        // --- Business Logic & Calculations ---
-
+        // Financial Calculations: Date-Based Income, Fixed Bills, Variable Spent & Surplus Rollover
         function getIncomeForMonth(monthStr) {
             const [year, month] = monthStr.split('-').map(Number);
-            const targetDate = new Date(year, month, 0);
+            const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
+
+            // Group streams by name so a raise on an existing income source replaces its prior rate
+            // rather than stacking duplicate salaries.
+            const latestByName = new Map();
+            state.incomeStreams.forEach((stream) => {
+                if (!stream.startDate) return;
+                const start = new Date(`${stream.startDate}T00:00:00`);
+                if (start <= endOfMonth) {
+                    const key = (stream.name || 'Income').trim().toLowerCase();
+                    const prev = latestByName.get(key);
+                    if (!prev || new Date(`${prev.startDate}T00:00:00`) <= start) {
+                        latestByName.set(key, stream);
+                    }
+                }
+            });
 
             let total = 0;
-            state.incomeStreams.forEach(stream => {
-                if (!stream.startDate) return;
-                const startDate = new Date(stream.startDate);
-                if (startDate <= targetDate) {
-                    total += Number(stream.amount || 0);
-                }
+            latestByName.forEach((stream) => {
+                total += Number(stream.amount || 0);
             });
             return total;
         }
@@ -954,30 +995,38 @@
 
         function getVariableSpentForMonth(monthStr) {
             return state.transactions
-                .filter(tx => tx.date && tx.date.startsWith(monthStr))
+                .filter((tx) => tx.date && tx.date.startsWith(monthStr))
                 .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
         }
 
-        // Calculate accumulated surplus / rollover across all historical recorded months
-        function getAccumulatedRollover() {
-            // Find all unique months in transactions or income streams
-            let monthsSet = new Set();
-            state.transactions.forEach(tx => {
-                if (tx.date) monthsSet.add(tx.date.slice(0, 7));
+        // Calculated monthly rollover showing cumulative net surplus across active/historical months
+        function getAccumulatedSurplusRollover() {
+            const months = new Set([state.currentMonth]);
+            state.transactions.forEach((tx) => {
+                if (tx.date && tx.date.length >= 7) {
+                    months.add(tx.date.slice(0, 7));
+                }
             });
-            monthsSet.add(state.currentMonth);
+            state.incomeStreams.forEach((inc) => {
+                if (inc.startDate && inc.startDate.length >= 7) {
+                    months.add(inc.startDate.slice(0, 7));
+                }
+            });
 
-            let totalAccumulated = 0;
-            monthsSet.forEach(m => {
-                const inc = getIncomeForMonth(m);
-                const fix = getFixedBillsTotal();
-                const varSp = getVariableSpentForMonth(m);
-                totalAccumulated += (inc - fix - varSp);
+            const sortedMonths = Array.from(months).sort();
+            let cumulativeSurplus = 0;
+            sortedMonths.forEach((m) => {
+                if (m <= state.currentMonth) {
+                    const inc = getIncomeForMonth(m);
+                    const fix = getFixedBillsTotal();
+                    const varSpent = getVariableSpentForMonth(m);
+                    cumulativeSurplus += (inc - fix - varSpent);
+                }
             });
-            return totalAccumulated;
+            return cumulativeSurplus;
         }
 
-        // --- Render All UI Components ---
+        // Rendering Functions
         function renderAll() {
             renderDashboard();
             if (!document.getElementById('tab-content-analytics').classList.contains('hidden')) {
@@ -993,29 +1042,31 @@
 
         function renderDashboard() {
             const month = state.currentMonth;
-            
             const totalIncome = getIncomeForMonth(month);
             const totalFixedBills = getFixedBillsTotal();
             const totalVariableSpent = getVariableSpentForMonth(month);
             const monthlySurplus = totalIncome - totalFixedBills - totalVariableSpent;
-            const accumulatedRollover = getAccumulatedRollover();
+            const rolloverSurplus = getAccumulatedSurplusRollover();
 
             document.getElementById('kpi-income').innerText = formatCurrency(totalIncome);
             document.getElementById('kpi-fixed-expenses').innerText = formatCurrency(totalFixedBills);
             document.getElementById('kpi-variable-spent').innerText = formatCurrency(totalVariableSpent);
-            
+
             const netEl = document.getElementById('kpi-net-cash');
             netEl.innerText = formatCurrency(monthlySurplus);
             if (monthlySurplus < 0) {
                 netEl.className = "text-2xl font-bold text-red-500";
-                document.getElementById('kpi-net-sub').innerText = "Monthly deficit";
+                document.getElementById('kpi-net-sub').innerText = "Monthly shortfall";
             } else {
                 netEl.className = "text-2xl font-bold text-brand-600 dark:text-brand-400";
-                document.getElementById('kpi-net-sub').innerText = "Monthly surplus";
+                document.getElementById('kpi-net-sub').innerText = "Monthly surplus savings";
             }
 
             const rolloverEl = document.getElementById('kpi-accumulated-savings');
-            rolloverEl.innerText = formatCurrency(accumulatedRollover);
+            rolloverEl.innerText = formatCurrency(rolloverSurplus);
+            rolloverEl.className = rolloverSurplus < 0
+                ? "text-2xl font-bold text-red-500"
+                : "text-2xl font-bold text-indigo-600 dark:text-indigo-400";
 
             renderCategoryProgress(month);
             renderFixedBillsTable();
@@ -1025,48 +1076,50 @@
         function renderCategoryProgress(month) {
             const container = document.getElementById('category-progress-list');
             const categories = Object.keys(state.categoryBudgets);
-            
-            const spentMap = {};
-            categories.forEach(cat => spentMap[cat] = 0);
-            
+
+            const spentByCategory = {};
+            categories.forEach((cat) => { spentByCategory[cat] = 0; });
+
             state.transactions
-                .filter(tx => tx.date && tx.date.startsWith(month))
-                .forEach(tx => {
-                    if (spentMap[tx.category] !== undefined) {
-                        spentMap[tx.category] += Number(tx.amount || 0);
-                    } else {
-                        spentMap[tx.category] = Number(tx.amount || 0);
-                    }
+                .filter((tx) => tx.date && tx.date.startsWith(month))
+                .forEach((tx) => {
+                    spentByCategory[tx.category] = (spentByCategory[tx.category] || 0) + Number(tx.amount || 0);
                 });
 
             if (categories.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">No categories configured.</p>`;
+                container.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">No variable categories configured.</p>`;
                 return;
             }
 
-            container.innerHTML = categories.map(cat => {
+            container.innerHTML = categories.map((cat) => {
                 const limit = Number(state.categoryBudgets[cat] || 0);
-                const spent = spentMap[cat] || 0;
-                const pct = limit > 0 ? Math.min(Math.round((spent / limit) * 100), 100) : 0;
-                const isOver = spent > limit && limit > 0;
-                
+                const spent = spentByCategory[cat] || 0;
+                const rawPct = limit > 0 ? Math.round((spent / limit) * 100) : 0;
+                const barWidth = Math.min(Math.max(rawPct, 0), 100);
+
                 let barColor = 'bg-brand-500';
-                if (pct >= 80 && pct < 100) barColor = 'bg-amber-500';
-                if (pct >= 100 || isOver) barColor = 'bg-red-500';
+                let alertBadge = '';
+                if (rawPct >= 100 && limit > 0) {
+                    barColor = 'bg-red-500';
+                    alertBadge = `<span class="px-2 py-0.5 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-[10px] rounded-full font-bold">100%+ LIMIT</span>`;
+                } else if (rawPct >= 80 && limit > 0) {
+                    barColor = 'bg-amber-500';
+                    alertBadge = `<span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-[10px] rounded-full font-bold">80% ALERT</span>`;
+                }
 
                 return `
                     <div class="space-y-1.5">
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
-                                ${cat}
-                                ${pct >= 100 ? '<span class="px-1.5 py-0.2 bg-red-100 text-red-600 text-[10px] rounded font-bold">OVER LIMIT</span>' : (pct >= 80 ? '<span class="px-1.5 py-0.2 bg-amber-100 text-amber-700 text-[10px] rounded font-bold">80%+</span>' : '')}
+                        <div class="flex justify-between items-center text-sm gap-2">
+                            <span class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                                ${escapeHtml(cat)}
+                                ${alertBadge}
                             </span>
                             <span class="text-xs text-slate-500 dark:text-slate-400">
-                                <strong class="${isOver ? 'text-red-500 font-bold' : ''}">${formatCurrency(spent)}</strong> / ${formatCurrency(limit)} (${pct}%)
+                                <strong class="${rawPct >= 100 ? 'text-red-500' : (rawPct >= 80 ? 'text-amber-600 dark:text-amber-400' : '')}">${formatCurrency(spent)}</strong> / ${formatCurrency(limit)} (${rawPct}%)
                             </span>
                         </div>
                         <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                            <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${barWidth}%"></div>
                         </div>
                     </div>
                 `;
@@ -1078,14 +1131,15 @@
             document.getElementById('fixed-bills-count').innerText = `${state.fixedBills.length} bills`;
 
             if (state.fixedBills.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400 text-sm">No fixed bills added yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400 text-sm">No preset fixed bills configured yet.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = state.fixedBills.map(bill => `
+            const sortedBills = [...state.fixedBills].sort((a, b) => Number(a.dueDay || 1) - Number(b.dueDay || 1));
+            tbody.innerHTML = sortedBills.map((bill) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td class="py-3 px-2 font-medium">${escapeHtml(bill.name)}</td>
-                    <td class="py-3 px-2 text-slate-500">Day ${bill.dueDay} of month</td>
+                    <td class="py-3 px-2 text-slate-500">Day ${escapeHtml(String(bill.dueDay))}</td>
                     <td class="py-3 px-2 text-right font-semibold">${formatCurrency(bill.amount)}</td>
                     <td class="py-3 px-2 text-center">
                         <span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-semibold">Preset</span>
@@ -1097,7 +1151,7 @@
         function renderTransactionsList(month) {
             const listEl = document.getElementById('transactions-list');
             const filtered = state.transactions
-                .filter(tx => tx.date && tx.date.startsWith(month))
+                .filter((tx) => tx.date && tx.date.startsWith(month))
                 .sort((a, b) => new Date(b.date) - new Date(a.date));
 
             document.getElementById('transaction-count').innerText = `${filtered.length} items`;
@@ -1106,217 +1160,246 @@
                 listEl.innerHTML = `
                     <div class="text-center py-12 text-slate-400">
                         <i class="fa-solid fa-receipt text-3xl mb-2 opacity-50"></i>
-                        <p class="text-sm">No variable expenses logged for ${month}.</p>
+                        <p class="text-sm">No variable expenses logged for ${escapeHtml(month)}.</p>
                     </div>
                 `;
                 return;
             }
 
-            listEl.innerHTML = filtered.map(tx => `
+            listEl.innerHTML = filtered.map((tx) => `
                 <div class="bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center justify-between group">
                     <div class="space-y-0.5">
                         <div class="flex items-center space-x-2">
                             <span class="px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-md text-xs font-semibold">${escapeHtml(tx.category)}</span>
-                            <span class="text-xs text-slate-400">${tx.date}</span>
+                            <span class="text-xs text-slate-400">${escapeHtml(tx.date)}</span>
                         </div>
-                        <p class="font-medium text-sm text-slate-800 dark:text-slate-100 mt-1">${escapeHtml(tx.notes || 'No notes')}</p>
-                        <p class="text-xs text-slate-400">Logged by: <span class="font-medium text-slate-600 dark:text-slate-300">${escapeHtml(tx.author || 'Family')}</span></p>
+                        <p class="font-medium text-sm text-slate-800 dark:text-slate-100 mt-1">${escapeHtml(tx.notes || 'Variable expense')}</p>
+                        <p class="text-xs text-slate-400">By: <span class="font-medium text-slate-600 dark:text-slate-300">${escapeHtml(tx.author || 'Household')}</span></p>
                     </div>
                     <div class="text-right flex items-center space-x-3">
                         <span class="font-bold text-slate-900 dark:text-white text-base">${formatCurrency(tx.amount)}</span>
-                        <button onclick="deleteTransaction('${tx.id}')" class="text-slate-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash-can"></i></button>
+                        <button type="button" onclick="confirmDeleteTransaction('${tx.id}')" aria-label="Delete expense" class="text-slate-400 hover:text-red-500 p-1 transition">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // --- Fast Input Preset Pill Handler ---
-        window.selectQuickCategory = function(catName) {
+        // Quick Category Pill Selection & Fast Variable Logging
+        window.selectQuickCategory = function(catName, btnEl) {
             document.getElementById('ftx-category').value = catName;
-            document.querySelectorAll('.quick-pill').forEach(pill => {
+            document.querySelectorAll('.quick-pill').forEach((pill) => {
                 pill.classList.remove('bg-brand-500', 'text-white', 'border-brand-500');
             });
-            event.currentTarget.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
+            if (btnEl) {
+                btnEl.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
+            }
             document.getElementById('ftx-amount').focus();
         };
 
         window.saveFastTransaction = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
 
-            const authorName = currentUser.email ? currentUser.email.split('@')[0] : "Spouse";
+            const author = currentUser.email ? currentUser.email.split('@')[0] : "Household";
             const txData = {
                 date: document.getElementById('ftx-date').value,
                 category: document.getElementById('ftx-category').value,
                 amount: parseFloat(document.getElementById('ftx-amount').value),
-                notes: document.getElementById('ftx-notes').value,
-                author: authorName,
+                notes: document.getElementById('ftx-notes').value.trim(),
+                author,
                 createdAt: new Date().toISOString()
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
-                await addDoc(colRef, txData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'), txData);
                 document.getElementById('ftx-amount').value = '';
                 document.getElementById('ftx-notes').value = '';
-                showToast("Expense logged instantly!");
+                showToast("Expense logged.");
             } catch (err) {
-                showToast("Error saving expense: " + err.message, "error");
+                showToast("Failed to save expense: " + err.message, "error");
             }
         };
 
-        // --- Analytics & Annual Summary Rendering ---
+        window.confirmDeleteTransaction = function(id) {
+            openConfirmModal("Delete Expense", "Remove this variable expense from your shared budget?", async () => {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'transactions', id));
+                    showToast("Expense removed.");
+                } catch (err) {
+                    showToast("Failed to remove expense.", "error");
+                }
+            });
+        };
+
+        // Analytics: Month-to-Month Comparison & Annual Summary
         function renderAnalytics() {
-            // Generate last 6 months list for comparison
             const tbody = document.getElementById('monthly-comparison-tbody');
-            const now = new Date();
-            let months = [];
+            const [selYear, selMonth] = state.currentMonth.split('-').map(Number);
+
+            const months = [];
             for (let i = 5; i >= 0; i--) {
-                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                months.push(d.toISOString().slice(0, 7));
+                const d = new Date(selYear, selMonth - 1 - i, 1);
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                months.push(`${y}-${m}`);
             }
 
-            tbody.innerHTML = months.map(m => {
+            tbody.innerHTML = months.map((m) => {
                 const inc = getIncomeForMonth(m);
                 const fix = getFixedBillsTotal();
                 const varSpent = getVariableSpentForMonth(m);
-                const savings = inc - fix - varSpent;
-                const rate = inc > 0 ? Math.max(0, Math.round((savings / inc) * 100)) : 0;
+                const surplus = inc - fix - varSpent;
+                const rate = inc > 0 ? Math.round((surplus / inc) * 100) : 0;
 
                 return `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
-                        <td class="py-3 px-3 font-semibold">${m}</td>
+                        <td class="py-3 px-3 font-semibold">${escapeHtml(m)}</td>
                         <td class="py-3 px-3 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatCurrency(inc)}</td>
                         <td class="py-3 px-3 text-right text-blue-600 dark:text-blue-400">${formatCurrency(fix)}</td>
                         <td class="py-3 px-3 text-right text-amber-600 dark:text-amber-400">${formatCurrency(varSpent)}</td>
-                        <td class="py-3 px-3 text-right font-bold ${savings < 0 ? 'text-red-500' : 'text-slate-900 dark:text-white'}">${formatCurrency(savings)}</td>
+                        <td class="py-3 px-3 text-right font-bold ${surplus < 0 ? 'text-red-500' : 'text-slate-900 dark:text-white'}">${formatCurrency(surplus)}</td>
                         <td class="py-3 px-3 text-center">
-                            <span class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-semibold">${rate}%</span>
+                            <span class="px-2.5 py-1 ${rate < 0 ? 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'} rounded-full text-xs font-semibold">${rate}%</span>
                         </td>
                     </tr>
                 `;
             }).join('');
 
-            // Annual calculations
-            const selectedYear = document.getElementById('annual-year-select').value;
+            const year = document.getElementById('annual-year-select').value;
             let annualInc = 0;
             let annualFixed = 0;
             let annualVar = 0;
 
             for (let m = 1; m <= 12; m++) {
-                const mStr = `${selectedYear}-${String(m).padStart(2, '0')}`;
+                const mStr = `${year}-${String(m).padStart(2, '0')}`;
                 annualInc += getIncomeForMonth(mStr);
-                annualFixed += getFixedBillsTotal(); // assuming constant or monthly aggregate
+                annualFixed += getFixedBillsTotal();
                 annualVar += getVariableSpentForMonth(mStr);
             }
 
-            const annualSavings = annualInc - annualFixed - annualVar;
+            const annualSurplus = annualInc - annualFixed - annualVar;
             document.getElementById('annual-total-income').innerText = formatCurrency(annualInc);
             document.getElementById('annual-total-fixed').innerText = formatCurrency(annualFixed);
             document.getElementById('annual-total-variable').innerText = formatCurrency(annualVar);
-            document.getElementById('annual-total-savings').innerText = formatCurrency(annualSavings);
+            const annualSavingsEl = document.getElementById('annual-total-savings');
+            annualSavingsEl.innerText = formatCurrency(annualSurplus);
+            annualSavingsEl.className = annualSurplus < 0
+                ? "text-xl font-bold text-red-500"
+                : "text-xl font-bold text-brand-600 dark:text-brand-400";
         }
 
-        // --- Shop Build & Projects Module Rendering ---
+        // Project Cost Tracker (Budget / Equity Loan, Contractor vs. DIY, Remaining Balance)
         function renderProjectsView() {
             const container = document.getElementById('projects-container');
             if (!state.projects || state.projects.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-slate-400">
                         <i class="fa-solid fa-helmet-safety text-4xl mb-3 opacity-40"></i>
-                        <p class="text-sm font-medium">No active projects yet. Create one here or convert a Savings Goal!</p>
+                        <p class="text-sm font-medium">No active projects yet. Create one or convert a savings goal.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = state.projects.map(proj => {
+            container.innerHTML = state.projects.map((proj) => {
                 const totalBudget = Number(proj.totalBudget || 0);
-                const projExpenses = state.projectExpenses.filter(pe => pe.projectId === proj.id);
-                const spent = projExpenses.reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
+                const expenses = state.projectExpenses.filter((pe) => pe.projectId === proj.id);
+                const spent = expenses.reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
+                const contractorSpent = expenses
+                    .filter((pe) => pe.workType === 'Contractor')
+                    .reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
+                const diySpent = expenses
+                    .filter((pe) => pe.workType === 'DIY')
+                    .reduce((sum, pe) => sum + Number(pe.amount || 0), 0);
                 const remaining = totalBudget - spent;
-                const pct = totalBudget > 0 ? Math.min(Math.round((spent / totalBudget) * 100), 100) : 0;
+                const rawPct = totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+                const barWidth = Math.min(Math.max(rawPct, 0), 100);
 
-                const catSpent = {};
-                (proj.categories || []).forEach(c => catSpent[c] = 0);
-                projExpenses.forEach(pe => {
-                    if (catSpent[pe.category] !== undefined) {
-                        catSpent[pe.category] += Number(pe.amount || 0);
-                    } else {
-                        catSpent[pe.category] = Number(pe.amount || 0);
-                    }
+                let barColor = 'bg-indigo-600';
+                if (rawPct >= 100 && totalBudget > 0) barColor = 'bg-red-500';
+                else if (rawPct >= 80 && totalBudget > 0) barColor = 'bg-amber-500';
+
+                const catTotals = {};
+                (proj.categories || []).forEach((c) => { catTotals[c] = 0; });
+                expenses.forEach((pe) => {
+                    catTotals[pe.category] = (catTotals[pe.category] || 0) + Number(pe.amount || 0);
                 });
 
                 return `
                     <div class="bg-slate-50 dark:bg-slate-700/30 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-5">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div>
-                                <h4 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-building-shield text-indigo-600"></i> ${escapeHtml(proj.name)}
-                                </h4>
-                                <p class="text-xs text-slate-500">Total Budget / Equity Loan: <strong class="text-slate-800 dark:text-slate-200">${formatCurrency(totalBudget)}</strong></p>
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(proj.name)}</h4>
+                                <p class="text-xs text-slate-500">Budget / Equity Loan: <strong class="text-slate-800 dark:text-slate-200">${formatCurrency(totalBudget)}</strong></p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button onclick="openProjectExpenseModal('${proj.id}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center space-x-1.5">
+                                <button type="button" onclick="openProjectExpenseModal('${proj.id}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center space-x-1.5">
                                     <i class="fa-solid fa-plus"></i>
                                     <span>Log Project Cost</span>
                                 </button>
-                                <button onclick="deleteProject('${proj.id}')" class="p-2 text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
+                                <button type="button" onclick="confirmDeleteProject('${proj.id}')" aria-label="Delete project" class="p-2 text-slate-400 hover:text-red-500 transition">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Progress KPIs -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
                             <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Total Spent</span>
+                                <span class="block text-xs uppercase font-semibold text-slate-400">Remaining</span>
+                                <span class="font-bold text-base ${remaining < 0 ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}">${formatCurrency(remaining)}</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs uppercase font-semibold text-slate-400">Total Spent (${rawPct}%)</span>
                                 <span class="font-bold text-base text-slate-900 dark:text-white">${formatCurrency(spent)}</span>
                             </div>
                             <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Remaining Budget</span>
-                                <span class="font-bold text-base ${remaining < 0 ? 'text-red-500' : 'text-emerald-600'}">${formatCurrency(remaining)}</span>
+                                <span class="block text-xs uppercase font-semibold text-slate-400">Contractor</span>
+                                <span class="font-bold text-base text-indigo-600 dark:text-indigo-400">${formatCurrency(contractorSpent)}</span>
                             </div>
                             <div>
-                                <span class="block text-xs uppercase font-semibold text-slate-400">Completion Spent</span>
-                                <span class="font-bold text-base text-indigo-600">${pct}%</span>
+                                <span class="block text-xs uppercase font-semibold text-slate-400">DIY</span>
+                                <span class="font-bold text-base text-brand-600 dark:text-brand-400">${formatCurrency(diySpent)}</span>
                             </div>
                         </div>
+
                         <div class="w-full bg-slate-200 dark:bg-slate-600 h-3 rounded-full overflow-hidden">
-                            <div class="bg-indigo-600 h-3 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                            <div class="${barColor} h-3 rounded-full transition-all duration-500" style="width: ${barWidth}%"></div>
                         </div>
 
-                        <!-- Category Breakdown Grid -->
                         <div>
-                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Category Breakdown</span>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                                ${(proj.categories || []).map(cat => {
-                                    const cSpent = catSpent[cat] || 0;
-                                    return `
-                                        <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs">
-                                            <span class="font-medium text-slate-700 dark:text-slate-200">${cat}</span>
-                                            <span class="font-bold text-slate-900 dark:text-white">${formatCurrency(cSpent)}</span>
-                                        </div>
-                                    `;
-                                }).join('')}
+                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Category Totals</span>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                                ${(proj.categories || []).map((cat) => `
+                                    <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs">
+                                        <span class="font-medium text-slate-700 dark:text-slate-200">${escapeHtml(cat)}</span>
+                                        <span class="font-bold text-slate-900 dark:text-white">${formatCurrency(catTotals[cat] || 0)}</span>
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
 
-                        <!-- Expenses List -->
                         <div>
-                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Recorded Expenses & Invoices</span>
+                            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Project Cost Log</span>
                             <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                                ${projExpenses.length === 0 ? `<p class="text-xs text-slate-400 italic">No project expenses logged yet.</p>` :
-                                    projExpenses.map(pe => `
+                                ${expenses.length === 0
+                                    ? `<p class="text-xs text-slate-400 italic">No costs logged for this project yet.</p>`
+                                    : expenses.map((pe) => `
                                         <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
                                             <div>
                                                 <div class="flex items-center space-x-2">
                                                     <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded font-semibold">${escapeHtml(pe.category)}</span>
-                                                    <span class="text-slate-400">${pe.date}</span>
+                                                    <span class="px-2 py-0.5 ${pe.workType === 'DIY' ? 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'} rounded font-semibold">${escapeHtml(pe.workType || 'Contractor')}</span>
+                                                    <span class="text-slate-400">${escapeHtml(pe.date)}</span>
                                                 </div>
-                                                <p class="font-medium text-slate-800 dark:text-slate-200 mt-1">${escapeHtml(pe.vendor)} <span class="text-slate-400 font-normal">(${escapeHtml(pe.source)})</span></p>
+                                                <p class="font-medium text-slate-800 dark:text-slate-200 mt-1">${escapeHtml(pe.vendor)}</p>
                                             </div>
                                             <div class="flex items-center space-x-3">
                                                 <span class="font-bold text-slate-900 dark:text-white">${formatCurrency(pe.amount)}</span>
-                                                <button onclick="deleteProjectExpense('${pe.id}')" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+                                                <button type="button" onclick="confirmDeleteProjectExpense('${pe.id}')" aria-label="Delete project cost" class="text-slate-400 hover:text-red-500">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     `).join('')
@@ -1328,20 +1411,20 @@
             }).join('');
         }
 
-        // --- Savings Targets & Goals Module Rendering ---
+        // Savings Goals & Conversion to Active Project Cost Tracker
         function renderSavingsGoalsView() {
             const container = document.getElementById('savings-goals-container');
             if (!state.savingsGoals || state.savingsGoals.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-2 text-center py-12 text-slate-400">
                         <i class="fa-solid fa-bullseye text-4xl mb-3 opacity-40"></i>
-                        <p class="text-sm font-medium">No savings goals set. Create a vacation fund, gift target, or equipment purchase goal!</p>
+                        <p class="text-sm font-medium">No savings goals yet. Create one for a trip, gift, or purchase.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = state.savingsGoals.map(sg => {
+            container.innerHTML = state.savingsGoals.map((sg) => {
                 const target = Number(sg.targetAmount || 0);
                 const saved = Number(sg.currentSaved || 0);
                 const pct = target > 0 ? Math.min(Math.round((saved / target) * 100), 100) : 0;
@@ -1350,14 +1433,12 @@
                     <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4 flex flex-col justify-between">
                         <div class="flex items-start justify-between">
                             <div>
-                                <h4 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-star text-amber-500"></i> ${escapeHtml(sg.name)}
-                                </h4>
+                                <h4 class="font-bold text-base text-slate-900 dark:text-white">${escapeHtml(sg.name)}</h4>
                                 <p class="text-xs text-slate-500 mt-0.5">Target: <strong class="text-slate-800 dark:text-slate-200">${formatCurrency(target)}</strong></p>
                             </div>
-                            <div class="flex items-center space-x-1">
-                                <button onclick="deleteSavingsGoal('${sg.id}')" class="p-1.5 text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
+                            <button type="button" onclick="confirmDeleteSavingsGoal('${sg.id}')" aria-label="Delete savings goal" class="p-1.5 text-slate-400 hover:text-red-500 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
 
                         <div class="space-y-1.5">
@@ -1370,11 +1451,11 @@
                             </div>
                         </div>
 
-                        <div class="pt-2 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
-                            <button onclick="updateSavingsGoalProgress('${sg.id}', ${saved})" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-xl text-xs font-semibold transition">
-                                <i class="fa-solid fa-coins mr-1"></i> Add Funds
+                        <div class="pt-3 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                            <button type="button" onclick="openAddSavingsFundsModal('${sg.id}', ${saved})" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-xl text-xs font-semibold transition">
+                                <i class="fa-solid fa-plus mr-1"></i>Add Funds
                             </button>
-                            <button onclick="convertGoalToProject('${sg.id}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center space-x-1.5">
+                            <button type="button" onclick="confirmConvertGoalToProject('${sg.id}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center space-x-1.5">
                                 <i class="fa-solid fa-arrow-right-arrow-left"></i>
                                 <span>Convert to Project Tracker</span>
                             </button>
@@ -1386,298 +1467,289 @@
 
         window.openNewSavingsGoalModal = function() {
             document.getElementById('savings-goal-form').reset();
-            document.getElementById('sg-current').value = 0;
+            document.getElementById('sg-current').value = '0';
             document.getElementById('savings-goal-modal').classList.remove('hidden');
         };
 
         window.saveSavingsGoal = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
-
-            const name = document.getElementById('sg-name').value;
-            const targetAmount = parseFloat(document.getElementById('sg-target').value);
-            const currentSaved = parseFloat(document.getElementById('sg-current').value);
-            const categories = document.getElementById('sg-categories').value.split(',').map(c => c.trim()).filter(Boolean);
+            if (!currentUser || !db) return;
 
             const goalData = {
-                name,
-                targetAmount,
-                currentSaved,
-                categories,
+                name: document.getElementById('sg-name').value.trim(),
+                targetAmount: parseFloat(document.getElementById('sg-target').value),
+                currentSaved: parseFloat(document.getElementById('sg-current').value),
+                categories: document.getElementById('sg-categories').value.split(',').map((c) => c.trim()).filter(Boolean),
                 createdAt: new Date().toISOString()
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'savingsGoals');
-                await addDoc(colRef, goalData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'savingsGoals'), goalData);
                 closeModal('savings-goal-modal');
-                showToast("Savings goal saved!");
+                showToast("Savings goal saved.");
             } catch (err) {
-                showToast("Error saving goal: " + err.message, "error");
+                showToast("Failed to save goal: " + err.message, "error");
             }
         };
 
-        window.updateSavingsGoalProgress = async function(goalId, currentVal) {
-            const added = prompt("Enter amount to add to savings goal:", "100");
-            if (!added || isNaN(added)) return;
-            const newVal = currentVal + parseFloat(added);
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', goalId);
-                await updateDoc(docRef, { currentSaved: newVal });
-                showToast("Savings updated!");
-            } catch (err) {
-                showToast("Error updating savings", "error");
-            }
+        window.openAddSavingsFundsModal = function(goalId, currentSaved) {
+            const goal = state.savingsGoals.find((g) => g.id === goalId);
+            document.getElementById('add-sg-id').value = goalId;
+            document.getElementById('add-sg-current').value = currentSaved;
+            document.getElementById('add-sg-amount').value = '';
+            document.getElementById('add-sg-label').innerText = goal
+                ? `${goal.name} (Currently saved: ${formatCurrency(currentSaved)})`
+                : `Currently saved: ${formatCurrency(currentSaved)}`;
+            document.getElementById('add-savings-funds-modal').classList.remove('hidden');
+            document.getElementById('add-sg-amount').focus();
         };
 
-        window.deleteSavingsGoal = async function(id) {
-            if (!currentUser || !confirm("Delete this savings goal?")) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', id);
-                await deleteDoc(docRef);
-                showToast("Savings goal deleted.");
-            } catch (err) {
-                showToast("Error deleting goal", "error");
-            }
-        };
+        window.submitSavingsFunds = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !db) return;
 
-        window.convertGoalToProject = async function(goalId) {
-            const goal = state.savingsGoals.find(g => g.id === goalId);
-            if (!goal || !currentUser) return;
-
-            if (!confirm(`Convert "${goal.name}" into an active Project Cost Tracker? This will create a project with a budget of ${formatCurrency(goal.targetAmount)}.`)) return;
+            const goalId = document.getElementById('add-sg-id').value;
+            const currentSaved = parseFloat(document.getElementById('add-sg-current').value) || 0;
+            const added = parseFloat(document.getElementById('add-sg-amount').value) || 0;
 
             try {
-                // 1. Create project
-                const projCol = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
-                const newProjRef = await addDoc(projCol, {
-                    name: goal.name + " (Converted)",
-                    totalBudget: goal.targetAmount,
-                    categories: goal.categories || ["General"],
-                    createdAt: new Date().toISOString()
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', goalId), {
+                    currentSaved: currentSaved + added
                 });
-
-                // 2. If already saved money, log initial starting expense/draw or seed record
-                if (goal.currentSaved > 0) {
-                    const peCol = collection(db, 'artifacts', appId, 'public', 'data', 'projectExpenses');
-                    await addDoc(peCol, {
-                        projectId: newProjRef.id,
-                        date: new Date().toISOString().slice(0, 10),
-                        category: goal.categories[0] || "General",
-                        amount: goal.currentSaved,
-                        vendor: "Initial Savings Transfer",
-                        source: "Savings Goal Conversion",
-                        createdAt: new Date().toISOString()
-                    });
-                }
-
-                // 3. Delete savings goal
-                const goalDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', goalId);
-                await deleteDoc(goalDocRef);
-
-                showToast("Successfully converted goal to project tracker!");
-                switchMainTab('projects');
+                closeModal('add-savings-funds-modal');
+                showToast("Savings funds added.");
             } catch (err) {
-                showToast("Error converting goal: " + err.message, "error");
+                showToast("Failed to update savings.", "error");
             }
         };
 
-        // --- CRUD & Firestore Action Handlers ---
+        window.confirmDeleteSavingsGoal = function(id) {
+            openConfirmModal("Delete Savings Goal", "Remove this savings goal?", async () => {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', id));
+                    showToast("Savings goal deleted.");
+                } catch (err) {
+                    showToast("Failed to delete savings goal.", "error");
+                }
+            });
+        };
 
+        window.confirmConvertGoalToProject = function(goalId) {
+            const goal = state.savingsGoals.find((g) => g.id === goalId);
+            if (!goal || !currentUser || !db) return;
+
+            openConfirmModal(
+                "Convert Goal to Project Tracker",
+                `Convert "${goal.name}" into an active project cost tracker with a ${formatCurrency(goal.targetAmount)} budget?`,
+                async () => {
+                    try {
+                        const categories = (goal.categories && goal.categories.length > 0) ? goal.categories : ["General"];
+                        const newProjRef = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
+                            name: goal.name,
+                            totalBudget: Number(goal.targetAmount || 0),
+                            categories,
+                            createdAt: new Date().toISOString()
+                        });
+
+                        if (Number(goal.currentSaved || 0) > 0) {
+                            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projectExpenses'), {
+                                projectId: newProjRef.id,
+                                date: new Date().toISOString().slice(0, 10),
+                                category: categories[0],
+                                workType: "DIY",
+                                amount: Number(goal.currentSaved),
+                                vendor: `Pre-saved funds transferred from "${goal.name}"`,
+                                createdAt: new Date().toISOString()
+                            });
+                        }
+
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'savingsGoals', goalId));
+                        showToast("Converted goal into project tracker.");
+                        window.switchMainTab('projects');
+                    } catch (err) {
+                        showToast("Failed to convert goal: " + err.message, "error");
+                    }
+                }
+            );
+        };
+
+        // Income, Fixed Bills & Category Limits CRUD
         window.saveIncomeStream = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
 
             const streamData = {
-                name: document.getElementById('inc-name').value,
+                name: document.getElementById('inc-name').value.trim(),
                 amount: parseFloat(document.getElementById('inc-amount').value),
                 startDate: document.getElementById('inc-start-date').value
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'incomeStreams');
-                await addDoc(colRef, streamData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'incomeStreams'), streamData);
                 document.getElementById('income-form').reset();
                 document.getElementById('inc-start-date').value = new Date().toISOString().slice(0, 10);
                 renderIncomeModalList();
-                showToast("Income rate added successfully!");
+                showToast("Income schedule saved.");
             } catch (err) {
-                showToast("Error saving income: " + err.message, "error");
+                showToast("Failed to save income: " + err.message, "error");
             }
         };
 
         window.deleteIncomeStream = async function(id) {
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'incomeStreams', id);
-                await deleteDoc(docRef);
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'incomeStreams', id));
                 renderIncomeModalList();
-                showToast("Income stream removed.");
+                showToast("Income entry removed.");
             } catch (err) {
-                showToast("Error deleting income", "error");
+                showToast("Failed to remove income entry.", "error");
             }
         };
 
         window.saveFixedBill = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
 
             const billData = {
-                name: document.getElementById('fb-name').value,
+                name: document.getElementById('fb-name').value.trim(),
                 amount: parseFloat(document.getElementById('fb-amount').value),
-                dueDay: parseInt(document.getElementById('fb-dueday').value)
+                dueDay: parseInt(document.getElementById('fb-dueday').value, 10)
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'fixedBills');
-                await addDoc(colRef, billData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fixedBills'), billData);
                 document.getElementById('fixed-bill-form').reset();
                 renderFixedBillsManageList();
-                showToast("Fixed bill added!");
+                showToast("Preset fixed bill added.");
             } catch (err) {
-                showToast("Error saving bill: " + err.message, "error");
+                showToast("Failed to add fixed bill: " + err.message, "error");
             }
         };
 
         window.deleteFixedBill = async function(id) {
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', id);
-                await deleteDoc(docRef);
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', id));
                 renderFixedBillsManageList();
                 showToast("Fixed bill removed.");
             } catch (err) {
-                showToast("Error deleting bill", "error");
+                showToast("Failed to remove fixed bill.", "error");
             }
         };
 
         window.saveCategoryBudgets = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
 
-            const categories = Object.keys(state.categoryBudgets);
-            const newBudgets = {};
-            categories.forEach(cat => {
-                const val = parseFloat(document.getElementById(`cat-limit-${cat}`).value);
-                newBudgets[cat] = isNaN(val) ? 0 : val;
+            const updated = {};
+            Object.keys(state.categoryBudgets).forEach((cat) => {
+                const input = document.getElementById(`cat-limit-${cat}`);
+                const val = input ? parseFloat(input.value) : 0;
+                updated[cat] = isNaN(val) ? 0 : val;
             });
 
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'categoryBudgets', 'main_limits');
-                await setDoc(docRef, { budgets: newBudgets });
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'categoryBudgets', 'main_limits'), {
+                    budgets: updated
+                });
                 closeModal('category-budget-modal');
-                showToast("Category spending limits updated!");
+                showToast("Category limits updated.");
             } catch (err) {
-                showToast("Error updating budgets: " + err.message, "error");
+                showToast("Failed to update limits: " + err.message, "error");
             }
         };
 
-        window.deleteTransaction = async function(id) {
-            if (!currentUser || !confirm("Delete this transaction?")) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', id);
-                await deleteDoc(docRef);
-                showToast("Transaction deleted.");
-            } catch (err) {
-                showToast("Error deleting", "error");
-            }
-        };
-
+        // Projects & Project Expenses CRUD
         window.openNewProjectModal = function() {
-            document.getElementById('proj-modal-title').innerText = "Create Shop Build-Out Project";
             document.getElementById('project-form').reset();
+            document.getElementById('proj-categories').value = "Concrete & Erection, Framing & Insulation, Electrical & Plumbing, Interior Finish & DIY";
             document.getElementById('project-modal').classList.remove('hidden');
         };
 
         window.saveProject = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
-
-            const name = document.getElementById('proj-name').value;
-            const totalBudget = parseFloat(document.getElementById('proj-budget').value);
-            const categories = document.getElementById('proj-categories').value.split(',').map(c => c.trim()).filter(Boolean);
+            if (!currentUser || !db) return;
 
             const projData = {
-                name,
-                totalBudget,
-                categories,
+                name: document.getElementById('proj-name').value.trim(),
+                totalBudget: parseFloat(document.getElementById('proj-budget').value),
+                categories: document.getElementById('proj-categories').value.split(',').map((c) => c.trim()).filter(Boolean),
                 createdAt: new Date().toISOString()
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
-                await addDoc(colRef, projData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), projData);
                 closeModal('project-modal');
-                showToast("Project workspace created!");
+                showToast("Project created.");
             } catch (err) {
-                showToast("Error creating project: " + err.message, "error");
+                showToast("Failed to create project: " + err.message, "error");
             }
         };
 
-        window.deleteProject = async function(id) {
-            if (!currentUser || !confirm("Delete this project and all its recorded expenses?")) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', id);
-                await deleteDoc(docRef);
-                showToast("Project deleted.");
-            } catch (err) {
-                showToast("Error deleting project", "error");
-            }
+        window.confirmDeleteProject = function(id) {
+            openConfirmModal("Delete Project", "Delete this project cost tracker?", async () => {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id));
+                    showToast("Project deleted.");
+                } catch (err) {
+                    showToast("Failed to delete project.", "error");
+                }
+            });
         };
 
         window.openProjectExpenseModal = function(projectId) {
-            const proj = state.projects.find(p => p.id === projectId);
+            const proj = state.projects.find((p) => p.id === projectId);
             if (!proj) return;
 
             document.getElementById('pe-project-id').value = projectId;
             document.getElementById('proj-exp-modal-title').innerText = `Log Cost: ${proj.name}`;
             document.getElementById('pe-date').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('pe-work-type').value = "Contractor";
+            document.getElementById('pe-amount').value = "";
+            document.getElementById('pe-vendor').value = "";
 
             const catSelect = document.getElementById('pe-category');
-            catSelect.innerHTML = (proj.categories || []).map(cat => `<option value="${cat}">${cat}</option>`).join('');
+            const cats = (proj.categories && proj.categories.length > 0) ? proj.categories : ["General"];
+            catSelect.innerHTML = cats.map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
 
             document.getElementById('project-expense-modal').classList.remove('hidden');
         };
 
         window.saveProjectExpense = async function(e) {
             e.preventDefault();
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
 
             const expenseData = {
                 projectId: document.getElementById('pe-project-id').value,
                 date: document.getElementById('pe-date').value,
                 category: document.getElementById('pe-category').value,
+                workType: document.getElementById('pe-work-type').value,
                 amount: parseFloat(document.getElementById('pe-amount').value),
-                vendor: document.getElementById('pe-vendor').value,
-                source: document.getElementById('pe-source').value || 'Equity Loan Draw',
+                vendor: document.getElementById('pe-vendor').value.trim(),
                 createdAt: new Date().toISOString()
             };
 
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'projectExpenses');
-                await addDoc(colRef, expenseData);
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projectExpenses'), expenseData);
                 closeModal('project-expense-modal');
-                document.getElementById('project-expense-form').reset();
-                showToast("Project expense logged!");
+                showToast("Project expense logged.");
             } catch (err) {
-                showToast("Error saving project cost: " + err.message, "error");
+                showToast("Failed to log project expense: " + err.message, "error");
             }
         };
 
-        window.deleteProjectExpense = async function(id) {
-            if (!currentUser || !confirm("Delete this project expense record?")) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projectExpenses', id);
-                await deleteDoc(docRef);
-                showToast("Expense record removed.");
-            } catch (err) {
-                showToast("Error deleting record", "error");
-            }
+        window.confirmDeleteProjectExpense = function(id) {
+            openConfirmModal("Delete Project Cost", "Remove this project cost item?", async () => {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projectExpenses', id));
+                    showToast("Project cost removed.");
+                } catch (err) {
+                    showToast("Failed to remove project cost.", "error");
+                }
+            });
         };
 
-        // --- Modals Control ---
-
+        // Modal Helpers
         window.openIncomeModal = function() {
             renderIncomeModalList();
             document.getElementById('inc-start-date').value = new Date().toISOString().slice(0, 10);
@@ -1691,10 +1763,10 @@
 
         window.openCategoryBudgetModal = function() {
             const container = document.getElementById('category-limits-inputs');
-            container.innerHTML = Object.keys(state.categoryBudgets).map(cat => `
+            container.innerHTML = Object.keys(state.categoryBudgets).map((cat) => `
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">${cat} Limit ($)</label>
-                    <input type="number" step="1" min="0" id="cat-limit-${cat}" value="${state.categoryBudgets[cat]}" required class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                    <label for="cat-limit-${escapeHtml(cat)}" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">${escapeHtml(cat)} Limit ($)</label>
+                    <input type="number" step="1" min="0" id="cat-limit-${escapeHtml(cat)}" value="${Number(state.categoryBudgets[cat] || 0)}" required class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                 </div>
             `).join('');
             document.getElementById('category-budget-modal').classList.remove('hidden');
@@ -1708,21 +1780,31 @@
             document.getElementById(modalId).classList.add('hidden');
         };
 
+        function openConfirmModal(title, message, onConfirm) {
+            pendingConfirmAction = onConfirm;
+            document.getElementById('confirm-modal-title').innerText = title;
+            document.getElementById('confirm-modal-message').innerText = message;
+            document.getElementById('confirm-action-modal').classList.remove('hidden');
+        }
+
         function renderIncomeModalList() {
             const container = document.getElementById('income-streams-list');
             if (state.incomeStreams.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No income streams logged.</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No income entries yet.</p>`;
                 return;
             }
-            container.innerHTML = state.incomeStreams.map(s => `
+            const sorted = [...state.incomeStreams].sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
+            container.innerHTML = sorted.map((s) => `
                 <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                     <div>
                         <h5 class="font-semibold text-sm">${escapeHtml(s.name)}</h5>
-                        <p class="text-xs text-slate-500">Effective from: ${s.startDate}</p>
+                        <p class="text-xs text-slate-500">Effective: ${escapeHtml(s.startDate)}</p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <span class="font-bold text-brand-600 dark:text-brand-400">${formatCurrency(s.amount)}/mo</span>
-                        <button onclick="deleteIncomeStream('${s.id}')" class="text-red-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                        <button type="button" onclick="deleteIncomeStream('${s.id}')" aria-label="Delete income entry" class="text-red-400 hover:text-red-600 text-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -1731,89 +1813,97 @@
         function renderFixedBillsManageList() {
             const container = document.getElementById('fixed-bills-manage-list');
             if (state.fixedBills.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No preset bills configured.</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No preset fixed bills yet.</p>`;
                 return;
             }
-            container.innerHTML = state.fixedBills.map(b => `
+            container.innerHTML = state.fixedBills.map((b) => `
                 <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                     <div>
                         <h5 class="font-semibold text-sm">${escapeHtml(b.name)}</h5>
-                        <p class="text-xs text-slate-500">Due day: ${b.dueDay} of each month</p>
+                        <p class="text-xs text-slate-500">Due day ${escapeHtml(String(b.dueDay))}</p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <span class="font-bold">${formatCurrency(b.amount)}</span>
-                        <button onclick="deleteFixedBill('${b.id}')" class="text-red-400 hover:text-red-600 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                        <button type="button" onclick="deleteFixedBill('${b.id}')" aria-label="Delete fixed bill" class="text-red-400 hover:text-red-600 text-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 </div>
             `).join('');
         }
 
         window.signOutUser = async function() {
+            if (!auth) return;
             try {
                 await signOut(auth);
                 closeModal('household-modal');
-                showToast("Signed out successfully.");
+                showToast("Signed out.");
             } catch (err) {
-                showToast("Error signing out", "error");
+                showToast("Failed to sign out.", "error");
             }
         };
 
-        // --- Export & Backup Functions ---
-
+        // Export Helpers (JSON & CSV)
         window.exportDataJSON = function() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `family_budget_backup_${state.currentMonth}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast("JSON backup downloaded!");
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            triggerDownload(blob, `family_budget_${state.currentMonth}.json`);
+            showToast("JSON backup exported.");
         };
 
         window.exportTransactionsCSV = function() {
-            let csv = "Date,Category,Amount,Notes,Author\n";
-            state.transactions.forEach(tx => {
-                csv += `"${tx.date}","${tx.category}",${tx.amount},"${(tx.notes || '').replace(/"/g, '""')}","${tx.author || ''}"\n`;
+            let csv = "Date,Category,Amount,Notes,LoggedBy\n";
+            state.transactions.forEach((tx) => {
+                const notes = (tx.notes || '').replace(/"/g, '""');
+                const author = (tx.author || '').replace(/"/g, '""');
+                csv += `"${tx.date || ''}","${tx.category || ''}",${Number(tx.amount || 0)},"${notes}","${author}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", url);
-            downloadAnchor.setAttribute("download", `variable_transactions_${state.currentMonth}.csv`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast("CSV exported!");
+            triggerDownload(blob, `variable_expenses_${state.currentMonth}.csv`);
+            showToast("CSV exported.");
         };
 
-        // --- Utility Helpers ---
+        function triggerDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
 
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+        // Formatting & UI Utilities
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val || 0));
         }
 
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
+        let toastTimer = null;
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
 
-            toastMsg.innerText = message;
-            if (type === 'error') {
-                toastIcon.className = "fa-solid fa-circle-exclamation text-red-400";
-            } else {
-                toastIcon.className = "fa-solid fa-circle-check text-brand-400";
-            }
+            msgEl.innerText = message;
+            iconEl.className = type === 'error'
+                ? "fa-solid fa-circle-exclamation text-red-400"
+                : "fa-solid fa-circle-check text-brand-400";
 
             toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3500);
+            }, 3200);
         }
     </script>
 </body>

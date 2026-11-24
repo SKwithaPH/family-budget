@@ -355,10 +355,10 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 class="font-bold text-lg">Fixed Expenses</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Tap edit on any bill to adjust this month or update recurring rate/due day</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Only bills active in the selected month count toward totals; tap edit to set start/end months or rates</p>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 bills</span>
+                                    <span class="text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full font-medium" id="fixed-bills-count">0 active</span>
                                     <button type="button" onclick="openFixedBillsModal()" class="min-h-[44px] px-3 text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline flex items-center">
                                         <i class="fa-solid fa-plus mr-1"></i>Manage
                                     </button>
@@ -548,7 +548,7 @@
                 <h3 class="font-bold text-lg">Fixed Expenses</h3>
                 <button type="button" onclick="closeModal('fixed-bills-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses or tap the pencil icon to edit due dates, permanent increases, or single-month amounts.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Add recurring monthly expenses with optional start/end months, or tap the pencil icon to adjust rates or cancel an expense after a specific month.</p>
 
             <div class="space-y-2.5 mb-4 overflow-y-auto flex-grow pr-1" id="fixed-bills-manage-list"></div>
 
@@ -556,15 +556,25 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <div>
                         <label for="fb-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Expense Name</label>
-                        <input type="text" id="fb-name" required placeholder="Mortgage" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                        <input type="text" id="fb-name" required placeholder="Shop Mortgage" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                     <div>
                         <label for="fb-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Amount ($)</label>
-                        <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="1650.00" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
+                        <input type="number" step="0.01" min="0" id="fb-amount" required placeholder="650.00" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm font-semibold">
                     </div>
                     <div>
                         <label for="fb-dueday" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Due Day (1-31)</label>
                         <input type="number" min="1" max="31" id="fb-dueday" required placeholder="1" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label for="fb-start-month" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Start Month (Optional)</label>
+                        <input type="month" id="fb-start-month" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                    <div>
+                        <label for="fb-end-month" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">End Month (Optional)</label>
+                        <input type="month" id="fb-end-month" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                 </div>
                 <button type="submit" class="w-full py-3 min-h-[44px] bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm shadow-md">Add Fixed Expense</button>
@@ -572,14 +582,14 @@
         </div>
     </div>
 
-    <!-- 2B. Edit Fixed Expense Modal (Supports This Month Only vs. Going Forward + Due Date) -->
+    <!-- 2B. Edit Fixed Expense Modal (Supports Start/End Month + This Month Only vs. Going Forward + Due Date) -->
     <div id="edit-fixed-bill-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[92vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="font-bold text-lg">Edit Fixed Expense</h3>
                 <button type="button" onclick="closeModal('edit-fixed-bill-modal')" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" id="efb-context-note">Adjust for the active month only or update the recurring rate moving forward.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" id="efb-context-note">Adjust active months, single-month amount, or recurring rate moving forward.</p>
 
             <form id="edit-fixed-bill-form" onsubmit="submitEditFixedBill(event)" class="space-y-4">
                 <input type="hidden" id="efb-id">
@@ -597,6 +607,17 @@
                         <input type="number" min="1" max="31" id="efb-dueday" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="efb-start-month" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Start Month</label>
+                        <input type="month" id="efb-start-month" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                    <div>
+                        <label for="efb-end-month" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">End Month (Last Bill)</label>
+                        <input type="month" id="efb-end-month" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-400 -mt-2">Leave Start/End blank if always active. Setting End Month (e.g. 2026-06) stops the bill in subsequent months while preserving earlier history.</p>
                 <div>
                     <label for="efb-scope" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Apply Amount Change To</label>
                     <select id="efb-scope" class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm font-medium">
@@ -617,7 +638,7 @@
         </div>
     </div>
     
-<!-- 2C. Edit Variable Expense Modal -->
+    <!-- 2C. Edit Variable Expense Modal -->
     <div id="edit-tx-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
@@ -917,7 +938,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import {
             getAuth,
-            signInAnonymously,
             signInWithCustomToken,
             signInWithEmailAndPassword,
             onAuthStateChanged,
@@ -1233,15 +1253,35 @@
         }
 
         // Resolves each fixed bill for a target YYYY-MM month using:
-        // 1) Single-month override (bill.monthlyOverrides[monthStr]) for fluctuating bills like Water/Sewer
-        // 2) Effective-dated rate history (bill.rateHistory) for permanent increases like Disney+
-        // 3) Base bill.amount fallback
+        // 1) Active window check (bill.startMonth and bill.endMonth) for mid-year starts or canceled bills
+        // 2) Single-month override (bill.monthlyOverrides[monthStr]) for fluctuating bills like Water/Sewer
+        // 3) Effective-dated rate history (bill.rateHistory) for permanent increases
+        // 4) Base bill.amount fallback
         function getFixedBillEffectiveDetails(bill, monthStr) {
+            if (bill.startMonth && monthStr < bill.startMonth) {
+                return {
+                    amount: 0,
+                    isMonthOverride: false,
+                    isInactiveWindow: true,
+                    inactiveReason: `Starts ${bill.startMonth}`
+                };
+            }
+            if (bill.endMonth && monthStr > bill.endMonth) {
+                return {
+                    amount: 0,
+                    isMonthOverride: false,
+                    isInactiveWindow: true,
+                    inactiveReason: `Ended ${bill.endMonth}`
+                };
+            }
+
             const overrides = bill.monthlyOverrides || {};
             if (Object.prototype.hasOwnProperty.call(overrides, monthStr)) {
                 return {
                     amount: Number(overrides[monthStr] || 0),
-                    isMonthOverride: true
+                    isMonthOverride: true,
+                    isInactiveWindow: false,
+                    inactiveReason: ''
                 };
             }
 
@@ -1253,20 +1293,26 @@
                 if (eligible.length > 0) {
                     return {
                         amount: Number(eligible[eligible.length - 1].amount || 0),
-                        isMonthOverride: false
+                        isMonthOverride: false,
+                        isInactiveWindow: false,
+                        inactiveReason: ''
                     };
                 }
                 // If viewing a month earlier than the earliest recorded effectiveMonth, use the earliest historical rate
                 const earliest = [...history].sort((a, b) => a.effectiveMonth.localeCompare(b.effectiveMonth))[0];
                 return {
                     amount: Number(earliest.amount || 0),
-                    isMonthOverride: false
+                    isMonthOverride: false,
+                    isInactiveWindow: false,
+                    inactiveReason: ''
                 };
             }
 
             return {
                 amount: Number(bill.amount || 0),
-                isMonthOverride: false
+                isMonthOverride: false,
+                isInactiveWindow: false,
+                inactiveReason: ''
             };
         }
 
@@ -1431,7 +1477,10 @@
 
         function renderFixedBillsTable() {
             const tbody = document.getElementById('fixed-bills-table-body');
-            document.getElementById('fixed-bills-count').innerText = `${state.fixedBills.length} bills`;
+            const activeCount = state.fixedBills.filter(
+                (bill) => !getFixedBillEffectiveDetails(bill, state.currentMonth).isInactiveWindow
+            ).length;
+            document.getElementById('fixed-bills-count').innerText = `${activeCount} active`;
 
             if (state.fixedBills.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400 text-sm">No fixed expenses configured yet.</td></tr>`;
@@ -1441,12 +1490,19 @@
             const sortedBills = [...state.fixedBills].sort((a, b) => Number(a.dueDay || 1) - Number(b.dueDay || 1));
             tbody.innerHTML = sortedBills.map((bill) => {
                 const details = getFixedBillEffectiveDetails(bill, state.currentMonth);
-                const badgeHtml = details.isMonthOverride
-                    ? `<span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">Month Adj.</span>`
-                    : `<span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-semibold">Preset</span>`;
+                let badgeHtml;
+                if (details.isInactiveWindow) {
+                    badgeHtml = `<span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-xs font-semibold">${escapeHtml(details.inactiveReason)}</span>`;
+                } else if (details.isMonthOverride) {
+                    badgeHtml = `<span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-xs font-semibold">Month Adj.</span>`;
+                } else {
+                    badgeHtml = `<span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-semibold">Active</span>`;
+                }
+
+                const rowOpacity = details.isInactiveWindow ? 'opacity-50' : '';
 
                 return `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition ${rowOpacity}">
                         <td class="py-3 px-2 font-medium">${escapeHtml(bill.name)}</td>
                         <td class="py-3 px-2 text-slate-500">Day ${escapeHtml(String(bill.dueDay))}</td>
                         <td class="py-3 px-2 text-right font-semibold">${formatCurrency(details.amount)}</td>
@@ -1806,6 +1862,10 @@
                 return;
             }
 
+            const categories = Object.keys(state.categoryBudgets).length > 0
+                ? Object.keys(state.categoryBudgets)
+                : ['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'];
+
             tbody.innerHTML = csvPreviewItems.map((item, idx) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/40">
                     <td class="py-2 px-3">
@@ -1816,7 +1876,7 @@
                     </td>
                     <td class="py-2 px-2">
                         <select onchange="csvPreviewItems[${idx}].category = this.value" class="px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-medium">
-                            ${['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'].map((cat) => `<option value="${cat}" ${item.category === cat ? 'selected' : ''}>${cat}</option>`).join('')}
+                            ${categories.map((cat) => `<option value="${escapeHtml(cat)}" ${item.category === cat ? 'selected' : ''}>${escapeHtml(cat)}</option>`).join('')}
                         </select>
                     </td>
                     <td class="py-2 px-2">
@@ -1944,6 +2004,10 @@
             });
             state.incomeStreams.forEach((inc) => {
                 if (inc.startDate && inc.startDate.length >= 7) monthSet.add(inc.startDate.slice(0, 7));
+            });
+            state.fixedBills.forEach((bill) => {
+                if (bill.startMonth && bill.startMonth.length >= 7) monthSet.add(bill.startMonth.slice(0, 7));
+                if (bill.endMonth && bill.endMonth.length >= 7) monthSet.add(bill.endMonth.slice(0, 7));
             });
 
             const months = Array.from(monthSet).sort().reverse();
@@ -2309,12 +2373,23 @@
             if (!currentUser || !db) return;
 
             const amt = parseFloat(document.getElementById('fb-amount').value);
+            const startMonth = document.getElementById('fb-start-month').value || '';
+            const endMonth = document.getElementById('fb-end-month').value || '';
+
+            if (startMonth && endMonth && endMonth < startMonth) {
+                showToast("End month cannot be earlier than start month.", "error");
+                return;
+            }
+
+            const effectiveBaseMonth = startMonth || state.currentMonth;
             const billData = {
                 name: document.getElementById('fb-name').value.trim(),
                 amount: amt,
                 dueDay: parseInt(document.getElementById('fb-dueday').value, 10),
+                startMonth,
+                endMonth,
                 rateHistory: [
-                    { effectiveMonth: state.currentMonth, amount: amt }
+                    { effectiveMonth: effectiveBaseMonth, amount: amt }
                 ],
                 monthlyOverrides: {}
             };
@@ -2322,6 +2397,7 @@
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fixedBills'), billData);
                 document.getElementById('fixed-bill-form').reset();
+                document.getElementById('fb-start-month').value = state.currentMonth;
                 renderFixedBillsManageList();
                 showToast("Fixed expense added.");
             } catch (err) {
@@ -2334,12 +2410,18 @@
             if (!bill) return;
 
             const details = getFixedBillEffectiveDetails(bill, state.currentMonth);
+            const fallbackAmount = Array.isArray(bill.rateHistory) && bill.rateHistory.length > 0
+                ? Number(bill.rateHistory[bill.rateHistory.length - 1].amount || bill.amount || 0)
+                : Number(bill.amount || 0);
+
             document.getElementById('efb-id').value = bill.id;
             document.getElementById('efb-name').value = bill.name || '';
-            document.getElementById('efb-amount').value = details.amount;
+            document.getElementById('efb-amount').value = details.isInactiveWindow ? fallbackAmount : details.amount;
             document.getElementById('efb-dueday').value = bill.dueDay || 1;
+            document.getElementById('efb-start-month').value = bill.startMonth || '';
+            document.getElementById('efb-end-month').value = bill.endMonth || '';
             document.getElementById('efb-scope').value = details.isMonthOverride ? 'month' : 'forward';
-            document.getElementById('efb-context-note').innerText = `Editing for ${state.currentMonth} (or update recurring amount & due day going forward).`;
+            document.getElementById('efb-context-note').innerText = `Editing for ${state.currentMonth} — set start/end months or update amount.`;
 
             const resetWrap = document.getElementById('efb-reset-wrapper');
             if (details.isMonthOverride) {
@@ -2362,14 +2444,21 @@
             const newName = document.getElementById('efb-name').value.trim();
             const newAmount = parseFloat(document.getElementById('efb-amount').value);
             const newDueDay = parseInt(document.getElementById('efb-dueday').value, 10);
+            const newStartMonth = document.getElementById('efb-start-month').value || '';
+            const newEndMonth = document.getElementById('efb-end-month').value || '';
             const scope = document.getElementById('efb-scope').value;
+
+            if (newStartMonth && newEndMonth && newEndMonth < newStartMonth) {
+                showToast("End month cannot be earlier than start month.", "error");
+                return;
+            }
 
             const overrides = { ...(bill.monthlyOverrides || {}) };
             let history = Array.isArray(bill.rateHistory) ? [...bill.rateHistory] : [];
 
             // Seed initial historical baseline if legacy bill had no rateHistory yet
             if (history.length === 0) {
-                history.push({ effectiveMonth: '2000-01', amount: Number(bill.amount || 0) });
+                history.push({ effectiveMonth: newStartMonth || '2000-01', amount: Number(bill.amount || 0) });
             }
 
             if (scope === 'month') {
@@ -2378,10 +2467,12 @@
                 await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', billId), {
                     name: newName,
                     dueDay: newDueDay,
+                    startMonth: newStartMonth,
+                    endMonth: newEndMonth,
                     monthlyOverrides: overrides
                 });
             } else {
-                // Permanent price update effective from active month forward (e.g. Disney+ price increase)
+                // Permanent price update effective from active month forward (e.g. price increase)
                 delete overrides[state.currentMonth];
                 const existingIdx = history.findIndex((h) => h.effectiveMonth === state.currentMonth);
                 if (existingIdx >= 0) {
@@ -2395,6 +2486,8 @@
                     name: newName,
                     amount: newAmount,
                     dueDay: newDueDay,
+                    startMonth: newStartMonth,
+                    endMonth: newEndMonth,
                     rateHistory: history,
                     monthlyOverrides: overrides
                 });
@@ -2559,6 +2652,8 @@
 
         window.openFixedBillsModal = function() {
             renderFixedBillsManageList();
+            document.getElementById('fb-start-month').value = state.currentMonth;
+            document.getElementById('fb-end-month').value = '';
             document.getElementById('fixed-bills-modal').classList.remove('hidden');
         };
 
@@ -2627,17 +2722,27 @@
             const sorted = [...state.fixedBills].sort((a, b) => Number(a.dueDay || 1) - Number(b.dueDay || 1));
             container.innerHTML = sorted.map((b) => {
                 const details = getFixedBillEffectiveDetails(b, state.currentMonth);
+                const baseAmount = Array.isArray(b.rateHistory) && b.rateHistory.length > 0
+                    ? Number(b.rateHistory[b.rateHistory.length - 1].amount || b.amount || 0)
+                    : Number(b.amount || 0);
+                const displayAmount = details.isInactiveWindow ? baseAmount : details.amount;
+                const windowParts = [];
+                if (b.startMonth) windowParts.push(`From ${b.startMonth}`);
+                if (b.endMonth) windowParts.push(`Through ${b.endMonth}`);
+                const windowText = windowParts.length > 0 ? ` · ${windowParts.join(' · ')}` : '';
+
                 return `
-                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                    <div class="bg-slate-50 dark:bg-slate-700/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 ${details.isInactiveWindow ? 'opacity-70' : ''}">
                         <div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-1.5">
                                 <h5 class="font-semibold text-sm">${escapeHtml(b.name)}</h5>
+                                ${details.isInactiveWindow ? `<span class="px-2 py-0.5 bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300 rounded text-[10px] font-semibold">${escapeHtml(details.inactiveReason)}</span>` : ''}
                                 ${details.isMonthOverride ? `<span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded text-[10px] font-semibold">${escapeHtml(state.currentMonth)} only</span>` : ''}
                             </div>
-                            <p class="text-xs text-slate-500">Due day ${escapeHtml(String(b.dueDay))}</p>
+                            <p class="text-xs text-slate-500">Due day ${escapeHtml(String(b.dueDay))}${escapeHtml(windowText)}</p>
                         </div>
                         <div class="flex items-center space-x-1 shrink-0">
-                            <span class="font-bold mr-2">${formatCurrency(details.amount)}</span>
+                            <span class="font-bold mr-2">${formatCurrency(displayAmount)}</span>
                             <button type="button" onclick="openEditFixedBillModal('${b.id}')" aria-label="Edit fixed expense" class="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-500 hover:text-brand-600 text-sm">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>

@@ -116,7 +116,7 @@
 
             <!-- Compact Active Month Switcher & Single-Row Scrollable Tab Bar -->
             <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-1.5 sm:gap-2">
                         <button type="button" onclick="stepMonth(-1)" aria-label="Previous month" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
                             <i class="fa-solid fa-chevron-left text-xs"></i>
@@ -133,48 +133,60 @@
                         </button>
                     </div>
 
-                    <!-- Secondary Budget & Workspace Tools Menu -->
-                    <div class="relative shrink-0" id="settings-menu-wrapper">
-                        <button type="button" onclick="toggleSettingsMenu(event)" aria-label="Budget settings" class="min-w-[44px] min-h-[44px] px-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-gear"></i>
-                            <span class="hidden sm:inline text-xs font-semibold">Setup</span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <!-- Budget View vs. Full View Toggle -->
+                        <button type="button" onclick="toggleViewMode()" id="view-mode-toggle-btn" class="min-h-[44px] px-3.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 font-semibold text-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-eye"></i>
+                            <span id="view-mode-label">Budget View</span>
                         </button>
-                        <div id="settings-dropdown" class="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
-                            <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-money-bill-trend-up text-emerald-500 w-4"></i>
-                                <span>Income</span>
+
+                        <!-- Secondary Budget & Workspace Tools Menu -->
+                        <div class="relative shrink-0" id="settings-menu-wrapper">
+                            <button type="button" onclick="toggleSettingsMenu(event)" aria-label="Budget settings" class="min-w-[44px] min-h-[44px] px-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl transition text-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-gear"></i>
+                                <span class="hidden sm:inline text-xs font-semibold">Setup</span>
                             </button>
-                            <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-file-invoice-dollar text-blue-500 w-4"></i>
-                                <span>Fixed Expenses</span>
-                            </button>
-                            <button type="button" onclick="closeSettingsMenu(); openCategoryBudgetModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-sliders text-amber-500 w-4"></i>
-                                <span>Budget</span>
-                            </button>
-                            <div class="border-t border-slate-200 dark:border-slate-700 my-1"></div>
-                            <button type="button" onclick="closeSettingsMenu(); exportDataJSON();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-download text-slate-400 w-4"></i>
-                                <span>Export JSON Backup</span>
-                            </button>
-                            <button type="button" onclick="closeSettingsMenu(); openJsonRestoreModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-upload text-indigo-400 w-4"></i>
-                                <span>Restore JSON Backup</span>
-                            </button>
-                            <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-file-csv text-slate-400 w-4"></i>
-                                <span>Export CSV Log</span>
-                            </button>
-                            <button type="button" onclick="closeSettingsMenu(); openHouseholdModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
-                                <i class="fa-solid fa-users text-indigo-500 w-4"></i>
-                                <span>Shared Account & Sign Out</span>
-                            </button>
+                            <div id="settings-dropdown" class="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 hidden z-30">
+                                <button type="button" onclick="closeSettingsMenu(); openIncomeModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-money-bill-trend-up text-emerald-500 w-4"></i>
+                                    <span>Income</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); openFixedBillsModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-file-invoice-dollar text-blue-500 w-4"></i>
+                                    <span>Fixed Expenses</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); openCategoryBudgetModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-sliders text-amber-500 w-4"></i>
+                                    <span>Budget</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); toggleViewMode();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-table-columns text-indigo-500 w-4"></i>
+                                    <span id="dropdown-view-mode-text">Switch to Budget View</span>
+                                </button>
+                                <div class="border-t border-slate-200 dark:border-slate-700 my-1"></div>
+                                <button type="button" onclick="closeSettingsMenu(); exportDataJSON();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-download text-slate-400 w-4"></i>
+                                    <span>Export JSON Backup</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); openJsonRestoreModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-upload text-indigo-400 w-4"></i>
+                                    <span>Restore JSON Backup</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); exportTransactionsCSV();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-file-csv text-slate-400 w-4"></i>
+                                    <span>Export CSV Log</span>
+                                </button>
+                                <button type="button" onclick="closeSettingsMenu(); openHouseholdModal();" class="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2.5">
+                                    <i class="fa-solid fa-users text-indigo-500 w-4"></i>
+                                    <span>Shared Account & Sign Out</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Single-Row Scrollable Tab Strip -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-0.5 hide-scrollbar">
+                <!-- Single-Row Scrollable Tab Strip (Hidden in simplified Budget View) -->
+                <div id="main-tabs-strip" class="flex items-center gap-2 overflow-x-auto pb-0.5 hide-scrollbar">
                     <button type="button" onclick="switchMainTab('dashboard')" id="tab-btn-dashboard" class="min-h-[44px] px-4 bg-brand-500 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center space-x-2 whitespace-nowrap shrink-0">
                         <i class="fa-solid fa-chart-pie"></i>
                         <span>Dashboard</span>
@@ -197,8 +209,44 @@
             <!-- ==================== TAB 1: DASHBOARD ==================== -->
             <section id="tab-content-dashboard" class="space-y-4 sm:space-y-6">
 
-                <!-- Compact 2x2 Mobile / 5-Card Desktop Financial Overview -->
-                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Streamlined Budget View Summary Banner (Visible only in Budget View) -->
+                <div id="budget-view-summary-cards" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Variable Spent</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white truncate" id="bv-variable-spent">$0.00</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 truncate" id="bv-variable-sub">Of monthly budget</p>
+                        </div>
+                        <div class="w-11 h-11 shrink-0 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Remaining Budget</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-brand-600 dark:text-brand-400 truncate" id="bv-variable-remaining">$0.00</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 truncate" id="bv-pacing-sub">Available to spend</p>
+                        </div>
+                        <div class="w-11 h-11 shrink-0 bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Monthly Surplus</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 truncate" id="bv-net-surplus">$0.00</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 truncate">After bills & spending</p>
+                        </div>
+                        <div class="w-11 h-11 shrink-0 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compact 2x2 Mobile / 5-Card Desktop Financial Overview (Full View) -->
+                <div id="full-kpi-grid" class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                     <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between gap-2">
                         <div class="min-w-0">
                             <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5 truncate">Income</p>
@@ -261,7 +309,7 @@
                         <h3 class="font-bold text-base flex items-center gap-2">
                             <i class="fa-solid fa-bolt text-amber-500"></i> Quick Variable Expense Entry
                         </h3>
-                        <div class="flex items-center gap-2">
+                        <div id="quick-entry-extra-tools" class="flex items-center gap-2">
                             <button type="button" onclick="toggleBatchEntryMode()" id="toggle-batch-btn" class="min-h-[36px] px-3 rounded-xl text-xs font-semibold border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
                                 <i class="fa-solid fa-table-list text-brand-500"></i>
                                 <span>Batch Entry (5 Rows)</span>
@@ -326,8 +374,8 @@
                 </div>
 
                 <!-- Main Dashboard Grid: Category Budget & Fixed Expenses + Recent Variable Transactions -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 space-y-6">
+                <div id="dashboard-main-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div id="dashboard-left-col" class="lg:col-span-2 space-y-6">
                         <!-- Category Budget Threshold Progress (Amber at 80%, Red at 100%) -->
                         <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
@@ -342,8 +390,8 @@
                             <div class="space-y-4" id="category-progress-list"></div>
                         </div>
 
-                        <!-- Fixed Expenses Table -->
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <!-- Fixed Expenses Table (Hidden in simplified Budget View) -->
+                        <div id="fixed-bills-card" class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 class="font-bold text-lg">Fixed Expenses</h3>
@@ -373,8 +421,8 @@
                         </div>
                     </div>
 
-                    <!-- Variable Expense Feed with Search & Category Filter -->
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+                    <!-- Variable Expense Feed with Search & Category Filter (Hidden in simplified Budget View) -->
+                    <div id="recent-log-card" class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
                         <div class="flex items-center justify-between mb-3">
                             <div>
                                 <h3 class="font-bold text-lg">Recent Variable Log</h3>
@@ -1066,6 +1114,7 @@
         let txCategoryFilter = 'ALL';
         let txSearchQuery = '';
         let pendingJsonRestorePayload = null;
+        let viewMode = 'full';
 
         // Core Application State
         const state = {
@@ -1093,6 +1142,76 @@
         } catch (err) {
             console.error("Firebase initialization failed:", err);
         }
+
+        // Per-User View Mode ('budget' vs 'full')
+        function getUserDefaultViewMode(user) {
+            try {
+                const saved = localStorage.getItem(`familyBudgetViewMode_${user.uid}`);
+                if (saved === 'budget' || saved === 'full') return saved;
+            } catch (_) {
+                // Ignore storage restrictions
+            }
+            const email = (user.email || '').toLowerCase();
+            if (email.includes('megan')) {
+                return 'budget';
+            }
+            return 'full';
+        }
+
+        function applyViewMode(mode) {
+            viewMode = mode === 'budget' ? 'budget' : 'full';
+            const isBudget = viewMode === 'budget';
+
+            const tabsStrip = document.getElementById('main-tabs-strip');
+            const fullKpiGrid = document.getElementById('full-kpi-grid');
+            const budgetSummaryCards = document.getElementById('budget-view-summary-cards');
+            const extraTools = document.getElementById('quick-entry-extra-tools');
+            const fixedBillsCard = document.getElementById('fixed-bills-card');
+            const recentLogCard = document.getElementById('recent-log-card');
+            const mainGrid = document.getElementById('dashboard-main-grid');
+            const leftCol = document.getElementById('dashboard-left-col');
+            const toggleLabel = document.getElementById('view-mode-label');
+            const dropdownLabel = document.getElementById('dropdown-view-mode-text');
+
+            if (isBudget) {
+                window.switchMainTab('dashboard');
+                if (isBatchMode) window.toggleBatchEntryMode();
+                if (tabsStrip) tabsStrip.classList.add('hidden');
+                if (fullKpiGrid) fullKpiGrid.classList.add('hidden');
+                if (budgetSummaryCards) budgetSummaryCards.classList.remove('hidden');
+                if (extraTools) extraTools.classList.add('hidden');
+                if (fixedBillsCard) fixedBillsCard.classList.add('hidden');
+                if (recentLogCard) recentLogCard.classList.add('hidden');
+                if (mainGrid) mainGrid.className = "grid grid-cols-1 gap-6";
+                if (leftCol) leftCol.className = "space-y-6";
+                if (toggleLabel) toggleLabel.innerText = "Full View";
+                if (dropdownLabel) dropdownLabel.innerText = "Switch to Full View";
+            } else {
+                if (tabsStrip) tabsStrip.classList.remove('hidden');
+                if (fullKpiGrid) fullKpiGrid.classList.remove('hidden');
+                if (budgetSummaryCards) budgetSummaryCards.classList.add('hidden');
+                if (extraTools) extraTools.classList.remove('hidden');
+                if (fixedBillsCard) fixedBillsCard.classList.remove('hidden');
+                if (recentLogCard) recentLogCard.classList.remove('hidden');
+                if (mainGrid) mainGrid.className = "grid grid-cols-1 lg:grid-cols-3 gap-6";
+                if (leftCol) leftCol.className = "lg:col-span-2 space-y-6";
+                if (toggleLabel) toggleLabel.innerText = "Budget View";
+                if (dropdownLabel) dropdownLabel.innerText = "Switch to Budget View";
+            }
+        }
+
+        window.toggleViewMode = function() {
+            const nextMode = viewMode === 'budget' ? 'full' : 'budget';
+            if (currentUser) {
+                try {
+                    localStorage.setItem(`familyBudgetViewMode_${currentUser.uid}`, nextMode);
+                } catch (_) {
+                    // Ignore storage restrictions
+                }
+            }
+            applyViewMode(nextMode);
+            showToast(nextMode === 'budget' ? "Switched to Budget View." : "Switched to Full View.");
+        };
 
         // Theme Preference Handling
         const themeToggleBtn = document.getElementById('theme-toggle');
@@ -1203,6 +1322,7 @@
                     document.getElementById('current-user-uid').value = user.uid;
                     document.getElementById('household-id-code').innerText = appId;
                     updateAuthNav(user);
+                    applyViewMode(getUserDefaultViewMode(user));
                     setupFirestoreSync();
                 } else {
                     currentUser = null;
@@ -1556,6 +1676,7 @@
             const totalFixedBills = getFixedBillsTotal();
             const totalVariableSpent = getVariableSpentForMonth(month);
             const totalVariableBudget = Object.values(state.categoryBudgets).reduce((sum, v) => sum + Number(v || 0), 0);
+            const varRemaining = totalVariableBudget - totalVariableSpent;
             const monthlySurplus = totalIncome - totalFixedBills - totalVariableSpent;
             const rolloverSurplus = getAccumulatedSurplusRollover();
 
@@ -1570,21 +1691,47 @@
                 ? `${varBudgetPct}% of ${formatCurrency(totalVariableBudget)}`
                 : 'Groceries, gas, dining';
 
-            // Pacing subtitle on Budget Thresholds card
+            // Update Budget View summary cards
+            const bvSpentEl = document.getElementById('bv-variable-spent');
+            const bvSubEl = document.getElementById('bv-variable-sub');
+            const bvRemEl = document.getElementById('bv-variable-remaining');
+            const bvPacingEl = document.getElementById('bv-pacing-sub');
+            const bvSurplusEl = document.getElementById('bv-net-surplus');
+
+            if (bvSpentEl) bvSpentEl.innerText = formatCurrency(totalVariableSpent);
+            if (bvSubEl) bvSubEl.innerText = totalVariableBudget > 0 ? `${varBudgetPct}% of ${formatCurrency(totalVariableBudget)}` : 'Of monthly budget';
+            if (bvRemEl) {
+                bvRemEl.innerText = formatCurrency(varRemaining);
+                bvRemEl.className = varRemaining < 0
+                    ? "text-xl sm:text-2xl font-bold text-red-500 truncate"
+                    : "text-xl sm:text-2xl font-bold text-brand-600 dark:text-brand-400 truncate";
+            }
+            if (bvSurplusEl) {
+                bvSurplusEl.innerText = formatCurrency(monthlySurplus);
+                bvSurplusEl.className = monthlySurplus < 0
+                    ? "text-xl sm:text-2xl font-bold text-red-500 truncate"
+                    : "text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 truncate";
+            }
+
+            // Pacing subtitle on Budget Thresholds card & Budget View summary card
             const pacingEl = document.getElementById('budget-pacing-summary');
-            if (pacingEl) {
-                const now = new Date();
-                const currentIsoMonth = now.toISOString().slice(0, 7);
-                const [y, m] = month.split('-').map(Number);
-                const daysInMonth = new Date(y, m, 0).getDate();
-                const varRemaining = totalVariableBudget - totalVariableSpent;
-                if (month === currentIsoMonth) {
-                    const daysLeft = Math.max(daysInMonth - now.getDate() + 1, 1);
-                    const dailySafe = varRemaining > 0 ? varRemaining / daysLeft : 0;
+            const now = new Date();
+            const currentIsoMonth = now.toISOString().slice(0, 7);
+            const [y, m] = month.split('-').map(Number);
+            const daysInMonth = new Date(y, m, 0).getDate();
+            if (month === currentIsoMonth) {
+                const daysLeft = Math.max(daysInMonth - now.getDate() + 1, 1);
+                const dailySafe = varRemaining > 0 ? varRemaining / daysLeft : 0;
+                if (pacingEl) {
                     pacingEl.innerText = `${formatCurrency(Math.max(varRemaining, 0))} variable budget left · ${daysLeft}d remaining (${formatCurrency(dailySafe)}/day)`;
-                } else {
-                    pacingEl.innerText = `Total variable target: ${formatCurrency(totalVariableBudget)} (${varRemaining >= 0 ? formatCurrency(varRemaining) + ' under' : formatCurrency(Math.abs(varRemaining)) + ' over'})`;
                 }
+                if (bvPacingEl) {
+                    bvPacingEl.innerText = `${daysLeft}d left · ${formatCurrency(dailySafe)}/day`;
+                }
+            } else {
+                const fallbackText = `Total variable target: ${formatCurrency(totalVariableBudget)} (${varRemaining >= 0 ? formatCurrency(varRemaining) + ' under' : formatCurrency(Math.abs(varRemaining)) + ' over'})`;
+                if (pacingEl) pacingEl.innerText = fallbackText;
+                if (bvPacingEl) bvPacingEl.innerText = `Target: ${formatCurrency(totalVariableBudget)}`;
             }
 
             const netEl = document.getElementById('kpi-net-cash');

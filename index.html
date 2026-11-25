@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="FamilyBudget">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2322c55e'/%3E%3Ccircle cx='256' cy='256' r='132' fill='none' stroke='%23ffffff' stroke-width='36'/%3E%3Ccircle cx='256' cy='256' r='36' fill='%23ffffff'/%3E%3Cpath d='M256 124v44M256 344v44M124 256h44M344 256h44' stroke='%23ffffff' stroke-width='32' stroke-linecap='round'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2322c55e'/%3E%3Ccircle cx='256' cy='256' r='132' fill='none' stroke='%23ffffff' stroke-width='36'/%3E%3Ccircle cx='256' cy='256' r='36' fill='%23ffffff'/%3E%3Cpath d='M256 124v44M256 344v44M124 256h44M344 256h44' stroke='%23ffffff' stroke-width='32' stroke-linecap='round'/%3E%3C/svg%3E">
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FamilyBudget%20%26%20Project%20Tracker%22%2C%22short_name%22%3A%22FamilyBudget%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2322c55e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27112%27%2520fill%3D%27%252322c55e%27%2F%253E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%27132%27%2520fill%3D%27none%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2736%27%2F%253E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%2736%27%2520fill%3D%27%2523ffffff%27%2F%253E%253Cpath%2520d%3D%27M256%2520124v44M256%2520344v44M124%2520256h44M344%2520256h44%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2732%27%2520stroke-linecap%3D%27round%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FamilyBudget%20%26%20Project%20Tracker%22%2C%22short_name%22%3A%22FamilyBudget%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2322c55e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27112%27%2520fill%3D%27%252322c55e%27%2F%3E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%27132%27%2520fill%3D%27none%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2736%27%2F%253E%253Ccircle%2520cx%3D%27256%27%2520cy%3D%27256%27%2520r%3D%2736%27%2520fill%3D%27%2523ffffff%27%2F%3E%253Cpath%2520d%3D%27M256%2520124v44M256%2520344v44M124%2520256h44M344%2520256h44%27%2520stroke%3D%27%2523ffffff%27%2520stroke-width%3D%2732%27%2520stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
     <!-- Tailwind CSS for responsive, high-contrast styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -53,6 +53,9 @@
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Shared Datalist for Recent Payees / Notes -->
+    <datalist id="recent-payee-notes"></datalist>
 
     <!-- Top Navigation Bar -->
     <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
@@ -343,7 +346,7 @@
                             </div>
                             <div class="sm:col-span-3">
                                 <label for="ftx-notes" class="sr-only">Store or Note</label>
-                                <input type="text" id="ftx-notes" placeholder="Store / item note..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                                <input type="text" id="ftx-notes" list="recent-payee-notes" autocomplete="off" placeholder="Store / item note..." class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                             </div>
                             <div class="sm:col-span-2">
                                 <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-sm transition flex items-center justify-center space-x-2">
@@ -435,7 +438,7 @@
                         <div class="space-y-2 mb-3">
                             <div class="relative">
                                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                <input type="text" id="tx-search-input" oninput="handleTxFilterChange()" placeholder="Search merchant, note, or member..." class="w-full pl-8 pr-8 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <input type="text" id="tx-search-input" list="recent-payee-notes" oninput="handleTxFilterChange()" placeholder="Search merchant, note, or member..." class="w-full pl-8 pr-8 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
                                 <button type="button" id="tx-search-clear" onclick="clearTxFilters()" aria-label="Clear filters" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs">
                                     <i class="fa-solid fa-circle-xmark"></i>
                                 </button>
@@ -739,7 +742,7 @@
                 </div>
                 <div>
                     <label for="etx-notes" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Store / Note</label>
-                    <input type="text" id="etx-notes" placeholder="Store / item note..." class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <input type="text" id="etx-notes" list="recent-payee-notes" autocomplete="off" placeholder="Store / item note..." class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('edit-tx-modal')" class="flex-1 py-2.5 min-h-[44px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
@@ -844,7 +847,7 @@
                 </div>
                 <div>
                     <label for="pe-vendor" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Vendor / Description</label>
-                    <input type="text" id="pe-vendor" required placeholder="e.g. Concrete crew or drywall & wire" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <input type="text" id="pe-vendor" list="recent-payee-notes" autocomplete="off" required placeholder="e.g. Concrete crew or drywall & wire" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('project-expense-modal')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
@@ -889,7 +892,7 @@
                 </div>
                 <div>
                     <label for="epe-vendor" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Vendor / Description</label>
-                    <input type="text" id="epe-vendor" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
+                    <input type="text" id="epe-vendor" list="recent-payee-notes" autocomplete="off" required class="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-sm">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('edit-project-expense-modal')" class="flex-1 py-2.5 min-h-[44px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm">Cancel</button>
@@ -1292,6 +1295,7 @@
 
             document.getElementById('ftx-date').value = new Date().toISOString().slice(0, 10);
             syncDynamicCategorySelectors();
+            syncPayeeAutocompleteOptions();
             document.getElementById('confirm-modal-submit').addEventListener('click', async () => {
                 const action = pendingConfirmAction;
                 pendingConfirmAction = null;
@@ -1409,6 +1413,40 @@
             return keys.length > 0 ? keys : ['Groceries', 'Dining Out', 'Shopping', 'Gas/Fuel', 'Miscellaneous'];
         }
 
+        // Populate Recent Payee / Note Autocomplete from recent transactions and project vendors
+        function syncPayeeAutocompleteOptions() {
+            const datalist = document.getElementById('recent-payee-notes');
+            if (!datalist) return;
+
+            const freqMap = new Map();
+            const sortedTxs = [...state.transactions].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            sortedTxs.forEach((tx) => {
+                const raw = (tx.notes || '').trim();
+                if (!raw) return;
+                const key = raw.toLowerCase();
+                const current = freqMap.get(key) || { label: raw, count: 0 };
+                current.count += 1;
+                freqMap.set(key, current);
+            });
+
+            state.projectExpenses.forEach((pe) => {
+                const raw = (pe.vendor || '').trim();
+                if (!raw) return;
+                const key = raw.toLowerCase();
+                const current = freqMap.get(key) || { label: raw, count: 0 };
+                current.count += 1;
+                freqMap.set(key, current);
+            });
+
+            const topPayees = Array.from(freqMap.values())
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 40);
+
+            datalist.innerHTML = topPayees
+                .map((item) => `<option value="${escapeHtml(item.label)}"></option>`)
+                .join('');
+        }
+
         // Keep quick pills, single-entry select, batch-row selects, and log filter pills synced with state.categoryBudgets
         function syncDynamicCategorySelectors() {
             const categories = getBudgetCategories();
@@ -1502,7 +1540,6 @@
             const [year, month] = monthStr.split('-').map(Number);
             const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
 
-            // One-time entries apply only in their own month while keeping recurring pay history intact
             let total = 0;
             const latestRecurringByName = new Map();
 
@@ -1517,8 +1554,6 @@
                     return;
                 }
 
-                // A raise entry with the same label and a later effective date supersedes the prior rate
-                // from that date forward while preserving earlier months' historical pay rate.
                 const key = `${(stream.name || 'Income').trim().toLowerCase()}__${cadence}`;
                 const prev = latestRecurringByName.get(key);
                 if (!prev || new Date(`${prev.startDate}T00:00:00`) <= start) {
@@ -1537,11 +1572,6 @@
             return getFixedBillsTotalForMonth(state.currentMonth);
         }
 
-        // Resolves each fixed bill for a target YYYY-MM month using:
-        // 1) Active window check (bill.startMonth and bill.endMonth) for mid-year starts or canceled bills
-        // 2) Single-month override (bill.monthlyOverrides[monthStr]) for fluctuating bills like Water/Sewer
-        // 3) Effective-dated rate history (bill.rateHistory) for permanent increases
-        // 4) Base bill.amount fallback
         function getFixedBillEffectiveDetails(bill, monthStr) {
             if (bill.startMonth && monthStr < bill.startMonth) {
                 return {
@@ -1583,7 +1613,6 @@
                         inactiveReason: ''
                     };
                 }
-                // If viewing a month earlier than the earliest recorded effectiveMonth, use the earliest historical rate
                 const earliest = [...history].sort((a, b) => a.effectiveMonth.localeCompare(b.effectiveMonth))[0];
                 return {
                     amount: Number(earliest.amount || 0),
@@ -1619,7 +1648,6 @@
             const [activeYear, activeMon] = state.currentMonth.split('-').map(Number);
             const yearPrefix = `${activeYear}-`;
 
-            // Find earliest month with recorded data in the active calendar year so blank pre-setup months don't skew YTD
             const yearMonths = [state.currentMonth];
             state.transactions.forEach((tx) => {
                 if (tx.date && tx.date.startsWith(yearPrefix)) {
@@ -1658,6 +1686,7 @@
         // Rendering Functions
         function renderAll() {
             syncDynamicCategorySelectors();
+            syncPayeeAutocompleteOptions();
             renderDashboard();
             if (!document.getElementById('tab-content-analytics').classList.contains('hidden')) {
                 renderAnalytics();
@@ -1972,7 +2001,9 @@
             }
 
             const amtEl = document.getElementById('ftx-amount');
-            if (amtEl) amtEl.focus();
+            if (amtEl) {
+                amtEl.focus();
+            }
         };
 
         window.saveFastTransaction = async function(e) {
@@ -2057,7 +2088,7 @@
                     </div>
                 </div>
                 <div class="sm:col-span-3">
-                    <input type="text" placeholder="Store / note..." class="batch-notes w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs">
+                    <input type="text" list="recent-payee-notes" autocomplete="off" placeholder="Store / note..." class="batch-notes w-full px-2.5 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs">
                 </div>
                 <div class="sm:col-span-1 text-right">
                     <button type="button" onclick="this.closest('.batch-entry-row').remove()" aria-label="Remove row" class="p-2 text-slate-400 hover:text-red-500 text-xs">
@@ -2241,7 +2272,6 @@
                 const rawAmt = parseFloat(String(row[amtIdx] || '').replace(/[$,]/g, ''));
                 if (!isoDate || isNaN(rawAmt) || rawAmt === 0) continue;
 
-                // Skip payments/credits when charges are negative (or vice versa)
                 const expenseAmt = chargesNegative ? (rawAmt < 0 ? Math.abs(rawAmt) : 0) : (rawAmt > 0 ? rawAmt : 0);
                 if (expenseAmt <= 0) continue;
 
@@ -2463,7 +2493,6 @@
             document.getElementById('etx-amount').value = Number(tx.amount || 0).toFixed(2);
             document.getElementById('etx-notes').value = tx.notes || '';
 
-            // Dynamically sync category options from state.categoryBudgets
             const catSelect = document.getElementById('etx-category');
             const categories = getBudgetCategories();
             catSelect.innerHTML = categories
@@ -2622,7 +2651,6 @@
                 return;
             }
 
-            // Household-wide roll-up across all projects
             const totalAllBudgets = state.projects.reduce((sum, p) => sum + Number(p.totalBudget || 0), 0);
             const activeProjectIds = new Set(state.projects.map((p) => p.id));
             const allActiveExpenses = state.projectExpenses.filter((pe) => activeProjectIds.has(pe.projectId));
@@ -3053,13 +3081,11 @@
             const overrides = { ...(bill.monthlyOverrides || {}) };
             let history = Array.isArray(bill.rateHistory) ? [...bill.rateHistory] : [];
 
-            // Seed initial historical baseline if legacy bill had no rateHistory yet
             if (history.length === 0) {
                 history.push({ effectiveMonth: newStartMonth || '2000-01', amount: Number(bill.amount || 0) });
             }
 
             if (scope === 'month') {
-                // Single-month override (e.g. Water/Sewer fluctuation) without changing other months
                 overrides[state.currentMonth] = newAmount;
                 await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fixedBills', billId), {
                     name: newName,
@@ -3069,7 +3095,6 @@
                     monthlyOverrides: overrides
                 });
             } else {
-                // Permanent price update effective from active month forward (e.g. price increase)
                 delete overrides[state.currentMonth];
                 const existingIdx = history.findIndex((h) => h.effectiveMonth === state.currentMonth);
                 if (existingIdx >= 0) {
